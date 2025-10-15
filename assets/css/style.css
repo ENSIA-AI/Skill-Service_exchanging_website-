@@ -1,1 +1,12 @@
 /*this file contains the golobal variables as the colors and some styles of divs and side bars */
+
+:root{
+    --clr-bars:#2d3250;
+    --clr-main:#424769;
+    --clr-btn:#f9b17a;
+    --clr-font:#ffff;
+    --clr-lighter:#5e6591;
+}
+body{
+    margin: 0;
+}
