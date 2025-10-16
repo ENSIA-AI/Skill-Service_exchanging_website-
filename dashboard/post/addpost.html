@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Post</title>
+    <link rel="stylesheet" href="../../assets/css/addpost.css"> 
+</head>
+<body>
+    <main class="content">
+        <form class="form-container">
+            <h2>Create New Post</h2>
+            <p class="subtitle">Share your skills with the community</p>
+            
+            <!-- Basic Information -->
+            <section class="form-section">
+                <h3>Basic Information</h3>
+                <div class="form-group">
+                    <label for="title">Service Title *</label>
+                    <input type="text" id="title" name="title" placeholder="e.g., Professional Web Development Services">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Describe your service in detail. What will you teach? What experience do you have?"></textarea>
+                    <small id="char-count">0/500 characters</small>
+                </div>
+            </section>
+            
+            <!-- Exchange Details -->
+            <section class="form-section">
+                <h3>Exchange Details</h3>
+                <div class="form-group">
+                    <label for="exchange">What do you want in exchange? *</label>
+                    <input type="text" id="exchange" name="exchange" placeholder="e.g., Spanish lessons, graphic design, etc.">
+                </div>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" name="category">
+                            <option>Select a category</option>
+                            <option>Programming</option>
+                            <option>Languages</option>
+                            <option>Art & Design</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-type">Service Type *</label>
+                        <select id="service-type" name="service-type">
+                            <option>Select service type</option>
+                            <option>Online</option>
+                            <option>In-person</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Skills/Tags -->
+            <section class="form-section">
+                <h3>Skills/Tags (Max 5)</h3>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="skill-category">Category</label>
+                        <select id="skill-category" name="skill-category">
+                            <option>Select a category</option>
+                        </select>
+                    </div>
+                    <button class="btn add-skill" type="button">+ Add skill</button>
+                </div>
+            </section>
+            
+            <!-- Pricing & Duration -->
+            <section class="form-section">
+                <h3>Pricing & Duration</h3>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="credits">Credits per Hour *</label>
+                        <input type="number" id="credits" name="credits" placeholder="e.g., 50">
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Typical Session Duration</label>
+                        <select id="duration" name="duration">
+                            <option>Select duration</option>
+                            <option>30 minutes</option>
+                            <option>60 minutes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pricing-note">
+                    <p>Recommended: 30-60 credits/hour</p>
+                    <ul>
+                        <li>Beginners: 20-40 credits/hour</li>
+                        <li>Intermediate: 40-60 credits/hour</li>
+                        <li>Advanced/Expert: 60-100+ credits/hour</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Location & Availability -->
+            <section class="form-section">
+                <h3>Location & Availability</h3>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="location">Location (City, State/Country)</label>
+                        <input type="text" id="location" name="location" placeholder="e.g., San Francisco, CA">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <strong>Service Delivery Options *</strong>
+                    <div class="delivery-options">
+                        <label><input type="checkbox" name="online" checked> Online Sessions</label>
+                        <span class="note">Conduct sessions via video call</span>
+                        <label><input type="checkbox" name="inperson"> In-Person Sessions</label>
+                        <span class="note">Meet locally for hands-on learning</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Buttons -->
+            <div class="form-actions">
+                <button class="btn cancel" type="button">Cancel</button>
+                <button class="btn submit" type="submit">Post</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

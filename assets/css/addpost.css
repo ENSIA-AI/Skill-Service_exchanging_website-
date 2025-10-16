@@ -1,0 +1,147 @@
+@import url(style.css);
+
+body {
+    background: var(--clr-main);
+    font-family: 'Inter', Arial, sans-serif;
+    color: var(--clr-font);
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    display: flex;
+    align-items: flex-start;
+    min-height: 100vh;
+    
+    padding: 40px;
+    background: var(--clr-main);
+    
+}
+
+.form-container {
+    background: var(--clr-lighter);
+    padding: 32px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 1000px;
+}
+
+.form-container h2 {
+    font-size: 2em;
+    margin-bottom: 8px;
+    color: var(--clr-font);
+}
+
+.subtitle {
+    color: var(--clr-font);
+    margin-bottom: 28px;
+}
+
+.form-section {
+    background: var(--clr-bars);
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+}
+
+.form-section h3 {
+    color: var(--clr-btn);
+    margin-bottom: 16px;
+    font-weight: 500;
+    font-size: 1.15em;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 7px;
+    color: var(--clr-font);
+}
+
+input, textarea, select {
+    background: var(--clr-bars);
+    border: 1px solid var(--clr-lighter);
+    color: var(--clr-font);
+    padding: 10px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1em;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--clr-btn);
+    box-shadow: 0 0 8px var(--clr-btn);
+}
+
+.form-actions {
+    text-align: right;
+}
+
+.btn {
+    background: transparent;
+    border: 1px solid var(--clr-btn);
+    color: var(--clr-btn);
+    padding: 9px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.btn.cancel:hover {
+    background: var(--clr-bars);
+    color: var(--clr-btn);
+}
+
+.btn.submit {
+    background: var(--clr-btn);
+    color: var(--clr-bars);
+    border: none;
+}
+
+.btn.submit:hover {
+    background: #ffa040; /* slight lighter for hover effect */
+    color: var(--clr-bars);
+}
+
+input[type="checkbox"]:checked {
+    accent-color: var(--clr-btn);
+}
+
+/* Additional, for subtle box and section backgrounds */
+.pricing-note, .delivery-options, .form-inline {
+    background: var(--clr-bars);
+    color: var(--clr-font);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.delivery-options{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.note{
+    color: rgb(142, 161, 155);
+}
+
+.main-content {
+    margin-left: 230px; 
+    padding: 40px;
+    background: var(--clr-main);
+    
+}
+@media (max-width:768px){
+    .main-content {
+        margin-left: 0; 
+    }
+}

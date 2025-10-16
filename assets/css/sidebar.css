@@ -10,8 +10,10 @@
     top: 76px;
     padding: 0;
     justify-content: center;
+    margin-top: 0px;
     
 }
+
 
 .sidebar{
     background-color: var(--clr-bars);
