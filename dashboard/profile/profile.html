@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="icon" href="../../assets/icons/bell.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../assets/css/personalprofile.css">
+</head>
+
+<body>
+    <div class="profile-page">
+        <div class="profile-head">
+            <div class="user-info">
+                <div class="avatar">
+                    <img src="../../assets/images/Default_pfp.svg" alt="">
+                </div>
+                <div id="" class="user-name">
+                    <span>username</span>
+                </div>
+                <div class="edit-profile">
+                    <a href="./editprofile.html"><b>Edit Profile</b></a>
+                </div>
+            </div>
+            <div class="user-meta">
+                <section>
+                    <div class="profile-name">
+                        <h2><strong><span>YOUR FULL NAME</span></strong></h2>
+                    </div>
+                </section>
+                <section>
+                    <div class="major" ><span class="muted-text">Skills</span></div>
+                        <div class="location"><span class="muted-text">Location: Seattle, Washington</span></div>
+                </section>
+                <section>
+                    <div class="user-meta-info">
+                        <div class="user-meta-card">
+                            <div class="user-meta-card-title"><h5><span  class="user-meta-card-title-name">Rating</span></h5></div>
+                            <div class="user-meta-card-info"><span class="user-meta-card-info-details">&star;&star;&star;&star;&star;</span></div>
+                        </div>
+                        <div class="user-meta-card">
+                            <div class="user-meta-card-title"><h5><span class="user-meta-card-title-name">Exchanges</span></h5></div>
+                            <div class="user-meta-card-info"><span class="user-meta-card-info-details">&star;&star;&star;&star;&star;</span></div>
+                        </div>
+                        <div class="user-meta-card">
+                            <div class="user-meta-card-title"><h5><span class="user-meta-card-title-name">Member Since</span></h5></div>
+                            <div class="user-meta-card-info"><span class="user-meta-card-info-details">&star;&star;&star;&star;&star;</span></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="profile-info">
+            <div class="profile-nav">
+                <div class="nav-item">
+                    <button>
+                        <span data-target="about-content">About</span>
+                    </button>
+
+                </div>
+                <div class="nav-item">
+                    <button>
+                        <span data-target="skill-content" class="active">Skills</span>
+                    </button>
+                </div>
+                <div class="nav-item">
+                    <button>
+                        <span data-target="interests-content">Interests</span>
+                    </button>
+                </div>
+                <div class="nav-item">
+                    <button>
+                        <span data-target="availability-content">Availability</span>
+                    </button>
+                </div>
+            </div>
+            <div class="profile-nav-content">
+                <div id="about-content" class="tab-content">
+                    <section>
+                        <div id="about" class="section" style="background:#5e6591 ;"><!-- BACKGROUND COLOR IS INLINE-->
+                            <div class="head-section">
+                                <h2><strong><span class="title">About</span></strong></h2>
+                                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    I’m a passionate <b>web developer</b> focused on creating
+                                    clean, user-friendly digital experiences. With <i>a
+                                        strong foundation in front-end technologies</i> and a
+                                    curiosity for continuous learning, I’m
+                                    <a href="https://legacy.reactjs.org/community/courses.html"><u>currently
+                                            expanding my skills in React and UI/UX design.</u></a>
+                                    My goal is to build products that combine functionality
+                                    with thoughtful design.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div id="skill-content" class="tab-content  active">
+                    <section>
+                        <div id="skills" class="section">
+                            <article aria-labelledby="skills-title">
+                                <div class="head-section">
+                                    <h2><strong><span class="title">Skills</span></strong></h2>
+                                    <p>
+                                        THIS IS YOUR SKILLS THAT'S YOU ARE GOOD WITH.
+                                    </p>
+                                </div>
+
+                                <div class="skills">
+                                    <div class="skill">
+                                        <div class="donut" style="--val: 92"><span>92%</span></div>
+                                        <p><strong>Web Development</strong><br><br><span class="muted">50
+                                                credits/hours</span></p>
+                                    </div>
+
+                                    <div class="skill">
+                                        <div class="donut" style="--val: 88"><span>88%</span></div>
+                                        <p><strong>React</strong><br><br><span class="muted">50 credits/hours</span></p>
+                                    </div>
+
+                                    <div class="skill">
+                                        <div class="donut" style="--val: 50"><span>50%</span></div>
+                                        <p><strong>Database</strong><br><br><span class="muted">50 credits/hours</span>
+                                        </p>
+                                    </div>
+
+                                    <div class="skill">
+                                        <div class="donut" style="--val: 76"><span>76%</span></div>
+                                        <p><strong>Node.js</strong><br><br><span class="muted">50 credits/hours</span>
+                                        </p>
+                                    </div>
+
+                                    <div class="skill">
+                                        <div class="donut" style="--val: 80"><span>80%</span></div>
+                                        <p><strong>UI/UX Design</strong><br><br><span class="muted">50
+                                                credits/hours</span></p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+                <div id="interests-content" class="tab-content">
+                    <section>
+                        <h3><strong><span class="title">Interests</span></strong></h3>
+                    </section>
+                </div>
+                <div id="availability-content" class="tab-content">
+                    <section>
+                        <h3><strong><span class="title">Availability</span></strong></h3>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item span');
+        const tabContents = document.querySelectorAll('.tab-content');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(i => i.classList.remove('active'));
+                tabContents.forEach(tab => tab.classList.remove('active'));
+
+                item.classList.add('active');
+                document.getElementById(item.dataset.target).classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
