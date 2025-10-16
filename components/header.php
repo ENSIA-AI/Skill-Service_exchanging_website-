@@ -1,3 +1,7 @@
+
+
+
+
 <html>
     <head>
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
@@ -7,7 +11,12 @@
         <div class="header">
 
 
+
+
             <div class="header-left">
+                <button class="humberger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-6 w-6" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
+                </button>
                 <span class="header-logo" >
                     <img src="/assets/images/Default_pfp.svg" >
                 </span>

@@ -21,6 +21,13 @@
     align-items: center;
     
 }
+.humberger{
+    border: 0;
+    color: var(--clr-font);
+    background-color: var(--clr-bars);
+    margin-left: 13px;
+    display: none;
+}
 .header-logo{
     display: flex;
     height: 50px;
@@ -118,6 +125,9 @@ color: var(--clr-font);
         padding-right: 30px;
         
     }
+    .humberger{
+        display: flex;
+    }
 }
 @media (max-width: 1024px) {
     .header-right {
@@ -129,4 +139,5 @@ color: var(--clr-font);
       width: auto;
       padding: 8px 12px;
     }
+    
   }

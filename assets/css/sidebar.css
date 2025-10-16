@@ -1,0 +1,76 @@
+
+@import url(/assets/css/style.css);
+
+.container{
+    background-color: var(--clr-bars);
+    display: flex;
+    position: fixed;
+    height: 100%;
+    width: 230px;
+    top: 76px;
+    padding: 0;
+    justify-content: center;
+    
+}
+
+.sidebar{
+    background-color: var(--clr-bars);
+    width: 75%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-top: 15px;
+}
+
+.sidebar button{
+    height: 65px;
+    border: 0;
+    border-radius: 15px;
+    width: 100%;
+    background-color: var(--clr-bars);
+    display: flex;
+    align-items: center;
+}
+
+.sidebar button:hover{
+    background-color: var(--clr-lighter);
+}
+
+.home-section {
+    color:var(--clr-font);
+}
+.notification-section {
+    color:var(--clr-font);
+}
+.events-section {
+    color:var(--clr-font);
+}
+.profile-section {
+    color:var(--clr-font);
+}
+
+.logout-section{
+    margin-top: auto;
+    margin-bottom: 20px;
+    color: red;
+}
+
+
+    
+    
+
+.name{
+    
+    height: 20px;
+    flex:1;
+    margin-left: 10px;
+    text-align: left;
+}
+
+
+@media (max-width:768px){
+    .container{
+        display: none;
+    }
+}
