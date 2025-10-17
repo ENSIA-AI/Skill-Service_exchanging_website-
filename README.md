@@ -117,7 +117,7 @@ Text:            #FFFFFF  /* Primary text */
 ### Architecture
 The platform implements a comprehensive, centralized skills management system to ensure data consistency across all features.
 
-#### Central Skills Data (`/components/skillsData.ts`)
+#### Central Skills Data 
 - **10 Categories**: Technology, Creative Arts, Languages, Business, Home Services, Fitness, Music, Cooking, Education, Crafts
 - **15-19 Skills per Category**: Curated list of common skills
 - **"Other" Option**: Custom skill input for flexibility
