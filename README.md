@@ -1,10 +1,10 @@
-# Skill & Service Exchange Platform
+# SWAP
 
 A modern web platform enabling users to trade expertise and skills without monetary exchange. Built with React, TypeScript, and Tailwind CSS, this platform connects people who want to learn with those willing to teach, creating a community-driven skill-sharing ecosystem.
 
 ## 🌟 Overview
 
-The Skill & Service Exchange Platform is designed to facilitate the exchange of knowledge and services between users based on their skills and needs. Whether you're a graphic designer looking to learn Spanish, or a chef wanting to improve your photography skills, this platform helps you find the perfect skill-exchange partner.
+SWAP is designed to facilitate the exchange of knowledge and services between users based on their skills and needs. Whether you're a graphic designer looking to learn Spanish, or a chef wanting to improve your photography skills, this platform helps you find the perfect skill-exchange partner.
 
 ## ✨ Key Features
 
