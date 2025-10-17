@@ -6,7 +6,12 @@
     --clr-btn:#f9b17a;
     --clr-font:#ffff;
     --clr-lighter:#5e6591;
+    --clr-secondary-font: #e0e0e0;
+
+
 }
 body{
     margin: 0;
+    color: var(--clr-font);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
 }
