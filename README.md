@@ -10,7 +10,6 @@ The Skill & Service Exchange Platform is designed to facilitate the exchange of 
 
 ### Core Functionality
 - **Skill-Based Trading System**: Exchange skills and services without monetary transactions
-- **Smart Matching Algorithm**: AI-powered recommendations to find compatible exchange partners
 - **Comprehensive User Profiles**: Showcase your skills, experience, and what you're looking to learn
 - **Rating & Review System**: Build trust through community feedback and verified ratings
 - **Event Management**: Create and join community workshops and skill-sharing events
@@ -20,8 +19,6 @@ The Skill & Service Exchange Platform is designed to facilitate the exchange of 
 ### User Experience
 - **Fully Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **Smooth Animations**: Enhanced hover effects and transitions throughout
-- **Accessibility Compliant**: Built with WCAG guidelines in mind
-- **Trust Badges**: Verified users and skill endorsements
 - **Inter Typography**: Clean, modern font family for optimal readability
 
 ## 🎨 Design System
@@ -70,28 +67,17 @@ Text:            #FFFFFF  /* Primary text */
    - Support information
 
 ### Authenticated Pages
-6. **Dashboard** (`/dashboard`)
-   - Personalized overview
-   - Sidebar navigation
-   - Quick actions and statistics
-   - Recent activity feed
 
-7. **Browse Posts** (`/browse`)
+6.**Home Posts** (`/home`)
    - Service listing with filtering
    - Category-based search
    - Skill-based filtering
    - Location filtering
 
-8. **Create Post** (`/create-post`)
+7. **add Post** (`/addpost`)
    - Create skill offering or request
    - Skill selection with categorized dropdowns
    - Description and requirements
-
-9. **Service Details** (`/service-details`)
-   - Detailed view of skill offerings
-   - User information
-   - Reviews and ratings
-   - Contact options
 
 10. **Profile Page** (`/profile`)
     - User profile display
@@ -111,11 +97,6 @@ Text:            #FFFFFF  /* Primary text */
     - RSVP functionality
     - Event creation
 
-13. **Smart Matching** (`/matching`)
-    - AI-powered skill match recommendations
-    - Compatibility scores
-    - Filter by skill categories
-    - Quick connect actions
 
 14. **Notifications** (`/notifications`)
     - Real-time updates
@@ -126,21 +107,10 @@ Text:            #FFFFFF  /* Primary text */
 ## 🛠️ Technical Stack
 
 ### Frontend
-- **React 18**: Component-based UI framework
-- **TypeScript**: Type-safe development
-- **Tailwind CSS v4**: Utility-first styling
-- **Lucide React**: Icon library
+- **java script**
+- **bootstrap CSS**
 
-### UI Components
-- **shadcn/ui**: High-quality, accessible component library
-  - Buttons, Cards, Dialogs, Forms
-  - Dropdowns, Tabs, Badges
-  - Tooltips, Popovers, Sheets
-  - And more...
 
-### State Management
-- React Hooks (useState, useEffect)
-- Component-level state management
 
 ## 🎯 Skills System
 
@@ -153,11 +123,6 @@ The platform implements a comprehensive, centralized skills management system to
 - **"Other" Option**: Custom skill input for flexibility
 - **Type-Safe**: Full TypeScript support
 
-### SkillSelector Component (`/components/SkillSelector.tsx`)
-Reusable component used across:
-- Sign-Up Page (initial skill selection)
-- Create Post Page (offering/requesting skills)
-- Edit Profile Page (managing skills)
 
 #### Features:
 - Category-based dropdown navigation
@@ -201,87 +166,52 @@ Reusable component used across:
 
 ## 📁 Project Structure
 
-```
-/
-├── App.tsx                          # Main app component with routing
-├── styles/
-│   └── globals.css                  # Tailwind v4 configuration & design tokens
-├── components/
-│   ├── skillsData.ts               # Central skills database
-│   ├── SkillSelector.tsx           # Reusable skill selection component
-│   │
-│   ├── HomePage.tsx                # Landing page
-│   ├── LoginPage.tsx               # Authentication
-│   ├── SignUpPage.tsx              # Registration with skills
-│   ├── Dashboard.tsx               # Main dashboard
-│   ├── DashboardLayout.tsx         # Shared layout with sidebar
-│   ├── BrowsePosts.tsx             # Service listings
-│   ├── CreatePostPage.tsx          # Create offerings/requests
-│   ├── ServiceDetailsPage.tsx      # Detailed service view
-│   ├── ProfilePage.tsx             # User profile display
-│   ├── EditProfilePage.tsx         # Profile editing
-│   ├── EventsPage.tsx              # Community events
-│   ├── MatchingPage.tsx            # Smart matching
-│   ├── NotificationsPage.tsx       # Notifications center
-│   ├── AboutUsPage.tsx             # About page
-│   ├── ContactUsPage.tsx           # Contact form
-│   │
-│   ├── FeatureCard.tsx             # Feature display component
-│   ├── CategoryCard.tsx            # Skill category component
-│   ├── PostCard.tsx                # Service post component
-│   ├── ProfileCard.tsx             # User profile card
-│   ├── EventCard.tsx               # Event display component
-│   ├── TestimonialCard.tsx         # Testimonial component
-│   │
-│   ├── ui/                         # shadcn/ui components
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── input.tsx
-│   │   ├── badge.tsx
-│   │   ├── select.tsx
-│   │   ├── dialog.tsx
-│   │   ├── tabs.tsx
-│   │   ├── avatar.tsx
-│   │   └── ... (30+ components)
-│   │
-│   └── figma/
-│       └── ImageWithFallback.tsx   # Image component with fallback
-│
-└── guidelines/
-    └── Guidelines.md                # Development guidelines
-```
+assets/
+│ ├── css/
+│ ├── icons/
+│ ├── images/
+│ └── js/
+auth/
+│ ├── login.html
+│ ├── login.php
+│ ├── signup.html
+│ └── signup.php
+components/
+│ ├── footer.html
+│ ├── footer.php
+│ ├── header.html
+│ ├── header.php
+│ └── sidebar.html
+│ └── sidebar.php
+dashboard/
+│ ├── events/
+│ │ ├── addevent.html
+│ │ ├── addevent.php
+│ │ └── events.html
+│ │ └── events.php
+│ ├── notification/
+│ │ └── notifications.html
+│ │ └── notifications.php
+post/
+│ ├── addpost.html
+│ ├── addpost.php
+│ └── postdetails.html
+│ └── postdetails.php
+profile/
+│ ├── home.html
+│ └── home.php
+php/
+README.md
+about.html
+about.php
+contact.html
+contact.php
+index.html
+index.php
 
-## 🚀 Getting Started
 
-### Prerequisites
-- Node.js 16+ 
-- npm or yarn
 
-### Installation
 
-```bash
-# Clone the repository
-git clone <repository-url>
-
-# Navigate to project directory
-cd skill-exchange-platform
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-### Build for Production
-
-```bash
-# Create optimized production build
-npm run build
-
-# Preview production build
-npm run preview
-```
 
 ## 🎯 Key Components
 
@@ -325,7 +255,6 @@ User profile preview:
 ## 🎨 Design Principles
 
 ### Trustworthy
-- Verification badges
 - Rating systems
 - User reviews
 - Transparent profiles
@@ -350,18 +279,9 @@ User profile preview:
 
 ## 📊 Feature Highlights
 
-### Smart Matching Algorithm
-The platform analyzes user skills and learning interests to suggest optimal exchange partners based on:
-- Skill compatibility
-- Geographic proximity
-- Availability match
-- User ratings
-- Exchange history
-
 ### Trust & Safety
-- User verification system
+
 - Rating and review mechanism
-- Reported content handling
 - Community guidelines enforcement
 
 ### Community Events
@@ -393,28 +313,3 @@ All skill-related data throughout the platform uses the centralized `skillsData.
 - [ ] Social media integration
 - [ ] Progress tracking for learning paths
 
-## 📝 Contributing
-
-Contributions are welcome! Please follow these guidelines:
-1. Fork the repository
-2. Create a feature branch
-3. Follow the existing code style
-4. Write meaningful commit messages
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🙏 Acknowledgments
-
-- **shadcn/ui** for the beautiful component library
-- **Lucide** for the comprehensive icon set
-- **Tailwind CSS** for the utility-first styling framework
-- **React Team** for the amazing framework
-
-## 📞 Support
-
-For support, please visit the Contact Us page or email support@skillexchange.com
-
----
