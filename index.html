@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkillSwap</title>
     <link rel="stylesheet" href="/assets/css/intro-home.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <!--Header -->
@@ -39,7 +40,7 @@
                     </div>
                 </div>
                
-                <img src="assets/images/heropic1.png" class="image-content">
+                <img src="assets/images/home.png" class="image-content">
                   
                     
                 
@@ -58,8 +59,11 @@
             <div class="feature-item">
                 <div class="content-wrapper">
                     <div class="text-content">
-                        <div class="feature-icon">🔍</div>
-                        <h3>Smart Matching System</h3>
+                       
+                        <h3>Smart Matching System
+                            <img class="feature-icon"src="assets/icons/matching.png" class="icons">
+
+                        </h3>
                         <p>Our intelligent matching system connects you with the perfect skill exchange partners based on your expertise and learning goals. Find exactly who you need, when you need them.</p>
                     </div>
                     <div class="image-content">
@@ -90,8 +94,11 @@
             <div class="feature-item">
                 <div class="content-wrapper">
                     <div class="text-content">
-                        <div class="feature-icon">👥</div>
-                        <h3>Community Events</h3>
+                        
+                        <h3>
+                            Community Events
+                            <img class="feature-icon"src="assets/icons/eventsicon.png" class="icons">
+                        </h3>
                         <p>Join group workshops, networking events, and skill-sharing sessions. Connect with like-minded learners and build lasting relationships in our vibrant community.</p>
                     </div>
                     <div class="image-content">
@@ -107,8 +114,11 @@
                         <div class="placeholder-image">Verification Image</div>
                     </div>
                     <div class="text-content">
-                        <div class="feature-icon">✅</div>
-                        <h3>Verified & Trusted Profiles</h3>
+                        
+                        <h3>
+                            Verified & Trusted Profiles
+                            <img class="feature-icon"src="assets/icons/trusticon.png" class="icons">
+                        </h3>
                         <p>Every member undergoes verification for your peace of mind. Our rating and review system ensures quality exchanges, and our support team is always ready to help.</p>
                     </div>
                 </div>
@@ -118,8 +128,11 @@
             <div class="feature-item">
                 <div class="content-wrapper">
                     <div class="text-content">
-                        <div class="feature-icon">📊</div>
-                        <h3>Track Your Progress</h3>
+                       
+                        <h3>
+                            Track Your Progress
+                            <img class="feature-icon"src="assets/icons/progressicon.png" class="icons">
+                        </h3>
                         <p>Monitor your skill development journey with our built-in progress tracking. Earn badges, celebrate milestones, and see your growth over time as you learn and teach.</p>
                     </div>
                     <div class="image-content">
@@ -239,55 +252,11 @@
     <!-- Footer -->
     <footer class="main-footer">
         <div class="container">
-            <p>&copy; 2024 SkillSwap. All rights reserved.</p>
+            <p>&copy; 2025 SkillSwap. All rights reserved.</p>
         </div>
     </footer>
-
- <script>
-    // FAQ Accordion Functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const questionButtons = document.querySelectorAll('.question-button');
-        
-        questionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Toggle active class on button
-                this.classList.toggle('active');
-                
-                // Toggle active class on answer
-                const answer = this.nextElementSibling;
-                answer.classList.toggle('active');
-                
-                // Close other open answers
-                questionButtons.forEach(otherButton => {
-                    if (otherButton !== this && otherButton.classList.contains('active')) {
-                        otherButton.classList.remove('active');
-                        otherButton.nextElementSibling.classList.remove('active');
-                    }
-                });
-            });
-        });
-        
-        // Scroll Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-        
-        // Observe elements for scroll animation
-        const elementsToAnimate = document.querySelectorAll('.feature-item, .step, .question');
-        elementsToAnimate.forEach(element => {
-            observer.observe(element);
-        });
-    });
-</script>
+ 
+ 
 </body>
 </html>
 
