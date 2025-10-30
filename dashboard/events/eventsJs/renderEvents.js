@@ -5,6 +5,10 @@ function renderEvents(){
 
     let eventsHtml =``;
     events.forEach((event) => {
+        const skillsHtml = skillsList(event.skills);
+        const isEventFull = event.attendees >= event.maxAttendees;
+        const joinButtonText = isEventFull ? 'Full' : 'Join Event';
+        const joinButtonClass = isEventFull ?  'full-event-button' : 'join-event-button';
         eventsHtml +=
         `
             <div class="event-card">
@@ -32,18 +36,49 @@ function renderEvents(){
                         </div>
                         <div class="detail-item">
                             <div class="event-skills">
-                                Skills needed: ${event.skills.join(', ')}
+                                Skills needed: ${skillsHtml}
                             </div>
                         </div>
                     </div>
                     <div class="join-event-div">
-                        <button class="join-event-button">Join Event</button>
+                        <button class="${joinButtonClass} js-join-event-button" ${isEventFull ? 'disabled' : ''}>${joinButtonText}</button>
                     </div>
             </div>
         `
 
     })
     document.querySelector('.js-events-list').innerHTML = eventsHtml ;
+    joinEvent();
+
 }
 
+function skillsList(skills){
+       
+         if( skills && skills.length > 0 ){
+            return skills.map((skill) =>
+                `<span class="skill-tag">${skill}</span>`
+            ).join(' ');
+        }
+        
+        else return `<span class="skill-tag">No prior knowledge required</span>`;
+}
+
+function joinEvent(){
+
+    let joinButtons = document.querySelectorAll('.js-join-event-button');
+    joinButtons.forEach(button =>{
+        
+        button.addEventListener('click' , () =>{
+            if(button.textContent === "Join Event"){
+                button.classList.add('joined-event');
+                button.textContent = "Requested";
+            }
+            else if(button.textContent === "Requested"){
+                button.classList.remove('joined-event');
+                button.textContent = 'Join Event';
+            }
+        }
+    )
+})
+}
 renderEvents();

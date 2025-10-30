@@ -46,36 +46,50 @@ body{
 
 }
 
-.add-event-button , .join-event-button{
+.add-event-button , .join-event-button , .full-event-button{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     color: var(--clr-font);
     background-color: var(--clr-btn);
     font-size: 1rem;
     border: 1px solid var(--clr-btn);
     border-radius: 10px;
     padding: 8px;
-    
+    white-space: nowrap;
+}
+.full-event-button{
+    opacity: 0.4;
+    width: 100%;
+    margin: 16px 0px 16px ;
 }
 
 .join-event-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
-    margin: 16px 0px 5px ;
+    margin: 16px 0px 16px ;
 }
 
+.join-event-button:hover, .add-event-button:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+
+.joined-event {
+    background-color: var(--clr-bars);
+    border: 1px solid var(--clr-bars);
+}
+    
 .events-list {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     margin: 24px ;
-    gap: 16px;   
+    gap: 24px; 
+
 }
 
-.details-text > div {
+.details-text div {
     display: flex ;
     align-items: center;
     flex-wrap: wrap;
@@ -84,14 +98,44 @@ body{
 }
 
 .event-card{
+    display: flex;
+    flex-direction: column;
+    justify-content : space-between;
+    min-height: 300px;
     line-height: 2;
     background-color: var(--clr-lighter);
     border: 1px solid var(--clr-lighter);
-    border-radius: 10px;
-    padding: 16px;
+    border-radius: 16px;
+    padding: 5px 16px;
+    transition: transform 0.5s ease ; 
+
 }
 
+.event-card:hover{
+    transform: scale(1.05);
+}
 
+.event-skills{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 5px;
+}
 
+.skill-tag{
+    background-color: var(--clr-bars);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--clr-bars);
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+    
+}
 
-
+.skill-tag:hover {
+    opacity: 1;
+    cursor: pointer;
+}
