@@ -46,7 +46,7 @@ body {
 }
 
 .form-section h3 {
-    color: var(--clr-btn);
+    color: var(--clr-org);
     margin-bottom: 16px;
     font-weight: 500;
     font-size: 1.15em;
@@ -74,8 +74,8 @@ input, textarea, select {
 }
 
 input:focus, textarea:focus, select:focus {
-    border-color: var(--clr-btn);
-    box-shadow: 0 0 8px var(--clr-btn);
+    border-color: var(--clr-org);
+    box-shadow: 0 0 8px var(--clr-org);
 }
 
 .form-actions {
@@ -84,8 +84,8 @@ input:focus, textarea:focus, select:focus {
 
 .btn {
     background: transparent;
-    border: 1px solid var(--clr-btn);
-    color: var(--clr-btn);
+    border: 1px solid var(--clr-org);
+    color: var(--clr-org);
     padding: 9px 18px;
     border-radius: 10px;
     cursor: pointer;
@@ -97,11 +97,11 @@ input:focus, textarea:focus, select:focus {
 
 .btn.cancel:hover {
     background: var(--clr-bars);
-    color: var(--clr-btn);
+    color: var(--clr-org);
 }
 
 .btn.submit {
-    background: var(--clr-btn);
+    background: var(--clr-org);
     color: var(--clr-bars);
     border: none;
 }
@@ -112,7 +112,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 input[type="checkbox"]:checked {
-    accent-color: var(--clr-btn);
+    accent-color: var(--clr-org);
 }
 
 /* Additional, for subtle box and section backgrounds */
@@ -134,14 +134,7 @@ input[type="checkbox"]:checked {
     color: rgb(142, 161, 155);
 }
 
-.main-content {
-    margin-left: 230px; 
-    padding: 40px;
-    background: var(--clr-main);
-    
-}
-@media (max-width:768px){
-    .main-content {
-        margin-left: 0; 
-    }
+
+.home-section{
+    background-color: var(--clr-btn);
 }

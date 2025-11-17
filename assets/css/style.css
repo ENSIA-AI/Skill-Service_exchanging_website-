@@ -4,12 +4,26 @@
     --clr-bars:#2d3250;
     --clr-main:#424769;
     --clr-btn:#f9b17a ;
-    --clr-font:#e9d6d6;
+    --clr-org:#ff6f00;
+    --clr-font:#ffffff;
     --clr-lighter:#5e6591;
 }
 body{
     margin: 0;
     background: var(--clr-main);
 }
+.main-content {
+    margin-left: 230px; 
+    padding: 40px;
+    background: var(--clr-main);
+    
+}
+
+@media (max-width:768px){
+    .main-content {
+        margin-left: 0; 
+    }
+}
+
 
 
