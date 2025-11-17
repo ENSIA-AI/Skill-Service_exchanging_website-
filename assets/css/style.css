@@ -3,8 +3,8 @@
 :root{
     --clr-bars:#2d3250;
     --clr-main:#424769;
-    --clr-btn:#f9b17a;
-    --clr-font:#ffff;
+    --clr-btn:#f9b17a ;
+    --clr-font:#e9d6d6;
     --clr-lighter:#5e6591;
     --clr-secondary-font: #e0e0e0;
 
@@ -14,4 +14,5 @@ body{
     margin: 0;
     color: var(--clr-font);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+    background: var(--clr-main);
 }
