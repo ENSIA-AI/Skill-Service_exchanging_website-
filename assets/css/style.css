@@ -3,7 +3,7 @@
 :root{
     --clr-bars:#2d3250;
     --clr-main:#424769;
-    --clr-btn:#ff6f00;
+    --clr-btn:#f9b17a ;
     --clr-font:#e9d6d6;
     --clr-lighter:#5e6591;
 }
@@ -11,3 +11,5 @@ body{
     margin: 0;
     background: var(--clr-main);
 }
+
+
