@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="assets\css\login.css">
+</head>
+<body>
+  <div class="logpage">
+    <form action="">
+      <div class="info-box">
+
+        <!-- EMAIL FIELD -->
+        <div class="email">
+          <h3>Email or Username</h3>
+          <input type="text" class="input-box" placeholder="Enter your email or username" required>
+          <small class="error-message"></small>
+        </div>
+
+        <!-- PASSWORD FIELD -->
+        <div class="password">
+          <h3>Password</h3>
+          <input type="password" class="input-box" placeholder="Enter your password" required>
+          <small class="error-message"></small>
+        </div>
+
+        <!-- REMEMBER ME / FORGOT PASSWORD -->
+        <div class="remember-password">
+          <div class="remember-me">
+            <input type="checkbox">
+            <span>Remember me</span>
+          </div>
+          <a href="#" class="forgot-password">Forgot Password?</a>
+        </div>
+
+        <!-- LOGIN BUTTON -->
+        <button class="login-btn" type="submit">Login</button>
+
+        <!-- ALTERNATIVE LOGIN OPTIONS -->
+        <div class="alternatives">
+          <p>Or continue with</p>
+          <div class="smedia">
+            <button class="media-btn">
+              <img src="assets\icons\google-color-icon.svg" class="google-icon" alt="">
+              <span>Google</span>
+            </button>
+            <button class="media-btn">
+              <img src="assets\icons\facebook-round-color-icon.svg" class="fb-icon" alt="">
+              <span>Facebook</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SIGNUP LINK -->
+        <div class="alt-signup">
+          <p>Don't have an account?</p>
+          <a href="">Sign Up</a>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <script src="login.js"></script>
+</body>
+</html>

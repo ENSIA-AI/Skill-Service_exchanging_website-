@@ -1,0 +1,129 @@
+@import url(/assets/css/style.css);
+* {box-sizing: border-box;}
+.logpage {
+  background-color: var(--clr-main);
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+
+}
+.info-box{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--clr-lighter);
+  padding: 80px 50px 80px 40px;
+  border-radius: 20px;
+  min-width: 450px;
+  height: 550px;
+  position: relative;
+}
+.email {
+  color: var(--clr-font);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 15px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.input-box {
+  background-color: #7076a2;
+  color: var(--clr-font);
+  flex: 1;
+  border-color: #b4b5c0;
+  border-bottom: #b4b5c0;
+  border-right: #b4b5c0;
+  outline: none;
+  border-width: 1.5px;
+  border-radius: 10px;
+  min-height: 40px;
+  margin-top: -10px;
+  padding-left: 20px;
+
+}
+.input-box.error {
+  border: 2px solid #f2545b;
+}
+.input-box.success {
+  border: 2px solid #2ecc71;
+}
+
+.error-message {
+  color: #f2545b;
+  display: block;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  min-height: 18px; /* reserve space to prevent layout shift */
+  visibility: hidden;
+  left: 0;
+}
+.input-box::placeholder{
+  color: gray;
+  font-size: 15px;
+  
+}
+.password {
+  color: var(--clr-font);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 15px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.remember-password {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 25px;
+ 
+}
+.remember-me {
+  color: var(--clr-font);
+  font-size: 17px;
+}
+.forgot-password{
+  color: var(--clr-botn);
+}
+.login-btn {
+  background-color: var(--clr-primbtn);
+  border: none;
+  border-radius: 10px;
+  min-height: 45px;
+  margin-top: 25px;
+  color: white;
+  font-size: 15px;
+}
+.alternatives p{
+  color: var(--clr-font);
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+}
+.smedia{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.media-btn{
+  background-color: var(--clr-bars);
+  border: none;
+  color: var(--clr-font);
+  height: 36px;
+  width: 180px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+}
+.google-icon {
+  width: 20px;
+  margin-right: 10px;
+  
+}
+.fb-icon {
+  width: 20px;
+  margin-right: 10px;
+  
+}

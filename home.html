@@ -88,67 +88,69 @@
   <h2>Browse Categories</h2>
   <div class="category-scroll">
 
-    <div class="category-card">
+    <div class="category-card " data-category="Technology & Programming">
       <img src="assets\icons\laptop-open-icon.svg" alt="Technology & Programming">
       <div class="category-info">
         <h3>Technology & Programming</h3>
-        <p>234 skills available</p>
+        <p class="posts-available"></p>
       </div>
     </div>
 
-    <div class="category-card">
+    <div class="category-card" data-category="Creative Arts & Design">
       <img src="assets\icons\paint-palette-clipart.svg" alt="Creative Arts & Design">
       <div class="category-info">
         <h3>Creative Arts & Design</h3>
-        <p>189 skills available</p>
+        <p class="posts-available"></p>
       </div>
     </div>
 
-    <div class="category-card">
+    <div class="category-card" data-category="Languages & Communication">
       <img src="assets\icons\online-community-icon.svg" alt="Languages & Communication">
       <div class="category-info">
         <h3>Languages & Communication</h3>
-        <p>156 skills available</p>
+        <p class="posts-available"></p>
       </div>
     </div>
 
-    <div class="category-card">
-      <img src="assets\icons\briefcase-color-icon.svg" alt="Business & Professional">
+    <div class="category-card" data-category="Business & Professional">
+      <img src="assets\icons\briefcase-emoji-clipart-original.svg" alt="Business & Professional">
       <div class="category-info">
         <h3>Business & Professional</h3>
-        <p>142 skills available</p>
+        <p class="posts-available"></p>
       </div>
     </div>
 
-    <div class="category-card">
+    <div class="category-card" data-category="Home Services & DIY">
       <img src="assets\icons\service-provider-icon.svg" alt="Home Services & DIY">
       <div class="category-info">
         <h3>Home Services & DIY</h3>
-        <p>98 skills available</p>
+        <p class="posts-available"></p>
       </div>
     </div>
 
-    <div class="category-card">
-      <img src="assets\icons\yoga-meditation-girl-clipart.svg" alt="Fitness & Wellness">
+    <div class="category-card" data-category="Fitness & Wellness">
+      <img src="assets\icons\yoga-meditation-girl-clipart.svg" alt="Fitness & Wellness" class="fitness-img">
       <div class="category-info">
         <h3>Fitness & Wellness</h3>
-        <p>167 skills available</p>
+        <p class="posts-available"></p>
       </div>
     </div>
 
   </div>
 </section>
 <section class="browse-posts">
-  <h2>Browse All Posts</h2>
+  <h2 id="posts-title">Browse All Posts</h2>
+  <button id="show-all-btn">Show All Posts</button>
   <div class="posts-grid">
-
     <!-- Post 1 -->
-    <div class="post-card">
+    <div class="post-card" data-category="Technology & Programming">
       <div class="post-header">
         <img src="assets\images\Default_pfp.svg" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
           <h3>Alex Johnson</h3>
-          <div class="stars">⭐ ⭐ ⭐ ⭐ ☆</div>
+          <div class="stars">
+            <img src="assets\icons\five-star-rating-icon.svg" alt="" class="star-icon">
+          </div>
         </div>
       </div>
 
@@ -167,12 +169,14 @@
     </div>
 
     <!-- Post 2 -->
-    <div class="post-card">
+    <div class="post-card" data-category="reative Arts & Design">
       <div class="post-header">
         <img src="assets\images\Default_pfp.svg" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
           <h3>Sara Kim</h3>
-          <div class="stars">⭐ ⭐ ⭐ ⭐ ⭐</div>
+          <div class="stars">
+            <img src="assets\icons\two-star-rating-icon.svg" alt="" class="star-icon">
+          </div>
         </div>
       </div>
 
@@ -191,12 +195,14 @@
     </div>
 
     <!-- Post 3 -->
-    <div class="post-card">
+    <div class="post-card" data-category="Technology & Programming">
       <div class="post-header">
         <img src="assets\images\Default_pfp.svg" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
           <h3>Michael Brown</h3>
-          <div class="stars">⭐ ⭐ ⭐ ⭐ ☆</div>
+          <div class="stars">
+            <img src="assets\icons\three-star-rating-icon.svg" alt="" class="star-icon">
+            </div>
         </div>
       </div>
 
@@ -216,12 +222,14 @@
     </div>
 
     <!-- Post 4 -->
-    <div class="post-card">
+    <div class="post-card" data-category="Business & Professional">
       <div class="post-header">
         <img src="assets\images\Default_pfp.svg" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
           <h3>Linda Parker</h3>
-          <div class="stars">⭐ ⭐ ⭐ ⭐ ⭐</div>
+          <div class="stars">
+            <img src="assets\icons\two-star-rating-icon.svg" alt="" class="star-icon">
+            </div>
         </div>
       </div>
 
@@ -238,14 +246,15 @@
 
       <button class="see-details-btn">See Details</button>
     </div>
-
     <!-- Post 5 -->
-    <div class="post-card">
+    <div class="post-card" data-category="Fitness & Wellness">
       <div class="post-header">
         <img src="assets\images\Default_pfp.svg" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
           <h3>Daniel Carter</h3>
-          <div class="stars">⭐ ⭐ ⭐ ⭐ ☆</div>
+          <div class="stars">
+            <img src="assets\icons\three-star-rating-icon.svg" alt="" class="star-icon">
+          </div>
         </div>
       </div>
 
@@ -264,12 +273,14 @@
     </div>
 
     <!-- Post 6 -->
-    <div class="post-card">
+    <div class="post-card" data-category="Home Services & DIY">
       <div class="post-header">
         <img src="assets\images\Default_pfp.svg" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
           <h3>Emma Williams</h3>
-          <div class="stars">⭐ ⭐ ⭐ ⭐ ☆</div>
+          <div class="stars">
+            <img src="assets\icons\five-star-rating-icon.svg" alt="" class="star-icon">
+          </div>
         </div>
       </div>
 
@@ -289,7 +300,8 @@
 
   </div>
 </section>
-<section class="Upcoming-sessions">
+<section class="sessions-activities">
+<div class="Upcoming-sessions">
   <div class="sessions-grid">
     <h3>your upcoming sessions</h3>
     <div class="session">
@@ -299,7 +311,7 @@
       <div class="tutor">
         <p>with sarah chen</p>
       </div>
-      <div class="date">
+      <div class="session-date">
         Oct 12,2:00 PM
       </div>
     </div>
@@ -310,7 +322,7 @@
       <div class="tutor">
         <p>with Michael Torres</p>
       </div>
-      <div class="date">
+      <div class="session-date">
         Oct 14, 10:00 AM
       </div>
     </div>
@@ -321,7 +333,7 @@
       <div class="tutor">
         <p>with David Kim</p>
       </div>
-      <div class="date">
+      <div class="session-date">
         Oct 15, 4:00 PM
       </div>
     </div>
@@ -329,15 +341,43 @@
       <span>view all sessions</span>
     </button>
   </div>
+</div>
+<div class="activity-container">
+  <h3>Recent Activity</h3>
+
+  <div class="activity-item">
+    <div class="icon green">
+      <img src="assets\icons\award.png" alt="Completed">
+    </div>
+    <div class="activity-text">
+      <p class="title">Completed React Course</p>
+      <p class="time">2 hours ago</p>
+    </div>
+  </div>
+
+  <div class="activity-item">
+    <div class="icon orange">
+      <img src="assets\icons\people_4.svg" alt="Connection">
+    </div>
+    <div class="activity-text">
+      <p class="title">New connection with Sarah Chen</p>
+      <p class="time">5 hours ago</p>
+    </div>
+  </div>
+
+  <div class="activity-item">
+    <div class="icon peach">
+      <img src="assets\icons\calendar.svg" alt="Calendar">
+    </div>
+    <div class="activity-text">
+      <p class="title">Booked photography session</p>
+      <p class="time">1 day ago</p>
+    </div>
+  </div>
+</div>
 </section>
-
-
-
-
-
-
   </main>
   
-
+<script src="home.js"></script>
 </body>
 </html>
