@@ -6,7 +6,18 @@
     --clr-btn:#ff6f00;
     --clr-font:#e9d6d6;
     --clr-lighter:#5e6591;
+    --clr-botn:#F7B37C;
+    --clr-primbtn:#f9b17a;
+    
 }
 body{
     margin: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
 }
+/* Background:      #424769  /* Main app background */
+/* Primary Buttons: #f9b17a  /* Call-to-action elements */
+/* Post Cards:      #676f9d  Content cards */
+/* Emphasis:        #2d3250  Sidebar and important elements */
+/* Text:            #FFFFFF  Primary text */
+                 /* #E0E0E0  Secondary text */ 
