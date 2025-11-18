@@ -3,8 +3,8 @@ html , body {
     height: 100%;
     margin: 0;
     padding: 0;
-    
 }
+
 body{
     display: grid;
     grid-template-areas: 
@@ -25,11 +25,11 @@ body{
 
 }
 
-.main-content{
+.main-content {
     grid-area: main;
     background-color: var(--clr-main);
     padding: 1.5rem;
-   
+    
 }
 
 .primary-sidebar{
@@ -47,18 +47,21 @@ body{
 }
 
 .add-event-button , .join-event-button , .full-event-button{
+
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--clr-font);
     background-color: var(--clr-btn);
     font-size: 1rem;
-    border: 1px solid var(--clr-btn);
+    border: 0.0625rem solid var(--clr-btn);
     border-radius: 10px;
     padding: 0.5rem;
     white-space: nowrap;
     min-height: 2.75rem;
+
 }
+
 .full-event-button{
     opacity: 0.4;
     width: 100%;
@@ -81,6 +84,10 @@ body{
     border: 1px solid var(--clr-bars);
 }
     
+.event-text, .event-title {
+    color: var(--clr-font);
+}
+
 .events-list {
     display: grid;
     grid-template-columns: repeat(auto-fit , minmax(300px , 1fr));
@@ -112,7 +119,7 @@ body{
 }
 
 .event-card:hover{
-    transform: scale(1.02);
+    transform: scale(1.05);
 }
 
 .event-skills{

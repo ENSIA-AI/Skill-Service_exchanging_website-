@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>create event</title>
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+        </div>
+    
+        <div class="form-container">
+            <form action ="" method="post" class="event-form">
+
+                <div class="form-section">
+                    <label for="event-title">Event Title</label>
+                    <input type="text" id="event-title" name="event-title" placeholder="e.g, Web development Workshop" required>
+                </div>
+            
+                <div class="form-section">
+                    <label for="event-date">Event Date</label>
+                    <input type="date" id="event-date" name="event-date" required>
+                </div>
+                
+                <div class="form-section">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" placeholder="e.g, Culture City Center" required>
+                </div>
+            
+
+                <div class="form-section">
+                    <label for="description">Description</label>
+                    <input id="description" name="description" rows="4" cols="50" placeholder="Describe your event . . ." required> 
+                </div>
+            
+                <div class="form-section">
+                    <label for="max-attendees">Max Attendees</label>
+                    <input type="number" id="max-attendees" name="max-attendees" value="10" min="0" max="100" step="1" required>
+                </div>
+                
+                <!-- category  selection here -->
+                <div class="form-section">
+                    <label for="category-select">Category of Event</label>
+                    <select id="category-select" name="category" class="form-select" required>
+                        <option value="">Select a category</option>
+
+                        <!-- options will be added through javascript -->
+                    </select>
+                </div>
+                
+                <!-- skills selection here (hidden initially)-->
+                <div class="form-section">
+
+                    <label for="skills-select">Skills Needed</label>
+                    <select id="skills-select" name="skills" multiple class="form-select large-select" required disabled>
+
+                        <option value="">Select a category first</option>
+
+                    </select>
+                </div>
+                    <!--<div class="select-help">Hold Ctrl (or Cmd on Mac) to select multiple skills</div>
+                    </div>-->
+
+                    <input type="hidden" id="selected-category" name="selected-category">
+                    <input type="hidden" id="selected-skills" name="selected-skills">
+
+                    <button type="submit" class="submit-button">Create Event</button>
+                
+            </form>
+        </div>
+    </div>
+
+    
+</body>
+</html>
