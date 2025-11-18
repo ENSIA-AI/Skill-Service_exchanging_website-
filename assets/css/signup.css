@@ -1,0 +1,27 @@
+:root {
+    --clr-bars: #2d3250;
+    --clr-main: #424769;
+    --clr-btn: #f9b17a;
+    --clr-font: #e9d6d6;
+    --clr-lighter: #5e6591;
+    --clr-white: #ffffff;
+    --clr-border: #676f9d;
+    --clr-success: #4CAF50;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, var(--clr-main) 0%, var(--clr-lighter) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
