@@ -14,12 +14,12 @@
 
 
             <div class="header-left">
-                <button class="humberger">
+                <div class="humberger">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-6 w-6" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
-                </button>
-                <span class="header-logo" >
+                </div>
+                <a href="/Skill-Service_exchanging_website-/dashboard/notification/notifications.php" class="header-logo" >
                     <img src="../../assets/images/Swap logo.png" >
-                </span>
+                </a>
                 <!--<a href="/dashboard/home.html"class="Swap">Swap</a>-->
     
             </div>
@@ -30,16 +30,48 @@
                     Credits:
                     <span class="credit-span">50</span>
                 </div>
-                <button class="header-notification">
+                <a href="/Skill-Service_exchanging_website-/dashboard/notification/notifications.php" class="header-notification">
                     
                     <svg  width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell h-5 w-5" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>
                     
-                </button>
-                <span class="header-profile">
+                </a>
+                <a href="/Skill-Service_exchanging_website-/dashboard/notification/notifications.php" class="header-profile">
                     <img src="../../assets/images/Default_pfp.svg" >
-                </span>
+                </a>
             </div>
         </div>
+        <script >
+            
 
+                        // Header functionality
+            document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.humberger');
+            
+            console.log('Header script loaded, hamburger found:', !!hamburger);
+
+            // Hamburger menu click event
+            if (hamburger) {
+                hamburger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('Hamburger clicked');
+                    
+                    // Dispatch custom event to toggle sidebar
+                    const toggleEvent = new CustomEvent('toggleSidebar');
+                    document.dispatchEvent(toggleEvent);
+                });
+            }
+
+            // Add hover effects to header elements
+            const headerElements = document.querySelectorAll('.header-credit, .header-notification, .header-profile');
+            headerElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.style.opacity = '0.8';
+                });
+                element.addEventListener('mouseleave', function() {
+                    this.style.opacity = '1';
+                });
+            });
+            });
+        </script>
     </body>
 </html>

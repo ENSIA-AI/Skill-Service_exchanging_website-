@@ -4,7 +4,8 @@
     --clr-bars:#2d3250;
     --clr-main:#424769;
     --clr-btn:#f9b17a ;
-    --clr-font:#e9d6d6;
+    --clr-org:#ff6f00;
+    --clr-font:#ffffff;
     --clr-lighter:#5e6591;
     --clr-secondary-font: #e0e0e0;
 
@@ -15,4 +16,22 @@ body{
     color: var(--clr-font);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
     background: var(--clr-main);
+}
+.main-content {
+    margin-left: 230px; 
+    padding: 40px;
+    background: var(--clr-main);
+    
+}
+
+@media (max-width:768px){
+    .main-content {
+        margin-left: 0; 
+    }
+}
+
+.contact
+{
+
+    background-color: #2d3250;
 }
