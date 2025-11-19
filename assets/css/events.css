@@ -14,9 +14,8 @@ body {
     background: your-header-color;
 }
 
-.main-content {
-    margin-top: 0rem;
-    margin-left: 0px; /* Account for sidebar */
+.event-main-content {
+    margin: 0%;
     padding: 1.5rem;
     min-height: calc(100vh - 5rem);
 }
@@ -35,7 +34,7 @@ body {
         display: none;
     }
     
-    .main-content {
+    .event-main-content {
         margin-left: 0;
     }
 }
@@ -164,3 +163,5 @@ body {
         font-size: clamp(1rem, 2.5vw, 2rem);
     }
 }
+
+
