@@ -1,17 +1,16 @@
 @import url(/assets/css/style.css);
-
-
 * {box-sizing: border-box;}
+
 
 .main-content {
   background-color: var(--clr-main);
   color: var(--clr-font);
-  padding: 0%;
-
-  /* Keep your original height logic but subtract the header height */
-  min-height: calc(100vh - 75px);
+  margin-left: clamp(12rem, 15vw, 18rem); /* matches sidebar width */
+  padding: 1.25rem;
+  padding-top: clamp(5rem, 6vh, 6.5rem); /* space for header */
+  min-height: calc(100vh - clamp(5.5rem, 8.5vh, 8rem));
   transition: margin-left 0.3s ease;
-  margin: 0%;
+
 }
 
 /* Search container */
@@ -22,7 +21,7 @@
   background-color: var(--clr-bars);
   border-radius: 0.625rem; /* 10px */
   padding: 0.5rem 0.75rem;
-  width: 90%;
+  width: 100%;
   margin-bottom: 1.25rem; /* 20px */
   box-sizing: border-box;
 }
@@ -56,7 +55,7 @@
 
 /* Create post button */
 .create-post-btn {
-  background-color: var(--clr-primbtn);
+  background-color: var(--clr-btn);
   color: white;
   border: none;
   border-radius: 0.625rem; /* 10px */
@@ -183,7 +182,6 @@ h3 {
   opacity: 0.8;
 }
 
-/* ---------- BROWSE POSTS ---------- */
 .browse-posts {
   margin-top: 2.5rem; /* 40px */
 }
@@ -204,7 +202,6 @@ h3 {
   gap: 1.25rem; /* 20px */
 }
 
-/* Each post card */
 .post-card {
   background-color: var(--clr-lighter);
   border-radius: 0.75rem; /* 12px */
@@ -213,7 +210,7 @@ h3 {
   flex-direction: column;
   justify-content: space-between;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  flex: 1 1 17.5rem; /* ~280px */
+  flex: 1 1 17.5rem; /* 280px */
 }
 
 .post-card:hover {
@@ -298,7 +295,7 @@ h3 {
 /* See details button */
 .see-details-btn {
   margin-top: auto;
-  background-color: var(--clr-botn);
+  background-color: var(--clr-btn);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -314,7 +311,6 @@ h3 {
   transform: translateY(-0.125rem);
 }
 
-/* ---------- RESPONSIVE: CATEGORIES + POSTS ---------- */
 @media (max-width: 1024px) {
   .category-card {
     min-width: 14rem; /* 224px */
@@ -340,7 +336,7 @@ h3 {
   background-color: var(--clr-lighter);
   border-radius: 1.25rem; 
   margin-top: 3.125rem; 
-  width: clamp(40%, 30vw, 60%);
+  width: clamp(45%, 40vw, 70%);
   padding: 1rem;
 }
 
@@ -391,16 +387,16 @@ h3 {
   margin-top: -3rem;
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  color: var(--clr-primbtn);
+  color: var(--clr-btn);
 }
 
 .view-sessions {
   background-color: var(--clr-main);
-  border-color: var(--clr-botn);
+  border-color: var(--clr-btn);
   border-radius: 0.6875rem; /* 11px */
   padding: 0.625rem;
   font-size: 0.9375rem; /* 15px */
-  color: var(--clr-primbtn);
+  color: var(--clr-btn);
   cursor: pointer;
   font-weight: 600;
   border-width: 0.2vh;
@@ -408,7 +404,7 @@ h3 {
 }
 
 .view-sessions:hover {
-  background-color: var(--clr-primbtn);
+  background-color: var(--clr-btn);
   color: white;
 }
 
@@ -416,9 +412,10 @@ h3 {
 .activity-container {
   background-color: var(--clr-lighter);
   border-radius: 1.25rem;
-  width: clamp(30vw, 50vw, 30vw);
+  width: clamp(40%, 60vw, 40%);
   margin-top: 3.125rem; /* 50px */
   padding: 0.625rem 1.875rem; /* 10px 30px */
+  margin-left: auto;
 }
 
 .activity-container h3 {
@@ -451,7 +448,7 @@ h3 {
 
 .icon.green { background: #0f9926; }
 .icon.orange { background: #ff9f43; }
-.icon.peach { background: var(--clr-botn); }
+.icon.peach { background: var(--clr-btn); }
 
 .activity-text .title {
   font-size: 1.0625rem; /* 17px */
@@ -466,8 +463,9 @@ h3 {
 
 .sessions-activities {
   display: flex;
-  gap: 1.875rem; /* 30px */
+  gap: 1rem; /* 30px */
   flex-wrap: wrap; /* responsive wrapping */
+  justify-content: space-between;
 }
 
 

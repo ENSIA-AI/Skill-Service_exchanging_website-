@@ -21,7 +21,7 @@
       </button>
     </div>
     
-    <button class="create-post-btn">
+    <button class="create-post-btn" onclick="window.location.href='/dashboard/post/addpost.html'">
       <img src="/assets/icons/plus.svg" alt="" class="plus-icon">
       <span>create new post</span>
      
@@ -108,7 +108,7 @@
         <span>Redux</span>
       </div>
 
-      <button class="see-details-btn">See Details</button>
+      <button class="see-details-btn" onclick="window.location.href='/dashboard/post/postdetails.html'">See Details</button>
     </div>
 
     <!-- Post 2 -->
@@ -134,7 +134,7 @@
         <span>Brand Strategy</span>
       </div>
 
-      <button class="see-details-btn">See Details</button>
+      <button class="see-details-btn" onclick="window.location.href='/dashboard/post/postdetails.html'">See Details</button>
     </div>
 
     <!-- Post 3 -->
@@ -161,7 +161,7 @@
         <span>MongoDB</span>
       </div>
 
-      <button class="see-details-btn">See Details</button>
+      <button class="see-details-btn" onclick="window.location.href='/dashboard/post/postdetails.html'">See Details</button>
     </div>
 
     <!-- Post 4 -->
@@ -187,7 +187,7 @@
         <span>Editing</span>
       </div>
 
-      <button class="see-details-btn">See Details</button>
+      <button class="see-details-btn" onclick="window.location.href='/dashboard/post/postdetails.html'">See Details</button>
     </div>
     <!-- Post 5 -->
     <div class="post-card" data-category="Fitness & Wellness">
@@ -212,7 +212,7 @@
         <span>Motivation</span>
       </div>
 
-      <button class="see-details-btn">See Details</button>
+      <button class="see-details-btn" onclick="window.location.href='/dashboard/post/postdetails.html'">See Details</button>
     </div>
 
     <!-- Post 6 -->
@@ -238,7 +238,7 @@
         <span>Renovation</span>
       </div>
 
-      <button class="see-details-btn">See Details</button>
+      <button class="see-details-btn" onclick="window.location.href='/dashboard/post/postdetails.html'">See Details</button>
     </div>
 
   </div>
@@ -323,28 +323,7 @@
   
 <script src="/assets/js/posts.js"></script>
 
-<script>
-    function loadHeader(){
-        fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.querySelector('.main-header').innerHTML = data;
-        });
-    }
 
-    function loadSideBar(){
-        fetch('sidebar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.querySelector('.primary-sidebar').innerHTML = data;
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        loadHeader();
-        loadSideBar();
-    });
-</script>
 
 
 
