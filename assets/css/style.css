@@ -21,7 +21,11 @@ body{
     margin-left: 230px; 
     padding: 40px;
     background: var(--clr-main);
-    
+}
+.main-content {
+    margin-left: 230px; 
+    padding: 40px;
+    background: var(--clr-main);
 }
 
 @media (max-width:768px){
