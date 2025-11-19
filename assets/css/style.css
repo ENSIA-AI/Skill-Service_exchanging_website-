@@ -11,8 +11,6 @@ body{
     margin: 0;
     background: var(--clr-main);
 }
-<<<<<<< Updated upstream
-=======
 .main-content {
     margin-left: 230px; 
     padding: 40px;
@@ -25,7 +23,6 @@ body{
         margin-left: 0; 
     }
 }
->>>>>>> Stashed changes
 
 .contact
 {
