@@ -11,6 +11,21 @@ body{
     margin: 0;
     background: var(--clr-main);
 }
+<<<<<<< Updated upstream
+=======
+.main-content {
+    margin-left: 230px; 
+    padding: 40px;
+    background: var(--clr-main);
+    
+}
+
+@media (max-width:768px){
+    .main-content {
+        margin-left: 0; 
+    }
+}
+>>>>>>> Stashed changes
 
 .contact
 {
