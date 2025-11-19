@@ -10,16 +10,6 @@ body
     padding-right: 30px;
 }
 
-/*:root{
-    --clr-bars:#2d3250;
-    --clr-main:#424769;
-    --clr-btn:#f9b17a ;
-    --clr-font:#e9d6d6;
-    --clr-lighter:#5e6591;
-    --clr-white: #ffffff;
-}*/
-
-
  /* HEADER STYLING */
 .main-header {
   background-color:var(--clr-bars);      
@@ -513,7 +503,7 @@ body
 .contact-title
 {
 
-  font-family: 'Times New Roman', Times, serif;
+ 
   font-size: 40px;
   font-weight: bold;
   margin:20px ;
@@ -572,6 +562,18 @@ textarea {
     height: auto;
     object-fit: contain;
 }
+
+
+#success-message {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 5px;
+ display:none; 
+ color:var(--clr-btn);
+  margin-top:10px;
+
+}
+
 
 
 
@@ -654,6 +656,9 @@ textarea {
     opacity: 0.9;
    
 }
+
+
+
 
 /* RESPONSIVE DESIGN */
 
@@ -1020,34 +1025,14 @@ textarea {
         font-size: 1.8rem;
         text-align: center;
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Floating animation class */
+/*Floating animation class */
 .float-animation {
     animation: float 6s ease-in-out infinite;
 }
 
-/* Keyframes for floating effect */
+ /*Keyframes for floating effect */
 @keyframes float {
     0% {
         transform: translateY(0);

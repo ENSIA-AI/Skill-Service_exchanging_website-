@@ -11,7 +11,7 @@
      <!--Header -->
     <header class="main-header">
        <div class="logo-section">
-          <img src="/assets/images/homeinp/Swap logo.png " >
+          <img src="/assets/images/homeinp/Swaplogo.png " >
        </div>
       
        <div class="navigation-bar">
@@ -51,6 +51,9 @@
     <p class="contact-title">Send us a Message<p>
     
     <form  method="post" class="contact-form">
+    <p id="success-message">
+    Your message has been sent successfully!</p>
+
       <div class="form-row">
         <div class="form-group">
           <label for="first-name">First Name</label>
@@ -94,5 +97,18 @@
  
  
  <script src="assets/js/home.js"></script>
+ <script>
+document.querySelector(".contact-form").addEventListener("submit", function(event) {
+    event.preventDefault();  // stops page reload / redirect
+    
+    // Show success message
+    const successMessage = document.getElementById("success-message");
+    successMessage.style.display = "block";
+    
+    // Optional: Clear the form
+    this.reset();
+});
+</script>
+
 </body>
 </html>
