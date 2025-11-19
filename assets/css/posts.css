@@ -1,0 +1,523 @@
+@import url(/assets/css/style.css);
+
+
+* {box-sizing: border-box;}
+
+.main-content {
+  background-color: var(--clr-main);
+  color: var(--clr-font);
+  padding: 0%;
+
+  /* Keep your original height logic but subtract the header height */
+  min-height: calc(100vh - 75px);
+  transition: margin-left 0.3s ease;
+  margin: 0%;
+}
+
+/* Search container */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem; /* ~10px */
+  background-color: var(--clr-bars);
+  border-radius: 0.625rem; /* 10px */
+  padding: 0.5rem 0.75rem;
+  width: 90%;
+  margin-bottom: 1.25rem; /* 20px */
+  box-sizing: border-box;
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--clr-font);
+  font-size: 1rem; /* 16px */
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.search-btn img {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem;
+  filter: invert(100%) brightness(100%);
+}
+
+.search-input::placeholder {
+  color: var(--clr-font);
+}
+
+/* Create post button */
+.create-post-btn {
+  background-color: var(--clr-primbtn);
+  color: white;
+  border: none;
+  border-radius: 0.625rem; /* 10px */
+  padding: 0.75rem 1.375rem; /* 12px 22px */
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem; /* 25px */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.create-post-btn:hover {
+  background-color: var(--clr-btn-hover, #c08764);
+  transform: translateY(-0.2rem);
+}
+
+.create-post-btn:active {
+  transform: scale(0.98);
+}
+
+.plus-icon {
+  width: 1.125rem; /* 18px */
+  height: 1.125rem;
+  filter: invert(100%) brightness(100%);
+}
+
+h3 {
+  text-transform: capitalize;
+  color: white;
+}
+
+
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+  .search-container {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+
+.browse-category {
+  margin-top: 1.875rem; /* 30px */
+}
+
+.browse-category h2 {
+  color: var(--clr-font);
+  margin-bottom: 0.9375rem; /* 15px */
+  font-size: 1.5rem;
+}
+
+/* Horizontal scroll container */
+.category-scroll {
+  display: flex;
+  gap: 0.9375rem; /* 15px */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 0.625rem; /* 10px */
+  scrollbar-width: auto;
+  scrollbar-color: var(--clr-lighter) transparent;
+}
+
+/* Each category card */
+.category-card {
+  background-color: var(--clr-lighter);
+  border-radius: 0.75rem; /* 12px */
+  min-width: 15.625rem; /* 250px */
+  max-width: 16.875rem; /* 270px */
+  flex: 0 0 auto;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  min-height: 13.75rem; /* 220px */
+  border: 0.125rem solid var(--clr-lighter); /* 2px */
+}
+
+.category-card:hover {
+  transform: translateY(-0.3125rem); /* 5px */
+  box-shadow: 0px 0.25rem 0.9375rem rgba(0, 0, 0, 0.2); /* 4px 15px */
+}
+
+/* Category image inside card */
+.category-card img {
+  width: 6.25rem; /* 100px */
+  height: 3.125rem; /* 50px */
+  margin-left: 1.25rem; /* 20px */
+  margin-top: 1.875rem; /* 30px */
+  filter: grayscale(10%);
+  opacity: 0.7;
+}
+
+.fitness-img {
+  width: 6.25rem;
+  height: 0.625rem; /* 10px */
+  margin-left: 2.5rem;
+  margin-top: 0.5rem; /* 8px */
+}
+
+/* Text info */
+.category-info {
+  padding: 0.625rem 0.75rem;
+  color: var(--clr-font);
+  margin-left: 1.25rem; /* 20px */
+}
+
+.category-info h3 {
+  margin: 0;
+  font-size: 1.5625rem; /* 25px */
+  font-weight: 600;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.category-info p {
+  margin: 0.3125rem 0 0 0; /* 5px */
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+/* ---------- BROWSE POSTS ---------- */
+.browse-posts {
+  margin-top: 2.5rem; /* 40px */
+}
+
+.browse-posts h2 {
+  color: var(--clr-font);
+  margin-bottom: 1.25rem; /* 20px */
+  font-size: 1.5rem;
+}
+
+.show-all-btn {
+  display: none;
+}
+
+.posts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem; /* 20px */
+}
+
+/* Each post card */
+.post-card {
+  background-color: var(--clr-lighter);
+  border-radius: 0.75rem; /* 12px */
+  padding: 1.125rem; /* 18px */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 1 1 17.5rem; /* ~280px */
+}
+
+.post-card:hover {
+  transform: translateY(-0.3125rem); /* 5px */
+  box-shadow: 0px 0.25rem 0.9375rem rgba(0, 0, 0, 0.15);
+}
+
+/* Post header */
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem; /* 10px */
+  margin-bottom: 0.625rem; /* 10px */
+}
+
+/* Show all button */
+#show-all-btn {
+  margin: 0.625rem 0 1.25rem;
+  padding: 0.5rem 0.9375rem;
+  background: var(--clr-primary);
+  border: none;
+  color: white;
+  border-radius: 0.375rem; /* 6px */
+  cursor: pointer;
+}
+
+/* Profile picture */
+.profile-pic {
+  width: 3.125rem; /* 50px */
+  height: 3.125rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Profile info */
+.profile-info h3 {
+  margin: 0;
+  color: var(--clr-font);
+  font-size: 1rem; /* 16px */
+  font-weight: 600;
+}
+
+/* Stars container */
+.stars .star-icon {
+  width: 5.625rem; /* 90px */
+  height: auto;
+  display: inline-block;
+}
+
+/* Post field & description */
+.post-field {
+  color: var(--clr-font);
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin: 0.3125rem 0;
+  opacity: 0.9;
+}
+
+.post-description {
+  color: var(--clr-font);
+  font-size: 0.9rem;
+  margin: 0.625rem 0;
+  opacity: 0.8;
+}
+
+/* Skills tags */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.625rem 0;
+}
+
+.skills span {
+  background-color: var(--clr-main);
+  color: var(--clr-font);
+  padding: 0.3125rem 0.625rem;
+  border-radius: 0.625rem;
+  font-size: 0.85rem;
+}
+
+/* See details button */
+.see-details-btn {
+  margin-top: auto;
+  background-color: var(--clr-botn);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.9375rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.see-details-btn:hover {
+  background-color: rgb(186, 142, 58);
+  transform: translateY(-0.125rem);
+}
+
+/* ---------- RESPONSIVE: CATEGORIES + POSTS ---------- */
+@media (max-width: 1024px) {
+  .category-card {
+    min-width: 14rem; /* 224px */
+    max-width: 16rem; /* 256px */
+    min-height: 12rem; /* 192px */
+  }
+  .posts-grid {
+    gap: 1rem;
+  }
+  .post-card {
+    flex: 1 1 15rem; /* ~240px */
+  }
+}
+
+
+@media (max-width: 600px) {
+  .category-card { min-width: 10rem; max-width: 12rem; }
+  .post-card { flex: 1 1 10rem; }
+  .browse-category h2, .browse-posts h2 { font-size: 1.25rem; }
+}
+
+.Upcoming-sessions {
+  background-color: var(--clr-lighter);
+  border-radius: 1.25rem; 
+  margin-top: 3.125rem; 
+  width: clamp(40%, 30vw, 60%);
+  padding: 1rem;
+}
+
+.sessions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* 40px */
+  padding: 0.625rem; /* 10px */
+  justify-content: center;
+}
+
+.sessions-grid h3 {
+  margin-bottom: -0.625rem; /* -10px */
+}
+
+/* Session Card */
+.session {
+  background-color: var(--clr-main);
+  padding-top: 0.3rem;
+  padding-left: 1rem;
+  border-radius: 1.25rem; /* 20px */
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 20vh; 
+  gap: 2.5rem; /* space between elements */
+  transition: background-color 0.3s ease;
+}
+
+.session:hover {
+  background-color: var(--clr-bars);
+}
+
+.session-header {
+  font-size: 0.95rem; /* ~15px */
+  padding: 0.6rem;
+  margin-top: -0.7rem;
+}
+
+.tutor {
+  font-size: 1.15rem; /* ~18px */
+  padding-left: 0.6rem;
+  margin-top: -2.5rem;
+}
+
+.session-date {
+  padding-left: 0.6rem;
+  margin-top: -3rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: var(--clr-primbtn);
+}
+
+.view-sessions {
+  background-color: var(--clr-main);
+  border-color: var(--clr-botn);
+  border-radius: 0.6875rem; /* 11px */
+  padding: 0.625rem;
+  font-size: 0.9375rem; /* 15px */
+  color: var(--clr-primbtn);
+  cursor: pointer;
+  font-weight: 600;
+  border-width: 0.2vh;
+  transition: background-color 0.4s ease;
+}
+
+.view-sessions:hover {
+  background-color: var(--clr-primbtn);
+  color: white;
+}
+
+
+.activity-container {
+  background-color: var(--clr-lighter);
+  border-radius: 1.25rem;
+  width: clamp(30vw, 50vw, 30vw);
+  margin-top: 3.125rem; /* 50px */
+  padding: 0.625rem 1.875rem; /* 10px 30px */
+}
+
+.activity-container h3 {
+  margin-bottom: 1.25rem; /* 20px */
+}
+
+/* Activity Items */
+.activity-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5625rem; /* 25px */
+}
+
+.activity-item .icon {
+  width: 2.5rem; /* 40px */
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.9375rem; /* 15px */
+}
+
+.icon img {
+  width: 1.375rem; /* 22px */
+  height: 1.375rem;
+  object-fit: contain;
+  filter: invert(1);
+}
+
+.icon.green { background: #0f9926; }
+.icon.orange { background: #ff9f43; }
+.icon.peach { background: var(--clr-botn); }
+
+.activity-text .title {
+  font-size: 1.0625rem; /* 17px */
+  margin: 0;
+}
+
+.activity-text .time {
+  font-size: 0.875rem; /* 14px */
+  opacity: 0.8;
+  margin: 0.125rem 0 0 0; /* 2px top */
+}
+
+.sessions-activities {
+  display: flex;
+  gap: 1.875rem; /* 30px */
+  flex-wrap: wrap; /* responsive wrapping */
+}
+
+
+@media (max-width: 1024px) {
+  .Upcoming-sessions, .activity-container {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .sessions-activities {
+    flex-direction: column;
+    gap: 1.25rem; /* 20px */
+  }
+  .session-date {
+    margin-top: -2.5rem;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .session {
+    min-height: 16vh;
+    gap: 1.25rem; /* 20px */
+  }
+  .session-header, .tutor, .session-date {
+    padding-left: 0.5rem;
+    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    margin-top: 0;
+  }
+  .view-sessions {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .activity-container {
+    width: 100%;
+    padding: 0.5rem 1rem;
+  }
+  .activity-item .icon {
+    width: 2rem;
+    height: 2rem;
+  }
+  .icon img {
+    width: 1rem;
+    height: 1rem;
+  }
+  .activity-text .title {
+    font-size: 0.95rem;
+  }
+  .activity-text .time {
+    font-size: 0.75rem;
+  }
+}
+

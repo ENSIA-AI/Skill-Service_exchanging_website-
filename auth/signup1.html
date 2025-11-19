@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/css/signuppages.css">
-
-
-    <title>Sign Up - Swap</title>
+    <title>Sign Up - SkillSwap</title>
 </head>
 <body>
     <div class="signup-container">
-        <!-- Left Side/Illustration -->
+        <!-- Left Side - Image/Illustration -->
         <div class="signup-left">
             <div class="illustration">
-                <img src="/assets/images/homeinp/signupside.jpg" alt="Join Community">
+                <img src="assets/images/homeinp/signup-illustration.png" alt="Join Community">
             </div>
         </div>
 
-        <!-- Right Side/Signup Form -->
+        <!-- Right Side - Signup Form -->
         <div class="signup-right">
             <h2>Personal Information</h2>
             
-            <form action="/auth/signup2.html" method="GET" class="signup-form">
+            <form action="/signup and login pages/signup2.html" method="GET" class="signup-form">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
                     <input type="text" id="fullName" name="fullName" placeholder="John Smith" required>
@@ -51,10 +48,8 @@
                     <input type="checkbox" id="terms" name="terms" required>
                     <label for="terms">I agree to Terms & Conditions</label>
                 </div>
-                  <div class="form-actions">
-                    <button type="button" class="btn-back" onclick="window.location.href='../index.html'">Back</button>
-                    <button type="submit" class="btn-next">Next</button>
-                </div>
+
+                <button type="submit" class="btn-next">Next</button>
             </form>
 
             <p class="login-link">
@@ -63,6 +58,6 @@
         </div>
     </div>
 
-   <script src="/assets/js/formvalidation.js"></script>  
+   <script src="assets/js/home.js"></script>  
 </body>
 </html>
