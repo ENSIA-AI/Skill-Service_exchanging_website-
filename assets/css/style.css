@@ -8,13 +8,13 @@
     --clr-font:#ffffff;
     --clr-lighter:#5e6591;
     --clr-secondary-font: #e0e0e0;
-
+    --main-font:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
 
 }
 body{
     margin: 0;
     color: var(--clr-font);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
+    font-family: 'Segoe UI', Tahoma, Geneva, sans-serif ;
     background: var(--clr-main);
 }
 .php-content {

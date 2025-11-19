@@ -1,6 +1,7 @@
 body {
     display: block;
     position: relative;
+    padding-top: 1rem !important;
 }
 
 .main-header {
