@@ -10,16 +10,14 @@ body
     padding-right: 30px;
 }
 
-:root
-{
+:root{
     --clr-bars:#2d3250;
     --clr-main:#424769;
-     --clr-btn:#f9b17a ;
+    --clr-btn:#f9b17a ;
     --clr-font:#e9d6d6;
     --clr-lighter:#5e6591;
     --clr-white: #ffffff;
 }
-
 
 
  /* HEADER STYLING */
@@ -453,8 +451,8 @@ body
     border-radius: 10px;
     box-shadow: 0 8px 8px rgba(0,0,0,0.2);
     margin-bottom: 15px;
-    overflow: hidden;       /* ensures box grows with answer */
-    transition: all 0.35s ease;  /* smooth growth */
+    overflow: hidden;      
+    transition: all 0.35s ease;  
 }
 
 .answer {

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/signuppages.css">
+    <title>Sign Up - Skills & Interests</title>
+</head>
+<body>
+    <div class="signup-container ">
+        <!-- Left Side - Image/Illustration -->
+        <div class="signup-left">
+            <div class="illustration">
+                <img src="/assets/images/homeinp/signupside.jpg" alt="Skills Illustration">
+            </div>
+        </div>
+
+        <!-- Right Side - Skills Form -->
+        <div class="signup-right">
+            <h2>Your Skills & Interests</h2>
+            
+            <form action="/auth/signup3.html" method="GET">
+            <!--Skills i can teach section -->
+                <div class="skills-section">
+                    <div class="section-header">
+                        <h3>Skills I Can Teach</h3>
+                        <span class="skills-counter">0/5 skills selected</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teachCategory">Category</label>
+                        <select id="teachCategory" name="teachCategory" onchange="updateSkills('teach')">
+                            <option value="technology">Technology & Programming</option>
+                            <option value="creative">Creative Arts & Design</option>
+                            <option value="languages">Languages & Communication</option>
+                            <option value="business">Business & Professional</option>
+                            <option value="home">Home Services & DIY</option>
+                            <option value="fitness">Fitness & Wellness</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group skills-dropdown-container" id="teachSkillsContainer">
+                        <label for="teachSkill">Skill</label>
+                        <select id="teachSkill" name="teachSkill">
+                            <option value="">Select a skill from the list</option>
+                        </select>
+                    </div>
+
+                    <div class="add-skill">
+                        <button type="button" class="btn-add-skill" onclick="addSkill('teach')">+ Add Skill</button>
+                    </div>
+
+                    <div class="selected-skills" id="teachSkillsList">
+                        <!--here the  Selected skills will appear  -->
+                    </div>
+                </div>
+
+                <!-- Skills I Want to Learn Section -->
+                <div class="skills-section">
+                    <div class="section-header">
+                        <h3>Skills I Want to Learn</h3>
+                        <span class="skills-counter">0/5 skills selected</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="learnCategory">Category</label>
+                        <select id="learnCategory" name="learnCategory" onchange="updateSkills('learn')">
+                            <option value="technology">Technology & Programming</option>
+                            <option value="creative">Creative Arts & Design</option>
+                            <option value="languages">Languages & Communication</option>
+                            <option value="business">Business & Professional</option>
+                            <option value="home">Home Services & DIY</option>
+                            <option value="fitness">Fitness & Wellness</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group skills-dropdown-container" id="learnSkillsContainer">
+                        <label for="learnSkill">Skill</label>
+                        <select id="learnSkill" name="learnSkill">
+                            <option value="">Select a skill from the list</option>
+                        </select>
+                    </div>
+
+                    <div class="add-skill">
+                        <button type="button" class="btn-add-skill" onclick="addSkill('learn')">+ Add Skill</button>
+                    </div>
+
+                    <div class="selected-skills" id="learnSkillsList">
+                        <!-- Selected skills will appear here -->
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                   <button type="button" class="btn-back" onclick="window.location.href='signup1.html'">Back</button>
+                    <button type="submit" class="btn-next">Next</button>
+                </div>
+            </form>
+
+            <p class="login-link">
+                Already have an account? <a href="login.html">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Skills data for each category
+        const skillsData = {
+            technology: [
+                "Web Development",
+                "Mobile App Development",
+                "Data Science",
+                "Machine Learning",
+                "Artificial Intelligence",
+                "Cybersecurity",
+                "Cloud Computing",
+                "Database Management",
+                "UI/UX Design",
+                "Software Engineering",
+                "Python Programming",
+                "JavaScript Development",
+                "Java Programming",
+                "C++ Development",
+                "Game Development",
+                "DevOps",
+                "Blockchain",
+                "IoT Development",
+                "API Development",
+                "Quality Assurance"
+            ],
+            creative: [
+                "Graphic Design",
+                "Digital Illustration",
+                "Photography",
+                "Video Editing",
+                "3D Modeling",
+                "Animation",
+                "Motion Graphics",
+                "Brand Design",
+                "Typography",
+                "Print Design",
+                "Web Design",
+                "UI Design",
+                "UX Research",
+                "Product Design",
+                "Fashion Design",
+                "Interior Design",
+                "Industrial Design",
+                "Packaging Design",
+                "Art Direction",
+                "Creative Direction"
+            ],
+            languages: [
+                "English Conversation",
+                "Business English",
+                "Spanish",
+                "French",
+                "German",
+                "Chinese Mandarin",
+                "Japanese",
+                "Arabic",
+                "Russian",
+                "Italian",
+                "Portuguese",
+                "Public Speaking",
+                "Presentation Skills",
+                "Negotiation",
+                "Interview Preparation",
+                "Accent Reduction",
+                "TOEFL/IELTS Preparation",
+                "Translation",
+                "Proofreading",
+                "Creative Writing"
+            ],
+            business: [
+                "Project Management",
+                "Leadership",
+                "Strategic Planning",
+                "Business Development",
+                "Marketing Strategy",
+                "Sales Techniques",
+                "Financial Analysis",
+                "Entrepreneurship",
+                "Time Management",
+                "Team Building",
+                "Conflict Resolution",
+                "Business Writing",
+                "Data Analysis",
+                "Digital Marketing",
+                "Social Media Management",
+                "Customer Service",
+                "Human Resources",
+                "Risk Management",
+                "Supply Chain Management",
+                "Quality Assurance"
+            ],
+            home: [
+                "Basic Plumbing",
+                "Electrical Repairs",
+                "Carpentry",
+                "Painting & Decorating",
+                "Gardening",
+                "Landscaping",
+                "Home Organization",
+                "Furniture Assembly",
+                "Appliance Repair",
+                "Home Maintenance",
+                "DIY Projects",
+                "Interior Design",
+                "Cleaning Techniques",
+                "Pest Control",
+                "Home Security",
+                "Energy Efficiency",
+                "Renovation Planning",
+                "Tool Usage & Safety",
+                "Wallpaper Installation",
+                "Tile Setting"
+            ],
+            fitness: [
+                "Personal Training",
+                "Yoga Instruction",
+                "Pilates",
+                "Meditation",
+                "Nutrition Coaching",
+                "Weight Training",
+                "Cardio Training",
+                "Martial Arts",
+                "Dance Fitness",
+                "Sports Coaching",
+                "Strength & Conditioning",
+                "Flexibility Training",
+                "Posture Correction",
+                "Injury Prevention",
+                "Rehabilitation Exercises",
+                "Group Fitness",
+                "Boxing",
+                "Swimming",
+                "Cycling",
+                "Running Technique"
+            ]
+        };
+
+        // Initialize skills when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSkills('teach');
+            updateSkills('learn');
+        });
+
+        function updateSkills(type) {
+            const categorySelect = document.getElementById(`${type}Category`);
+            const skillSelect = document.getElementById(`${type}Skill`);
+            
+            const selectedCategory = categorySelect.value;
+            
+            // Clear existing skills
+            skillSelect.innerHTML = '<option value="">Select a skill from the list</option>';
+            
+            // Get skills for selected category
+            const skills = skillsData[selectedCategory] || [];
+            
+            // Populate skills dropdown
+            skills.forEach(skill => {
+                const option = document.createElement('option');
+                option.value = skill.toLowerCase().replace(/\s+/g, '-');
+                option.textContent = skill;
+                skillSelect.appendChild(option);
+            });
+        }
+
+        function addSkill(type) {
+            const categorySelect = document.getElementById(`${type}Category`);
+            const skillSelect = document.getElementById(`${type}Skill`);
+            const skillsList = document.getElementById(`${type}SkillsList`);
+            const skillsCounter = document.querySelector(`#${type}SkillsList`).closest('.skills-section').querySelector('.skills-counter');
+            
+            const category = categorySelect.options[categorySelect.selectedIndex].text;
+            const skill = skillSelect.options[skillSelect.selectedIndex].text;
+            
+            if (!skill || skill === 'Select a skill from the list') {
+                alert('Please select a skill');
+                return;
+            }
+            
+            // Count current skills
+            const currentSkills = skillsList.querySelectorAll('.skill-item').length;
+            if (currentSkills >= 5) {
+                alert('Maximum 5 skills allowed');
+                return;
+            }
+            
+            // Create skill item
+            const skillItem = document.createElement('div');
+            skillItem.className = 'skill-item';
+            skillItem.innerHTML = `
+                ${skill}
+                <button type="button" class="remove-skill" onclick="removeSkill(this, '${type}')">×</button>
+            `;
+            
+            skillsList.appendChild(skillItem);
+            
+            // Update counter
+            const newCount = currentSkills + 1;
+            skillsCounter.textContent = `${newCount}/5 skills selected`;
+            
+            // Reset skill select
+            skillSelect.selectedIndex = 0;
+        }
+
+        function removeSkill(button, type) {
+            const skillItem = button.parentElement;
+            const skillsList = document.getElementById(`${type}SkillsList`);
+            const skillsCounter = skillsList.closest('.skills-section').querySelector('.skills-counter');
+            
+            skillItem.remove();
+            
+            // Update counter
+            const currentSkills = skillsList.querySelectorAll('.skill-item').length;
+            skillsCounter.textContent = `${currentSkills}/5 skills selected`;
+        }
+    </script>
+</body>
+</html>

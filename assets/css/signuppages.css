@@ -1,0 +1,822 @@
+
+/* Signup Page Styles */
+:root {
+    --clr-bars: #2d3250;
+    --clr-main: #424769;
+    --clr-btn: #f9b17a;
+    --clr-font: #e9d6d6;
+    --clr-lighter: #5e6591;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--clr-main);
+    color: var(--clr-font);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.signup-container {
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    min-height: 600px;
+    background-color: var(--clr-bars);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+/* Left Side - Full Width Illustration */
+.signup-left {
+    flex: 1;
+    background: linear-gradient(135deg, var(--clr-bars) 0%, var(--clr-main) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.illustration {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.illustration img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Right Side - Form */
+.signup-right {
+    flex: 1;
+    padding: 80px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+}
+
+.signup-right h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.signup-form {
+    width: 100%;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--clr-main);
+    color: var(--clr-font);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--clr-btn);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(249, 177, 122, 0.2);
+}
+
+.form-group input::placeholder {
+    color: rgba(233, 214, 214, 0.6);
+    font-style: italic;
+}
+
+/* Autofill Styling */
+.form-group input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px var(--clr-main) inset !important;
+    -webkit-text-fill-color: var(--clr-font) !important;
+    border: 2px solid var(--clr-btn) !important;
+    background-color: var(--clr-main) !important;
+}
+
+/* Select Dropdowns */
+.form-group select {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--clr-bars);
+    color: var(--clr-font);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    appearance: none;
+    
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 45px;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--clr-btn);
+    background-color: var(--clr-main);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(249, 177, 122, 0.2);
+}
+
+/* Dropdown Options */
+.form-group select option {
+    background-color: var(--clr-main);
+    color: var(--clr-font);
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: none;
+}
+
+.form-group select option:hover,
+.form-group select option:focus {
+    background-color: var(--clr-btn);
+    color: var(--clr-bars);
+}
+
+.form-group select option:checked {
+    background-color: var(--clr-btn);
+    color: var(--clr-bars);
+    font-weight: 600;
+}
+
+/* Checkbox Styling */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 30px 0;
+}
+
+.form-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--clr-btn);
+    cursor: pointer;
+}
+
+.form-check label {
+    font-size: 1rem;
+    color: var(--clr-font);
+    cursor: pointer;
+}
+
+/* Buttons */
+.btn-next, .btn-create {
+    width: 100%;
+    background-color: var(--clr-btn);
+    color: #ffffff;
+    border: none;
+    padding: 18px 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.btn-next:hover, .btn-create:hover {
+    background-color: #e65c00;
+    transform: translateY(-3px);
+}
+
+.btn-next:active, .btn-create:active {
+    transform: translateY(-1px);
+}
+
+.btn-create {
+    flex: 2;
+    background-color: var(--clr-btn);
+    color: var(--clr-bars);
+    margin-bottom: 0;
+}
+
+.btn-back {
+    flex: 1;
+    background-color: transparent;
+    color: var(--clr-font);
+    border: 2px solid var(--clr-font);
+    padding: 16px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: rgba(233, 214, 214, 0.1);
+    border-color: var(--clr-btn);
+    color: var(--clr-btn);
+    transform: translateY(-2px);
+}
+
+.btn-add-skill {
+    background-color: transparent;
+    color: var(--clr-btn);
+    border: 2px solid var(--clr-btn);
+    padding: 10px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+}
+
+.btn-add-skill:hover {
+    background-color: var(--clr-btn);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 177, 122, 0.3);
+}
+
+/* Login Link */
+.login-link {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--clr-font);
+}
+
+.login-link a {
+    color: var(--clr-btn);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+    color: #e65c00;
+}
+
+/* Skills Section */
+.skills-section {
+    background-color: var(--clr-main);
+    min-height: 160px;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-header h3 {
+    font-size: 1rem;
+    color: white;
+    font-weight: 600;
+}
+
+.skills-counter {
+    font-size: 0.9rem;
+    color: var(--clr-btn);
+    font-weight: 500;
+}
+
+.add-skill {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.selected-skills {
+    min-height: 60px;
+    background-color: var(--clr-bars);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    border: 2px dashed rgba(249, 177, 122, 0.3);
+}
+
+.selected-skills:empty::before {
+    content: "No skills added yet. Select a category and click 'Add Skill'.";
+    color: rgba(233, 214, 214, 0.5);
+    font-style: italic;
+    text-align: center;
+    display: block;
+    padding: 10px;
+}
+
+.skill-item {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--clr-btn) 0%, #e65c00 100%);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    margin: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.skill-item .remove-skill {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.skill-item .remove-skill:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin: 14px 0 14px;
+}
+
+.form-actions .btn-next {
+    flex: 2;
+    margin-bottom: 0;
+}
+
+/* Skills Dropdown Container */
+.skills-dropdown-container {
+    display: block;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* Availability & Preferences Page Specific Styles */
+.availability-page .form-group {
+    margin-bottom: 20px;
+}
+
+.availability-page .form-check {
+    margin: 15px 0;
+}
+
+.availability-page .form-actions {
+    margin: 20px 0 15px;
+}
+
+/* Meeting Preference Options */
+.preference-options {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.option-radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--clr-lighter);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.option-radio:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--clr-btn);
+}
+
+.option-radio input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--clr-btn);
+}
+
+.radio-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--clr-font);
+}
+
+.option-radio input[type="radio"]:checked + .radio-label {
+    color: var(--clr-btn);
+}
+
+/* Days Grid */
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.day-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 12px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--clr-lighter);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.day-checkbox:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--clr-btn);
+}
+
+.day-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--clr-btn);
+}
+
+.day-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--clr-font);
+}
+
+.day-checkbox input[type="checkbox"]:checked + .day-label {
+    color: var(--clr-btn);
+    font-weight: 600;
+}
+
+/* Time Slots */
+.time-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.time-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--clr-lighter);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.time-checkbox:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--clr-btn);
+}
+
+.time-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--clr-btn);
+}
+
+.time-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--clr-font);
+}
+
+.time-checkbox input[type="checkbox"]:checked + .time-label {
+    color: var(--clr-btn);
+    font-weight: 600;
+}
+
+/* Timezone specific styling */
+#timezone {
+    background-color: var(--clr-main) !important;
+}
+
+#timezone:focus {
+    background-color: var(--clr-main) !important;
+    border-color: var(--clr-btn);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(249, 177, 122, 0.2);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.signup-right h2,
+.form-group,
+.form-check,
+.btn-next,
+.login-link,
+.skills-section,
+.form-actions,
+.preference-options,
+.days-grid,
+.time-slots,
+.form-group select {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }
+.form-group:nth-child(5) { animation-delay: 0.5s; }
+.form-check { animation-delay: 0.6s; }
+.btn-next, .btn-create { animation-delay: 0.7s; }
+.login-link { animation-delay: 0.8s; }
+.skills-section:nth-child(1) { animation-delay: 0.1s; }
+.skills-section:nth-child(2) { animation-delay: 0.2s; }
+.form-actions { animation-delay: 0.3s; }
+.preference-options { animation-delay: 0.1s; }
+.days-grid { animation-delay: 0.2s; }
+.time-slots { animation-delay: 0.3s; }
+.form-group select { animation-delay: 0.4s; }
+
+/* Responsive Design - Mobile First Approach */
+@media (max-width: 768px) {
+    .preference-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .option-radio {
+        min-width: auto;
+        justify-content: flex-start;
+    }
+    
+    .days-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+/* Responsive Design - Mobile First Approach */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        background-color: var(--clr-lighter);
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+       
+      
+    }
+    .signup-container {
+        flex-direction: column;
+        min-height: auto;
+        border-radius: 15px;
+        margin: 10px 5px;
+        max-height: 95vh;
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    .signup-left {
+        display: none;
+      
+    }
+
+    .illustration img {
+        display: none;
+    }
+
+    .signup-right {
+        padding: 30px 20px;
+        flex: none;
+        overflow-y: visible;
+        max-height: none;
+    }
+
+    .signup-right h2 {
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 14px 16px;
+        font-size: 0.9rem;
+    }
+
+    .form-check {
+        margin: 20px 0;
+        gap: 10px;
+    }
+
+    .form-check input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+
+    .form-check label {
+        font-size: 0.9rem;
+    }
+
+    .btn-next,
+    .btn-create {
+        padding: 16px 20px;
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .login-link {
+        font-size: 0.9rem;
+    }
+
+    /* Skills section mobile improvements */
+    .skills-section {
+        padding: 15px 12px;
+        margin-bottom: 15px;
+        min-height: 140px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .section-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .skills-counter {
+        font-size: 0.8rem;
+        align-self: flex-end;
+    }
+
+    .add-skill {
+        margin: 12px 0;
+    }
+
+    .btn-add-skill {
+        padding: 10px 18px;
+        font-size: 0.9rem;
+        max-width: 100%;
+    }
+
+    .selected-skills {
+        min-height: 45px;
+        padding: 10px;
+    }
+
+    .skill-item {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        margin: 3px;
+    }
+
+    /* Form actions mobile */
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+        margin: 20px 0 12px;
+    }
+
+    .btn-back,
+    .form-actions .btn-next,
+    .form-actions .btn-create {
+        padding: 14px 18px;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+
+    /* Availability page specific mobile styles */
+    .days-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .day-checkbox {
+        padding: 10px 6px;
+    }
+
+    .day-label {
+        font-size: 0.8rem;
+    }
+
+    .time-slots {
+        gap: 6px;
+    }
+
+    .time-checkbox {
+        padding: 10px 12px;
+    }
+
+    .time-label {
+        font-size: 0.85rem;
+    }
+
+    .preference-options {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .option-radio {
+        min-width: auto;
+        justify-content: flex-start;
+        padding: 10px 12px;
+    }
+
+    .availability-page .form-group {
+        margin-bottom: 15px;
+    }
+
+    .availability-page .form-check {
+        margin: 12px 0;
+    }
+
+    .availability-page .form-actions {
+        margin: 15px 0 10px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 375px) {
+    .signup-right {
+        padding: 25px 15px;
+    }
+    
+    .signup-right h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: 12px 14px;
+        font-size: 0.85rem;
+    }
+    
+    .days-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+}
