@@ -1,0 +1,325 @@
+/* CSS Variables */
+
+/* Reset */
+@import url(/assets/css/style.css);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--clr-main);
+    color: var(--clr-font);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    line-height: 1.4;
+    overflow-x: hidden;
+}
+
+/* Main Container - Compact */
+.login-container {
+    display: flex;
+    width: 90%;
+    max-width: 11100px;
+    background: var(--clr-bars);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    height: auto;
+    min-height: auto;
+}
+
+/* Left Side - Compact Image */
+.login-left {
+    flex: 1;
+    background: var(--clr-lighter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.illustration {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.illustration img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    animation: floatImage 6s ease-in-out infinite;
+}
+
+@keyframes floatImage {
+    0%, 100% {
+        transform: scale(1) translateY(0px);
+    }
+    50% {
+        transform: scale(1.02) translateY(-5px);
+    }
+}
+
+/* Right Side - Fixed Spacing */
+.login-right {
+    flex: 1;
+    padding: 8px 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Fixed Header Spacing */
+.logo {
+    text-align: center;
+    margin-bottom: 5px; /* Reduced space below logo */
+}
+
+.logo h1 {
+    color: var(--clr-btn);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Fixed Title Spacing */
+.login-right > h2 {
+    font-size: 1.4rem;
+    margin-bottom: 2px; /* Reduced space below welcome back */
+    text-align: center;
+}
+
+.subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 15px; /* Reduced space below subtitle */
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Compact Divider */
+.divider {
+    
+    background: var(--clr-lighter);
+    margin: 5px 0 5px 0; /* Reduced top margin, kept bottom */
+}
+
+/* Compact Form */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Reduced gap */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px; /* Reduced spacing */
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--clr-main);
+    border: 1px solid var(--clr-lighter);
+    border-radius: 6px;
+    color: var(--clr-font);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--clr-btn);
+    box-shadow: 0 4px 15px rgba(249, 177, 122, 0.2);
+}
+.form-group input::placeholder {
+    color: rgba(233, 214, 214, 0.6);
+    font-style: italic;
+}
+
+/* Compact Form Options */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0 12px 0; /* Reduced top and bottom margins */
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--clr-btn);
+}
+
+.form-check label {
+    margin-bottom: 0;
+    font-size: 0.85rem;
+}
+
+.forgot-password {
+    color: var(--clr-btn);
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+/* Compact Buttons */
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--clr-btn);
+    color: var(--clr-bars);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 5px 0 8px 0; /* Reduced margins */
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: var(--clr-org);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Compact Social Login */
+.social-divider {
+    text-align: center;
+    margin: 12px 0 8px 0; /* Reduced top margin, smaller bottom */
+    color: rgba(255, 255, 255, 0.7);
+    position: relative;
+    font-size: 0.85rem;
+}
+
+.social-divider span {
+    background: var(--clr-bars);
+    padding: 0 12px;
+}
+
+.social-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--clr-lighter);
+    z-index: -1;
+}
+
+.social-login {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px; /* Reduced bottom margin */
+}
+
+.btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--clr-lighter);
+    border-radius: 6px;
+    color: var(--clr-font);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.btn-social:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-social img {
+    width: 16px;
+    height: 16px;
+}
+
+/* Compact Sign Up Link */
+.signup-link {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    margin-top: 5px; /* Reduced top margin */
+}
+
+.signup-link a {
+    color: var(--clr-btn);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@media (min-width: 1440px) {
+  .login-container {
+    max-width: 1300px;
+    height: auto;         /* FIX */
+    min-height: auto;   
+  }
+  .logo h1 { font-size: 2.4rem; }
+}
+@media (max-width: 1439px) and (min-width: 1024px) {
+  .login-container {
+    height: auto;         /* FIX */
+    min-height: auto;
+  }
+}
+@media (max-width: 600px) {
+
+  body {
+    padding: 3vw;
+  }
+
+  .login-container {
+    flex-direction: column;
+    width: 95%;
+    height: auto;
+    min-height: auto;
+  }
+
+  .login-left {
+    height: 35vh;
+  }
+
+  .social-login {
+    flex-direction: column;
+  }
+
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+   .login-left {
+    display: none;
+  }
+
+  .login-container {
+    height: auto;
+  }
+  .login-right {
+        padding-bottom: 30px; /* Prevent bottom disappearing */
+  }
+}
