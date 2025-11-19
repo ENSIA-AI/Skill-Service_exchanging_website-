@@ -19,7 +19,16 @@ class ProfileDataManager {
                 { name: 'Node.js', proficiency: 76, rate: 50 },
                 { name: 'UI/UX Design', proficiency: 80, rate: 50 }
             ],
-            seekingSkills: ['Graphic Design', 'Logo Creation', 'Video Editing', 'Content Writing']
+            seekingSkills: ['Graphic Design', 'Logo Creation', 'Video Editing', 'Content Writing'],
+            availability: {
+                monday: { available: false, startTime: '09:00', endTime: '17:00' },
+                tuesday: { available: false, startTime: '09:00', endTime: '17:00' },
+                wednesday: { available: false, startTime: '09:00', endTime: '17:00' },
+                thursday: { available: false, startTime: '09:00', endTime: '17:00' },
+                friday: { available: false, startTime: '09:00', endTime: '17:00' },
+                saturday: { available: false, startTime: '09:00', endTime: '17:00' },
+                sunday: { available: false, startTime: '09:00', endTime: '17:00' }
+            }
         };
 
         this.data = this.loadData();
@@ -76,6 +85,11 @@ class ProfileDataManager {
         if (!this.data.offeringSkills.some(s => s.name === skill.name)) {
             this.data.offeringSkills.push(skill);
             window.profileData = this.data;
+            try {
+                sessionStorage.setItem('profileData', JSON.stringify(this.data));
+            } catch (e) {
+                console.log('sessionStorage not available');
+            }
             return true;
         }
         return false;
@@ -84,6 +98,11 @@ class ProfileDataManager {
     removeOfferingSkill(skillName) {
         this.data.offeringSkills = this.data.offeringSkills.filter(s => s.name !== skillName);
         window.profileData = this.data;
+        try {
+            sessionStorage.setItem('profileData', JSON.stringify(this.data));
+        } catch (e) {
+            console.log('sessionStorage not available');
+        }
     }
 
     updateOfferingSkill(skillName, updates) {
@@ -94,6 +113,11 @@ class ProfileDataManager {
                 ...updates
             };
             window.profileData = this.data;
+            try {
+                sessionStorage.setItem('profileData', JSON.stringify(this.data));
+            } catch (e) {
+                console.log('sessionStorage not available');
+            }
         }
     }
 
@@ -101,6 +125,11 @@ class ProfileDataManager {
         if (!this.data.seekingSkills.includes(skillName) && this.data.seekingSkills.length < 10) {
             this.data.seekingSkills.push(skillName);
             window.profileData = this.data;
+            try {
+                sessionStorage.setItem('profileData', JSON.stringify(this.data));
+            } catch (e) {
+                console.log('sessionStorage not available');
+            }
             return true;
         }
         return false;
@@ -109,6 +138,11 @@ class ProfileDataManager {
     removeSeekingSkill(skillName) {
         this.data.seekingSkills = this.data.seekingSkills.filter(s => s !== skillName);
         window.profileData = this.data;
+        try {
+            sessionStorage.setItem('profileData', JSON.stringify(this.data));
+        } catch (e) {
+            console.log('sessionStorage not available');
+        }
     }
 }
 

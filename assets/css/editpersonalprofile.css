@@ -517,13 +517,122 @@ select optgroup {
 }
 
 .cancel-btn {
-    background: linear-gradient(to bottom, var(--mix-color), var(--clr-bars));
+    background: var(--clr-bars) ;
     text-align: center;
-    border: 2px solid red;
-    margin: 0 10px;
+    border:2px solid  rgba(255, 0, 0, 0.695) ;
+    margin:0 10px;
+}
+
+.cancel-btn:hover{
+    background: rgba(255, 0, 0, 0.695) ;
 }
 
 .cancel-btn a {
-    color: var(--clr-font);
+    color: rgba(255, 0, 0, 0.695);
     text-decoration: none;
+}
+
+.cancel-btn a:hover{
+    color: var(--clr-font);
+}
+
+.availability-schedule-description {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+#availability-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.availability-day {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--clr-bars);
+    border-radius: var(--radius);
+    transition: background 0.3s ease;
+}
+
+.availability-day:hover {
+    background: color-mix(in srgb, var(--clr-bars) 90%, var(--clr-font) 10%);
+}
+
+.day-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--mix-color);
+}
+
+.availability-day label {
+    min-width: 100px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--clr-font);
+}
+
+.time-input {
+    padding: 8px 12px;
+    background: var(--clr-main);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    color: var(--clr-font);
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: var(--mix-color);
+    box-shadow: 0 0 0 2px rgba(249, 177, 122, 0.2);
+}
+
+.time-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.availability-day span {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design for Availability Schedule */
+@media (max-width: 768px) {
+    .availability-day {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .availability-day label {
+        min-width: auto;
+        flex: 1 1 100%;
+    }
+
+    .time-input {
+        flex: 1;
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .availability-day {
+        padding: 12px;
+    }
+
+    .day-checkbox {
+        width: 18px;
+        height: 18px;
+    }
+
+    .time-input {
+        padding: 6px 8px;
+        font-size: 0.9rem;
+    }
 }

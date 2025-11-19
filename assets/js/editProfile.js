@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupSeekingDropdowns();
     setupOfferingSkillsManagement();
     setupSeekingSkillsManagement();
+    setupAvailability();
     setupFormSubmission();
     setupSliders();
 });
@@ -26,6 +27,7 @@ function loadUserDataIntoForm() {
 
     loadOfferingSkills(userData.offeringSkills);
     loadSeekingSkills(userData.seekingSkills);
+    loadAvailability(userData.availability);
 }
 
 function loadOfferingSkills(skills) {
@@ -258,6 +260,44 @@ function updateSkillCounter() {
     counter.style.color = count >= 10 ? 'red' : 'white';
 }
 
+function loadAvailability(availability) {
+    if (!availability) return;
+    
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    
+    days.forEach(day => {
+        const checkbox = document.getElementById(`day-${day}`);
+        const startTime = document.getElementById(`time-${day}-start`);
+        const endTime = document.getElementById(`time-${day}-end`);
+        
+        if (checkbox && availability[day]) {
+            checkbox.checked = availability[day].available;
+            startTime.value = availability[day].startTime;
+            endTime.value = availability[day].endTime;
+            
+            startTime.disabled = !availability[day].available;
+            endTime.disabled = !availability[day].available;
+        }
+    });
+}
+
+function setupAvailability() {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    
+    days.forEach(day => {
+        const checkbox = document.getElementById(`day-${day}`);
+        const startTime = document.getElementById(`time-${day}-start`);
+        const endTime = document.getElementById(`time-${day}-end`);
+        
+        if (checkbox) {
+            checkbox.addEventListener('change', () => {
+                startTime.disabled = !checkbox.checked;
+                endTime.disabled = !checkbox.checked;
+            });
+        }
+    });
+}
+
 function setupSliders() {
     document.querySelectorAll('.card').forEach(card => {
         makeSliderInteractive(card);
@@ -381,8 +421,24 @@ function setupFormSubmission() {
             seekingSkills.push(skillName);
         });
 
+        const availability = {};
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        
+        days.forEach(day => {
+            const checkbox = document.getElementById(`day-${day}`);
+            const startTime = document.getElementById(`time-${day}-start`);
+            const endTime = document.getElementById(`time-${day}-end`);
+            
+            availability[day] = {
+                available: checkbox.checked,
+                startTime: startTime.value,
+                endTime: endTime.value
+            };
+        });
+
         formData.offeringSkills = offeringSkills;
         formData.seekingSkills = seekingSkills;
+        formData.availability = availability;
         window.profileManager.saveData(formData);
 
         console.log('Saved data:', formData);

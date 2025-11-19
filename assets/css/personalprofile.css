@@ -46,6 +46,7 @@ body {
     font-style: normal;
     font-variation-settings:
         "wdth" 100;
+        
 }
 
 .profile-page {
@@ -294,6 +295,16 @@ body {
 
 }
 
+.no-skills-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #ccc;
+    font-style: italic;
+    padding: 20px;
+    background: #2d3250;
+    border-radius: 10px;
+}
+
 .head-section {
     color: aliceblue;
     letter-spacing: 1px;
@@ -320,6 +331,35 @@ body {
 .muted-text {
     color: var(--muted);
     margin: 0 var(--space-4);
+}
+
+.availability-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #5e6591;
+    padding-bottom: 15px;
+    border-radius: 0 0 10px 10px;
+}
+
+.availability-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: #2d3250;
+    border-radius: 10px;
+    color: white;
+    margin: 0 10px;
+}
+
+.day-label {
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.time-slot {
+    color: #f9b17a;
+    font-weight: 500;
 }
 
 .user-meta-info {

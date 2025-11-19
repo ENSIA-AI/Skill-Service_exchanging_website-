@@ -383,7 +383,7 @@
                                         </div>
                                         <div class="slider-thumb" id="new-skill-thumb" style="--val: 50"></div>
                                     </div>
-                                    
+
                                     <input type="hidden" id="offering-proficiency" name="offering_proficiency"
                                         value="50">
                                 </div>
@@ -542,7 +542,7 @@
                                         <option data-category="crafts-hobbies">Jewelry Design</option>
                                     </select>
 
-                                    <!-- ✅ Added these two elements -->
+                                    
                                     <button type="button" class="btn" id="add-skill-btn" style="margin-top:10px;">Add
                                         Skill</button>
 
@@ -552,6 +552,100 @@
                             <div>
                                 <span class="muted-text">Add skills you're interested in learning to help us find better
                                     matches for you.</span>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="profile-picture-section-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25"
+                                    role="img" aria-label="Clock icon" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="color: white;">
+                                    <title>Clock</title>
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span class="section-title">Availability Schedule</span>
+                            </div>
+
+                            <div>
+                                <p class="availability-schedule-description">
+                                    Set your available days and hours for skill exchange sessions.
+                                </p>
+
+                                <div id="availability-container">
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-monday" name="day-monday" class="day-checkbox">
+                                        <label for="day-monday">Monday</label>
+                                        <input type="time" id="time-monday-start" name="time-monday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-monday-end" name="time-monday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-tuesday" name="day-tuesday" class="day-checkbox">
+                                        <label for="day-tuesday">Tuesday</label>
+                                        <input type="time" id="time-tuesday-start" name="time-tuesday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-tuesday-end" name="time-tuesday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-wednesday" name="day-wednesday"
+                                            class="day-checkbox">
+                                        <label for="day-wednesday">Wednesday</label>
+                                        <input type="time" id="time-wednesday-start" name="time-wednesday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-wednesday-end" name="time-wednesday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-thursday" name="day-thursday"
+                                            class="day-checkbox">
+                                        <label for="day-thursday">Thursday</label>
+                                        <input type="time" id="time-thursday-start" name="time-thursday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-thursday-end" name="time-thursday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-friday" name="day-friday" class="day-checkbox">
+                                        <label for="day-friday">Friday</label>
+                                        <input type="time" id="time-friday-start" name="time-friday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-friday-end" name="time-friday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-saturday" name="day-saturday"
+                                            class="day-checkbox">
+                                        <label for="day-saturday">Saturday</label>
+                                        <input type="time" id="time-saturday-start" name="time-saturday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-saturday-end" name="time-saturday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-sunday" name="day-sunday" class="day-checkbox">
+                                        <label for="day-sunday">Sunday</label>
+                                        <input type="time" id="time-sunday-start" name="time-sunday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-sunday-end" name="time-sunday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div style="display: flex; justify-content: center; align-items: flex-end;">
@@ -569,8 +663,10 @@
             </div>
         </main>
     </div>
-    <script src="../../assets/js/editProfile.js"></script>
+
     <script src="../../assets/js/profileData.js"></script>
+    <script src="../../assets/js/editProfile.js"></script>
+
 
 
 

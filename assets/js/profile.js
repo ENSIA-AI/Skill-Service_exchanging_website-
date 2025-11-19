@@ -1,10 +1,16 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Profile page loaded');
     loadProfileData();
     setupTabNavigation();
 });
 
 function loadProfileData() {
+    console.log('Loading profile data...');
     const userData = window.profileManager.getData();
+    console.log('User data:', userData);
+    console.log('Offering skills:', userData.offeringSkills);
+    console.log('Seeking skills:', userData.seekingSkills);
+
     updateProfileHeader(userData);
     updateProfileMeta(userData);
     updateTabsContent(userData);
@@ -62,6 +68,7 @@ function updateTabsContent(userData) {
 
     updateSkillsSection(userData.offeringSkills);
     updateInterestsSection(userData.seekingSkills);
+    updateAvailabilitySection(userData.availability);
 }
 
 function updateSkillsSection(skills) {
@@ -73,26 +80,26 @@ function updateSkillsSection(skills) {
     skills.forEach(skill => {
         const skillDiv = document.createElement('div');
         skillDiv.className = 'skill';
-        
+
         const donutDiv = document.createElement('div');
         donutDiv.className = 'donut';
         donutDiv.style.setProperty('--val', skill.proficiency);
-        
+
         const span = document.createElement('span');
         span.textContent = `${skill.proficiency}%`;
         donutDiv.appendChild(span);
-        
+
         const p = document.createElement('p');
         p.innerHTML = `
             <strong>${skill.name}</strong><br><br>
             <span class="muted">${skill.rate} credits/hours</span>
         `;
-        
+
         skillDiv.appendChild(donutDiv);
         skillDiv.appendChild(p);
         skillsContainer.appendChild(skillDiv);
     });
-    
+
     console.log('Skills updated:', skills);
 }
 
@@ -100,14 +107,13 @@ function updateInterestsSection(seekingSkills) {
     const interestsContent = document.querySelector('#interests-content section');
     if (!interestsContent) return;
 
-    interestsContent.innerHTML = '<h3><strong><span class="title">Interests</span></strong></h3>';
 
     const skillsContainer = document.createElement('div');
-    skillsContainer.style.cssText = 'display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;';
-    
+    skillsContainer.style.cssText = 'background:#5e6591; display: flex; flex-wrap: wrap; gap: 10px; padding-left: 20px ;';
+
     seekingSkills.forEach(skill => {
         const skillBadge = document.createElement('span');
-        skillBadge.style.cssText = 'background: linear-gradient(135deg, #424769, #5e6591); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 500;';
+        skillBadge.style.cssText = 'background:#2d3250; color: white; padding: 8px 16px; border-radius: 20px; font-weight: 500; ';
         skillBadge.textContent = skill;
         skillsContainer.appendChild(skillBadge);
     });
@@ -115,10 +121,61 @@ function updateInterestsSection(seekingSkills) {
     interestsContent.appendChild(skillsContainer);
 }
 
+function updateAvailabilitySection(availability) {
+
+    const container = document.getElementById('availability-list-container');
+
+    if (!container || !availability) return;
+
+    container.innerHTML = '';
+
+    const days = [
+        { key: 'monday', label: 'Monday' },
+        { key: 'tuesday', label: 'Tuesday' },
+        { key: 'wednesday', label: 'Wednesday' },
+        { key: 'thursday', label: 'Thursday' },
+        { key: 'friday', label: 'Friday' },
+        { key: 'saturday', label: 'Saturday' },
+        { key: 'sunday', label: 'Sunday' }
+    ];
+
+    days.forEach(day => {
+        
+        if (availability[day.key] && availability[day.key].available) {
+
+            const dayRow = document.createElement('div');
+            dayRow.className = 'availability-row'; 
+
+            const dayLabel = document.createElement('span');
+            dayLabel.className = 'day-label'; 
+            dayLabel.textContent = day.label;
+
+            const timeRange = document.createElement('span');
+            timeRange.className = 'time-slot'; 
+            timeRange.textContent = `${availability[day.key].startTime} - ${availability[day.key].endTime}`;
+
+            dayRow.appendChild(dayLabel);
+            dayRow.appendChild(timeRange);
+
+            container.appendChild(dayRow);
+        }
+    });
+}
+
+if (availabilityContainer.children.length === 0) {
+    const noAvailability = document.createElement('p');
+    noAvailability.style.cssText = 'color: #d4dedd; margin-top: 20px;';
+    noAvailability.textContent = 'No availability set. Please update your schedule in the edit profile page.';
+    availabilityContainer.appendChild(noAvailability);
+}
+
+availabilityContent.appendChild(availabilityContainer);
+
+
 function setupTabNavigation() {
     const navItems = document.querySelectorAll('.nav-item span');
     const tabContents = document.querySelectorAll('.tab-content');
-    
+
     navItems.forEach(item => {
         item.addEventListener('click', () => {
             navItems.forEach(i => i.classList.remove('active'));
