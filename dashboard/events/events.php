@@ -10,7 +10,7 @@
     <?php include '../../components/header.html'; ?>
     <?php include '../../components/sidebar.html'; ?>
     <main class="php-content">
-        <?php include './addpost.html';?>
+        <?php include './events.html';?>
     </main>
         
         

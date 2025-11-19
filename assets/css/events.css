@@ -1,46 +1,43 @@
-
-html , body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+body {
+    display: block;
+    position: relative;
 }
 
-body{
-    display: grid;
-    grid-template-areas: 
-    "header header"
-    "sidebar  main";
-    grid-template-rows: 5rem 1fr;
-    grid-template-columns: 14rem 1fr ;
-    min-height: 100vh;
-
-    color: var(--clr-font);
-    
-}
-
-.main-header{
-    grid-area:header;
-
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5rem;
+    width: 100%;
+    z-index: 1000;
+    background: your-header-color;
 }
 
 .main-content {
-    grid-area: main;
-    background-color: var(--clr-main);
+    margin-top: 0rem;
+    margin-left: 0px; /* Account for sidebar */
     padding: 1.5rem;
-    
+    min-height: calc(100vh - 5rem);
 }
 
-.primary-sidebar{
-    grid-area: sidebar;
-    
+.primary-sidebar {
+    position: fixed;
+    left: 0;
+    top: 5rem;
+    width: 14rem;
+    height: calc(100vh - 5rem);
+    background: your-sidebar-color;
 }
 
-.event-header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1rem;
-
+@media (max-width: 600px) {
+    .primary-sidebar {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
 }
 
 .add-event-button , .join-event-button , .full-event-button{
@@ -142,6 +139,12 @@ body{
 .skill-tag:hover {
     opacity: 1;
     cursor: pointer;
+}
+.event-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* This pushes items to edges */
+    padding: 0 1rem;
 }
 
 @media (max-width: 600px){
