@@ -26,7 +26,6 @@ body {
     display: flex;
     width: 90%;
     max-width: 11100px;
-    
     background: var(--clr-bars);
     border-radius: 12px;
     overflow: hidden;
@@ -88,7 +87,7 @@ body {
 }
 
 .logo h1 {
-    color: var(--clr-botn);
+    color: var(--clr-btn);
     font-size: 1.8rem;
     font-weight: 700;
     margin: 0;
@@ -169,7 +168,7 @@ body {
 .form-check input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: var(--clr-botn);
+    accent-color: var(--clr-btn);
 }
 
 .form-check label {
@@ -178,7 +177,7 @@ body {
 }
 
 .forgot-password {
-    color: var(--clr-botn);
+    color: var(--clr-btn);
     text-decoration: none;
     font-size: 0.85rem;
 }
@@ -187,7 +186,7 @@ body {
 .btn-login {
     width: 100%;
     padding: 12px;
-    background-color: var(--clr-botn);
+    background-color: var(--clr-btn);
     color: var(--clr-bars);
     border: none;
     border-radius: 6px;
@@ -269,7 +268,7 @@ body {
 }
 
 .signup-link a {
-    color: var(--clr-botn);
+    color: var(--clr-btn);
     text-decoration: none;
     font-weight: 600;
 }
