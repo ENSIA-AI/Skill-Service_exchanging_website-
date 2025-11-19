@@ -1,4 +1,4 @@
-
+@import url(/assets/css/style.css);
 body
 {
     margin-top: 150px;
@@ -10,14 +10,14 @@ body
     padding-right: 30px;
 }
 
-:root{
+/*:root{
     --clr-bars:#2d3250;
     --clr-main:#424769;
     --clr-btn:#f9b17a ;
     --clr-font:#e9d6d6;
     --clr-lighter:#5e6591;
     --clr-white: #ffffff;
-}
+}*/
 
 
  /* HEADER STYLING */
