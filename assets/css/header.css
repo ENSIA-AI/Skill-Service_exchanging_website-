@@ -89,7 +89,7 @@ color: var(--clr-font);
 }
 .credit-span {
     margin-left: 5px;
-    background-color: var(--clr-org);
+    background-color: var(--clr-btn);
     padding-left: 5px;
     padding-right: 5px;
     border-radius: 10px;
