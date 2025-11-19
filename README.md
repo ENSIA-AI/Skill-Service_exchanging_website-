@@ -1,10 +1,10 @@
 # SWAP
 
-A modern web platform enabling users to trade expertise and skills without monetary exchange. Built with React, TypeScript, and Tailwind CSS, this platform connects people who want to learn with those willing to teach, creating a community-driven skill-sharing ecosystem.
+A modern web platform enabling users to trade expertise and skills without monetary exchange. Built with HTML, CSS, bootstrap CSS, Javascript, php, this platform connects people who want to learn with those willing to teach, creating a community-driven skill-sharing ecosystem.
 
 ## 🌟 Overview
 
-SWAP is designed to facilitate the exchange of knowledge and services between users based on their skills and needs. Whether you're a graphic designer looking to learn Spanish, or a chef wanting to improve your photography skills, this platform helps you find the perfect skill-exchange partner.
+SWAP is designed to facilitate the exchange of knowledge and services between users based on their skills and needs. Whether you're a graphic designer looking to learn Spanish, or a chef wanting to improve your photography skills, this platform helps you find the perfect skill-exchange partner completely for free.
 
 ## ✨ Key Features
 
@@ -83,7 +83,7 @@ Text:            #FFFFFF  /* Primary text */
     - User profile display
     - Skills showcase with ratings
     - Reviews and testimonials
-    - Exchange history
+    - Availability calender
 
 11. **Edit Profile** (`/edit-profile`)
     - Update personal information
@@ -302,14 +302,11 @@ All skill-related data throughout the platform uses the centralized `skillsData.
 
 ## 🎯 Future Enhancements
 
-- [ ] Real-time messaging system
 - [ ] Video call integration
 - [ ] Advanced scheduling calendar
 - [ ] Skill verification through tests
 - [ ] Reputation score algorithm
 - [ ] Mobile native apps
-- [ ] Multi-language support
-- [ ] Payment gateway (for premium features)
 - [ ] Social media integration
 - [ ] Progress tracking for learning paths
 

@@ -1,0 +1,374 @@
+@import url('style.css');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--clr-main);
+    color: var(--clr-font);
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--clr-font);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.container {
+    width: 37.5rem;
+    border-radius: 15px;
+    background-color: var(--clr-lighter);
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.event-form {
+    width: 100%;
+}
+
+/* Form Sections */
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-section label {
+    font-weight: 600;
+    color: var(--clr-font);
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .form-section {
+    flex: 1;
+    margin-bottom: 1.5rem;
+}
+
+/* Input and Textarea Styles */
+.form-section input,
+.form-section textarea {
+    width: 100%;
+    color: var(--clr-font); /* Text stays fully opaque */
+    background-color: rgba(208, 210, 227, 0.2);
+    padding: 0.75rem;
+    border: 0.01rem solid var(--clr-secondary-font);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+   
+}
+
+.form-section input::placeholder,
+.form-section textarea::placeholder {
+    color: var(--clr-secondary-font);
+    opacity: 1;
+}
+
+.form-section input:focus,
+.form-section textarea:focus {
+    outline: none;
+    border-color: var(--clr-btn);
+    box-shadow: 0 0 5px 5px rgba(255, 157, 82, 0.3);
+}
+
+/* Skills Section Styles */
+.skills-section {
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    background-color: var(--clr-lighter);
+}
+
+.skills-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.skills-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--clr-font);
+}
+
+.skills-counter {
+    font-size: 0.9rem;
+    color: var(--clr-secondary-font);
+    background-color: var(--clr-lighter);
+    padding: 0.4rem 0.8rem;
+    border-radius: 1rem;
+    border: 1px solid var(--clr-lighter);
+}
+
+
+.skills-input-group {
+    background-color: var(--clr-main);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.skills-category-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+
+.category-skill-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.input-group label {
+    font-weight: 600;
+    color: var(--clr-font);
+    font-size: 0.9rem;
+}
+
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Category and Skill Select Styles */
+.form-select {
+    width: 100%;
+    color: var(--clr-font);
+    background-color: var(--clr-lighter);
+    padding: 0.75rem;
+    border: 2px solid var(--clr-lighter);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.3s ease;
+}
+
+/* Custom dropdown arrow */
+.select-wrapper::after {
+    content: "▼";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--clr-secondary-font);
+    pointer-events: none;
+    font-size: 0.8rem;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--clr-btn);
+    box-shadow: 0 0 5px rgba(249, 177, 122, 0.3);
+}
+
+
+.form-select option {
+    background-color: var(--clr-lighter);
+    color: var(--clr-font);
+    padding: 0.75rem;
+    border: none;
+}
+
+/* Scrollable skills dropdown */
+.skill-select {
+    height: auto;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* Style for selected options */
+.form-select option:checked {
+    background-color: var(--clr-bars);
+    color: var(--clr-font);
+}
+
+/* Style for hover options */
+.form-select option:hover {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+}
+
+/* Add Skill Button - takes full width */
+.add-skill-btn {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+    border: 2px solid var(--clr-btn);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    width: 100%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.add-skill-btn:hover {
+    opacity: 0.7;
+    
+}
+
+.plus-icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Selected Skills Display */
+.selected-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 2rem;
+}
+
+.skill-item {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+    border: 1px solid var(--clr-btn);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.remove-skill {
+    background: none;
+    border: none;
+    color: var(--clr-font);
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.remove-skill:hover {
+    background-color: rgba(167, 179, 255, 0.2);
+}
+
+/* Form Buttons */
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.submit-button,
+.cancel-button {
+    padding: 0.75rem 2rem;
+    border: 2px solid var(--clr-bars);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.submit-button {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+    border-color: var(--clr-btn);
+}
+
+.cancel-button {
+    background-color: var(--clr-bars);
+    color: var(--clr-btn);
+    border-color: var(--clr-btn);
+    transition: all 0.3s ease ;
+}
+
+.submit-button:hover {
+    opacity: 0.7;
+}
+
+.cancel-button:hover {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        width: 90%;
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .category-skill-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .form-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .submit-button,
+    .cancel-button {
+        width: 100%;
+        max-width: 200px;
+    }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/header.css"> <!-- if your header uses a separate file -->
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../../assets/css/notifications.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <!-- Sidebar would be included here -->
+    
+    <div class="main-container">
+        <div class="head">
+            <h1>Notifications</h1>
+            <p>You have 5 unread notifications</p>
+        </div>
+
+
+        <div class="notification-card new">
+            <div class="notification-header">
+                <div style="flex: 1;">
+                    <span class="notification-title">New Match Found!</span>
+                    <span class="notification-badge">New</span>
+                </div>
+                <span class="notification-time">5 minutes ago</span>
+            </div>
+            <div class="notification-content">
+                Sarah Chen is looking for Web Development and offers Graphic Design - Perfect match!
+            </div>
+            <div class="notification-actions">
+                <button class="btn btn-primary">View Details</button>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="notification-card new">
+            <div class="notification-header">
+                <div style="flex: 1;">
+                    <span class="notification-title">Credits Earned!</span>
+                    <span class="notification-badge">New</span>
+                </div>
+                <span class="notification-time">1 hour ago</span>
+            </div>
+            <div class="notification-content">
+                You earned 50 credits for completing a session with Michael Torres
+            </div>
+            <div class="notification-actions">
+                <button class="btn btn-secondary">Mark as Read</button>
+            </div>
+        </div>
+
+        <!-- Additional notification examples -->
+        <div class="notification-card">
+            <div class="notification-header">
+                <div style="flex: 1;">
+                    <span class="notification-title">Session Reminder</span>
+                </div>
+                <span class="notification-time">3 hours ago</span>
+            </div>
+            <div class="notification-content">
+                Your Spanish lesson with Maria Rodriguez starts in 2 hours
+            </div>
+            <div class="notification-actions">
+                <button class="btn btn-primary">View Session</button>
+            </div>
+        </div>
+
+        <div class="notification-card">
+            <div class="notification-header">
+                <div style="flex: 1;">
+                    <span class="notification-title">New Review Received</span>
+                </div>
+                <span class="notification-time">1 day ago</span>
+            </div>
+            <div class="notification-content">
+                John Smith left you a 5-star review for your web development session
+            </div>
+            <div class="notification-actions">
+                <button class="btn btn-primary">Read Review</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filter tabs functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // In a real app, you would filter notifications here
+                    console.log(`Filtering by: ${this.textContent}`);
+                });
+            });
+
+            // Mark as read functionality
+            const markAsReadButtons = document.querySelectorAll('.btn-secondary');
+            markAsReadButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const card = this.closest('.notification-card');
+                    const badge = card.querySelector('.notification-badge');
+                    
+                    if (badge) {
+                        badge.remove();
+                    }
+                    
+                    card.classList.remove('new');
+                    this.textContent = 'Marked as Read';
+                    this.disabled = true;
+                    
+                    // Update unread count in header
+                    const unreadText = document.querySelector('.header p');
+                    const currentUnread = parseInt(unreadText.textContent.match(/\d+/)[0]);
+                    unreadText.textContent = `You have ${currentUnread - 1} unread notifications`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

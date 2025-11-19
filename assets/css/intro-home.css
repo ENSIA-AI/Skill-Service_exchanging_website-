@@ -16,6 +16,7 @@ body
     --clr-btn:#f9b17a ;
     --clr-font:#e9d6d6;
     --clr-lighter:#5e6591;
+    --clr-white: #ffffff;
 }
 
 
@@ -386,7 +387,7 @@ body
 }
 
 
-/*Contact us page */
+/*Contact us section */
 .questions-container
 {
  display: flex;
@@ -462,6 +463,10 @@ body
     padding: 0 20px;
 }
 
+
+
+
+/*Contact us page */
 
 
 .contact-container
@@ -649,133 +654,9 @@ textarea {
     opacity: 0.9;
    
 }
-@media (min-width: 600px) and (max-width: 685px) {
-   
-    .hero .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .hero .content-wrapper {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 30px;
-        min-height: auto;
-        padding: 40px 0;
-    }
-    
-    .hero .text-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-    
-    .hero .main-title {
-        font-size: 2rem;
-        text-align: center;
-        line-height: 1.3;
-        margin-bottom: 15px;
-    }
-    
-    .hero .subtitle {
-        font-size: 1.1rem;
-        text-align: center;
-        margin-bottom: 25px;
-        max-width: 90%;
-    }
-    
-    .hero .image-content {
-        max-width: 60%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .hero .homepic {
-        max-width: 100%;
-        height: auto;
-    }
-    
-    .how-it-works .steps {
-        flex-direction: row;
-        gap: 15px;
-        margin-top: 40px;
-    }
-    
-    .how-it-works .step {
-        flex: 1;
-        min-height: 250px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        padding: 25px 15px;
-        text-align: center;
-    }
-    
-    .how-it-works .step-number {
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
-        margin-bottom: 20px;
-    }
-    
-    .how-it-works .step h3 {
-        font-size: 1.2rem;
-        margin-bottom: 12px;
-        min-height: 2.8rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .how-it-works .step p {
-        font-size: 0.9rem;
-        line-height: 1.4;
-        flex-grow: 1;
-        display: flex;
-        align-items: center;
-    }
-    
-    .steps {
-        align-items: stretch;
-    }
-    
-    
-    .cta .cta-content {
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .cta-content h2 {
-        font-size: 1.8rem;
-        text-align: center;
-    }
-    
-    .cta-content p {
-        text-align: center;
-        max-width: 90%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-   
-    .section-header {
-        text-align: center;
-    }
-    
-    .section-header h2 {
-        font-size: 1.8rem;
-        text-align: center;
-    }
-}
+
+/* RESPONSIVE DESIGN */
+
 
 @media (max-width: 600px) 
 {

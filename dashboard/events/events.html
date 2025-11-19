@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/events.css">
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="stylesheet" href="../../assets/css/sidebar.css">
+</head>
+<body>
+    
+    <header class="main-header"></header> 
+
+        <main class="main-content">
+
+            <div class="event-header">    
+                 <p class="event-text">Upcoming events</p>
+                <button class="add-event-button js-add-event-button">
+                    +&nbsp;&nbsp;&nbsp;create event
+                </button>
+            </div>
+
+            <div class="events-list js-events-list">
+            </div>
+       
+        </main>
+
+        <aside class="primary-sidebar"></aside>
+        
+      
+        <script>
+            function loadHeader(){
+                fetch('../../components/header.html')  
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('.main-header').innerHTML = data;
+                });
+            }
+
+            function loadSideBar(){
+                fetch('../../components/sidebar.html')  
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('.primary-sidebar').innerHTML = data;
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                loadHeader();
+                loadSideBar();
+            })
+        </script>
+        <script type="module" src="eventsJs/renderEvents.js"></script>
+</body>
+</html>

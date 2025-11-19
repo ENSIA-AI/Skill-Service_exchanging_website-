@@ -1,5 +1,4 @@
-
-@import url(/assets/css/style.css);
+@import url(style.css);
 
 .container{
     background-color: var(--clr-bars);
@@ -11,9 +10,7 @@
     padding: 0;
     justify-content: center;
     margin-top: 0px;
-    
 }
-
 
 .sidebar{
     background-color: var(--clr-bars);
@@ -25,54 +22,102 @@
     padding-top: 15px;
 }
 
-.sidebar button{
+.sidebar > div{
     height: 65px;
     border: 0;
     border-radius: 15px;
     width: 100%;
-    background-color: var(--clr-bars);
     display: flex;
     align-items: center;
+
+    cursor: pointer;
 }
 
-.sidebar button:hover{
+.sidebar > div:hover{
     background-color: var(--clr-lighter);
 }
 
 .home-section {
     color:var(--clr-font);
+    background-color: var(--clr-bars);
 }
+
 .notification-section {
     color:var(--clr-font);
+    background-color: var(--clr-bars);
 }
+
 .events-section {
     color:var(--clr-font);
+    background-color: var(--clr-bars);
 }
+
 .profile-section {
     color:var(--clr-font);
+    background-color: var(--clr-bars);
 }
 
 .logout-section{
     margin-top: auto;
     margin-bottom: 20px;
     color: red;
+    background-color: var(--clr-bars);
 }
 
-
-    
-    
-
 .name{
-    
     height: 20px;
     flex:1;
     margin-left: 10px;
     text-align: left;
 }
 
-
 @media (max-width:768px){
     .container{
         display: none;
+    }
+}
+a {
+    color: var(--clr-font);
+    text-decoration: none;
+    
+}
+svg{
+    margin-left: 5px;
+}
+
+/* Mobile sidebar animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+/* Mobile sidebar specific styles */
+@media (max-width: 600px) {
+    .container {
+        position: fixed;
+        top: 76px;
+        left: 0;
+        height: calc(100% - 76px);
+        width: 230px;
+        z-index: 1000;
+        background-color: var(--clr-bars);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     }
 }

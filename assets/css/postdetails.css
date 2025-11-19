@@ -1,0 +1,543 @@
+@import url(style.css);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--clr-main);
+    color: var(--clr-font);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.page-container {
+    display: flex;
+    min-height: calc(100vh - 75px);
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 230px;
+    padding: 30px;
+}
+
+.service-detail-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
+}
+
+/* Provider Header */
+.provider-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background-color: var(--clr-lighter);
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.provider-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.provider-info {
+    flex: 1;
+}
+
+.provider-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--clr-font);
+}
+
+.provider-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stars {
+    color: var(--clr-btn);
+    font-size: 1rem;
+}
+
+.reviews-count {
+    color: var(--clr-secondary-font);
+    font-size: 0.9rem;
+}
+
+.service-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 15px;
+}
+
+.price-label {
+    color: var(--clr-secondary-font);
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+}
+
+.price-value {
+    color: var(--clr-btn);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.favorite-btn {
+    background-color: var(--clr-main);
+    border: none;
+    color: var(--clr-font);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.favorite-btn:hover {
+    background-color: var(--clr-btn);
+    transform: scale(1.1);
+}
+
+/* Service Header */
+.service-header {
+    margin-bottom: 25px;
+}
+
+.service-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--clr-font);
+}
+
+.service-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.tag-btn {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+}
+
+/* Service Quick Info */
+.service-quick-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.info-card {
+    background-color: var(--clr-lighter);
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.info-card svg {
+    color: var(--clr-btn);
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+
+.info-label {
+    color: var(--clr-secondary-font);
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    color: var(--clr-font);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.btn-primary,
+.btn-secondary {
+    flex: 1;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+}
+
+.btn-primary:hover {
+    background-color: #ff9f5a;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(249, 177, 122, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--clr-lighter);
+    color: var(--clr-font);
+}
+
+.btn-secondary:hover {
+    background-color: #6a7099;
+    transform: translateY(-2px);
+}
+
+/* Service Description */
+.service-description,
+.skills-section,
+.exchange-section,
+.requirements-section {
+    background-color: var(--clr-lighter);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.service-description h2,
+.skills-section h2,
+.exchange-section h2,
+.requirements-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--clr-font);
+}
+
+.service-description h3,
+.skills-section h3,
+.exchange-section h3 {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    color: var(--clr-font);
+}
+
+.service-description p,
+.skills-section p,
+.exchange-section p {
+    line-height: 1.7;
+    color: var(--clr-secondary-font);
+    margin-bottom: 15px;
+}
+
+.objectives-list,
+.expectations-list,
+.requirements-list {
+    list-style: none;
+    margin-top: 15px;
+}
+
+.objectives-list li,
+.expectations-list li,
+.requirements-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    color: var(--clr-secondary-font);
+    line-height: 1.6;
+}
+
+.objectives-list svg,
+.expectations-list svg,
+.requirements-list svg {
+    color: var(--clr-btn);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Skills Section */
+.skills-tags,
+.seeking-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.skill-tag,
+.seeking-tag {
+    background-color: var(--clr-main);
+    color: var(--clr-font);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.seeking-tag {
+    background-color: #06ffa5;
+    color: #2d3250;
+}
+
+.experience-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 12px 16px;
+    background-color: var(--clr-main);
+    border-radius: 10px;
+    color: var(--clr-btn);
+    font-weight: 500;
+}
+
+/* Exchange Section */
+.payment-options {
+    margin-bottom: 25px;
+}
+
+.payment-badges {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.payment-badge {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 2px solid var(--clr-main);
+    color: var(--clr-secondary-font);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-badge.active {
+    background-color: var(--clr-btn);
+    border-color: var(--clr-btn);
+    color: var(--clr-font);
+}
+
+.seeking-skills {
+    margin-top: 25px;
+}
+
+.exchange-expectations {
+    margin-top: 25px;
+}
+
+/* Availability Section */
+.availability-section {
+    position: sticky;
+    top: 90px;
+    align-self: flex-start;
+}
+
+.availability-card {
+    background-color: var(--clr-lighter);
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.availability-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--clr-font);
+}
+
+/* Calendar */
+.calendar-container {
+    margin-bottom: 25px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-month {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--clr-font);
+}
+
+.calendar-nav-btn {
+    background-color: var(--clr-main);
+    border: none;
+    color: var(--clr-font);
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.calendar-nav-btn:hover {
+    background-color: var(--clr-btn);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--clr-secondary-font);
+    padding: 10px 0;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--clr-font);
+    font-size: 0.9rem;
+}
+
+.calendar-day:hover {
+    background-color: var(--clr-main);
+}
+
+.calendar-day.prev-month,
+.calendar-day.next-month {
+    color: #777;
+}
+
+.calendar-day.selected {
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
+    font-weight: 600;
+}
+
+/* Available Slots */
+.available-slots {
+    margin-bottom: 0;
+}
+
+.available-slots h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: var(--clr-font);
+}
+
+.time-slot {
+    background-color: var(--clr-main);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: var(--clr-font);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .service-detail-container {
+        grid-template-columns: 1fr 320px;
+    }
+}
+
+@media (max-width: 992px) {
+    .service-detail-container {
+        grid-template-columns: 1fr;
+    }
+
+    .availability-section {
+        position: static;
+    }
+
+    .availability-card {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding: 20px 15px;
+    }
+
+    .service-title {
+        font-size: 1.5rem;
+    }
+
+    .service-quick-info {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .provider-header {
+        flex-wrap: wrap;
+    }
+
+    .service-price {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        margin-right: 0;
+    }
+
+    .payment-badges {
+        flex-direction: column;
+    }
+
+    .payment-badge {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-tags {
+        flex-direction: column;
+    }
+
+    .tag {
+        text-align: center;
+    }
+
+    .skills-tags,
+    .seeking-tags {
+        flex-direction: column;
+    }
+}

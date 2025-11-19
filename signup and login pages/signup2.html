@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Skills & Interests</title>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Left Side - Image/Illustration -->
+        <div class="signup-left">
+            <div class="illustration">
+                <img src="assets/images/homeinp/skills-illustration.png" alt="Skills Illustration">
+            </div>
+        </div>
+
+        <!-- Right Side - Skills Form -->
+        <div class="signup-right">
+            <h2>Your Skills & Interests</h2>
+            
+            <form action="/signup and login pages/signup3.html" method="GET">
+                <!-- Skills I Can Teach Section -->
+                <div class="skills-section">
+                    <div class="section-header">
+                        <h3>Skills I Can Teach</h3>
+                        <span class="skills-counter">0/5 skills selected</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teachCategory">Category</label>
+                        <select id="teachCategory" name="teachCategory">
+                            <option value="">Select a category</option>
+                            <option value="technology">Technology & Programming</option>
+                            <option value="creative">Creative Arts & Design</option>
+                            <option value="languages">Languages & Communication</option>
+                            <option value="business">Business & Professional</option>
+                            <option value="home">Home Services & DIY</option>
+                            <option value="fitness">Fitness & Wellness</option>
+                            <option value="music">Music & Entertainment</option>
+                            <option value="cooking">Cooking & Culinary</option>
+                            <option value="education">Education & Tutoring</option>
+                            <option value="crafts">Crafts & Hobbies</option>
+                        </select>
+                    </div>
+
+                    <div class="add-skill">
+                        <button type="button" class="btn-add-skill" onclick="addSkill('teach')">+ Add Skill</button>
+                    </div>
+
+                    <div class="selected-skills" id="teachSkills">
+                        <!-- Selected skills will appear here -->
+                    </div>
+                </div>
+
+                <!-- Skills I Want to Learn Section -->
+                <div class="skills-section">
+                    <div class="section-header">
+                        <h3>Skills I Want to Learn</h3>
+                        <span class="skills-counter">0/5 skills selected</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="learnCategory">Category</label>
+                        <select id="learnCategory" name="learnCategory">
+                            <option value="">Select a category</option>
+                            <option value="technology">Technology & Programming</option>
+                            <option value="creative">Creative Arts & Design</option>
+                            <option value="languages">Languages & Communication</option>
+                            <option value="business">Business & Professional</option>
+                            <option value="home">Home Services & DIY</option>
+                            <option value="fitness">Fitness & Wellness</option>
+                            <option value="music">Music & Entertainment</option>
+                            <option value="cooking">Cooking & Culinary</option>
+                            <option value="education">Education & Tutoring</option>
+                            <option value="crafts">Crafts & Hobbies</option>
+                        </select>
+                    </div>
+
+                    <div class="add-skill">
+                        <button type="button" class="btn-add-skill" onclick="addSkill('learn')">+ Add Skill</button>
+                    </div>
+
+                    <div class="selected-skills" id="learnSkills">
+                        <!-- Selected skills will appear here -->
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-back">Back</button>
+                    <button type="submit" class="btn-next">Next</button>
+                </div>
+            </form>
+
+            <p class="login-link">
+                Already have an account? <a href="login.html">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Skill Input Modal -->
+    <div id="skillModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add New Skill</h3>
+            <div class="form-group">
+                <label for="skillName">Skill Name</label>
+                <input type="text" id="skillName" placeholder="Enter skill name">
+            </div>
+            <div class="form-group">
+                <label for="skillLevel">Experience Level</label>
+                <select id="skillLevel">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="expert">Expert</option>
+                </select>
+            </div>
+            <button type="button" class="btn-add" onclick="saveSkill()">Add Skill</button>
+        </div>
+    </div>
+
+    <script src="assets/js/home.js"></script>
+</body>
+</html>
