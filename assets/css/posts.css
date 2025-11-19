@@ -5,7 +5,7 @@
 .main-content {
   background-color: var(--clr-main);
   color: var(--clr-font);
-  margin-left: clamp(12rem, 15vw, 18rem); /* matches sidebar width */
+  margin-left:0;
   padding: 1.25rem;
   padding-top: clamp(5rem, 6vh, 6.5rem); /* space for header */
   min-height: calc(100vh - clamp(5.5rem, 8.5vh, 8rem));
