@@ -63,6 +63,7 @@ function skillsList(skills){
         else return `<span class="skill-tag">No prior knowledge required</span>`;
 }
 
+//change join event styles
 function joinEvent(){
 
     let joinButtons = document.querySelectorAll('.js-join-event-button');
@@ -80,5 +81,13 @@ function joinEvent(){
         }
     )
 })
+
+// create event button
+document.querySelector('.js-add-event-button').addEventListener('click', () => {
+    window.location.href = "addevent.html";
+});
+
 }
+
+
 renderEvents();

@@ -20,8 +20,6 @@ body{
 
 .main-header{
     grid-area:header;
-    background-color: var(--clr-bars);
-    border-bottom: 1px solid var(--clr-main);
 
 }
 
@@ -34,7 +32,6 @@ body{
 
 .primary-sidebar{
     grid-area: sidebar;
-    background-color: var(--clr-bars);
     
 }
 
@@ -152,17 +149,11 @@ body{
         grid-template-areas: 
         " header"
         " main";
-        grid-template-rows: 4rem 1fr;
+        grid-template-rows: 3rem 1fr;
         grid-template-columns: 1fr ;
     
     } 
-    .primary-sidebar{
-        display: none;
-        
-    }
-    .main-content{
-        padding: 1.2rem;
-    }
+    
     .event-card {
         font-size: clamp(1rem, 2.5vw, 2rem);
     }

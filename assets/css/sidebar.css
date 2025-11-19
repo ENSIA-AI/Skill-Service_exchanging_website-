@@ -109,7 +109,7 @@ svg{
 }
 
 /* Mobile sidebar specific styles */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .container {
         position: fixed;
         top: 76px;
