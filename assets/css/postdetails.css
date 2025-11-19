@@ -23,7 +23,7 @@ body {
 
 .service-detail-container {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 0 ;
     display: grid;
     grid-template-columns: 1fr 380px;
     gap: 30px;
@@ -538,4 +538,8 @@ body {
     .seeking-tags {
         flex-direction: column;
     }
+}
+.main-content{
+    margin: 0;
+    padding: 0;
 }
