@@ -321,8 +321,14 @@ h3 {
     gap: 1rem;
   }
   .post-card {
-    flex: 1 1 15rem; /* ~240px */
+    flex: 1 1 15rem; /* 240px */
   }
+  @media (max-width: 1024px) {
+  .search-container {
+    margin-top: 90px !important;
+  }
+}
+
 }
 
 
@@ -330,6 +336,7 @@ h3 {
   .category-card { min-width: 10rem; max-width: 12rem; }
   .post-card { flex: 1 1 10rem; }
   .browse-category h2, .browse-posts h2 { font-size: 1.25rem; }
+
 }
 
 .Upcoming-sessions {
