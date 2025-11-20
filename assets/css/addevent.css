@@ -376,7 +376,7 @@ body {
     -ms-overflow-style: none;
 }
 
-/* Responsive Design */
+/* Responsive Design - SIMPLIFIED */
 @media (max-width: 900px) {
     .create-event-container {
         flex-direction: column;
@@ -391,8 +391,8 @@ body {
     }
 }
 
-@media (max-width: 600px) {
-    /* Hide image on small screens */
+@media (max-width: 768px) {
+    /* Hide image on screens 768px and below */
     .event-image-section {
         display: none;
     }
