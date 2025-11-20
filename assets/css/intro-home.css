@@ -1,4 +1,4 @@
-@import url(/assets/css/style.css);
+@import url(style.css);
 body
 {
     margin-top: 150px;
@@ -44,6 +44,7 @@ body
   flex:1;
   display:flex;
   align-items: center;
+  width: 10px;
 
 }
 .logo-section img
@@ -143,6 +144,7 @@ body
 
 
 .hero {
+    border-radius: 15px;
     padding-left: 30px;
     padding-right:30px;
     background: linear-gradient(135deg, var(--clr-main) 0%, var(--clr-lighter) 100%);
