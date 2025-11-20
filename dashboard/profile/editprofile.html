@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="icon" href="../../assets/icons/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../../assets/css/editpersonalprofile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="edit-page-container">
+        <header>
+            <div class="edit-page-header">
+                <div>
+                    <h2><strong><span style="color: white;">Edit Profile</span></strong></h2>
+                </div>
+                <div><span style="color: white;">Update your information and skills</span></div>
+            </div>
+        </header>
+        <main>
+            <div>
+                <div>
+                    <form id="update-profile-form" action="test/test2.php" method="get">
+                        <div class="section profile-picture-section">
+                            <div class="profile-picture-section-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25"
+                                    role="img" aria-label="Camera icon" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="color: white;">
+                                    <title>Camera</title>
+                                    <path
+                                        d="M3 7.5h3l1.2-1.8A1 1 0 0 1 8.1 5h7.8a1 1 0 0 1 .9.7L18 7.5h3A1.5 1.5 0 0 1 22.5 9V19.5A1.5 1.5 0 0 1 21 21H3A1.5 1.5 0 0 1 1.5 19.5V9A1.5 1.5 0 0 1 3 7.5z" />
+                                    <circle cx="12" cy="14" r="3.2" />
+                                </svg>
+                                <span class="section-title">Profile Picture</span>
+                            </div>
+                            <div class="profile-picture-section-content">
+                                <figure style="margin: 0;">
+                                    <div class="edit-profile-avatar">
+                                        <img src="../../assets/icons/favicon_io/android-chrome-512x512.png" alt="">
+                                    </div>
+                                </figure>
+                                <div class="profile-picture-section-second-column">
+                                    <h4><span class="section-subtitle">Upload New Photo</span></h4>
+                                    <span class="muted-text picture-instruction-text">JPG, PNG or GIF. Max size 2MB.
+                                        Recommended:
+                                        400x400px</span>
+
+                                    <div class="profile-btn-1">
+                                        <input type="file" id="upload-picture-desktop"
+                                            title="Upload new ptofile picture" hidden>
+                                        <label for="upload-picture-desktop" class="upload-new-picture">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" width="20"
+                                                height="20" fill="none" stroke="currentColor" stroke-width="3"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                <polyline points="17 8 12 3 7 8" />
+                                                <line x1="12" y1="3" x2="12" y2="15" />
+                                            </svg>
+                                            UPLOAD PICTURE
+                                        </label>
+                                        <button type="button" class="remove-btn">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" width="16"
+                                                height="16" fill="none" stroke="currentColor" stroke-width="3"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                                <path d="M10 11v6" />
+                                                <path d="M14 11v6" />
+                                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                            </svg>
+                                            REMOVE
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile-btn-2">
+                                <input type="file" id="upload-picture-mobile" title="Upload new ptofile picture" hidden>
+                                <label for="upload-picture-mobile" class="upload-new-picture">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 20" width="20" height="20"
+                                        fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="17 8 12 3 7 8" />
+                                        <line x1="12" y1="3" x2="12" y2="15" />
+                                    </svg>
+                                    UPLOAD PICTURE
+                                </label>
+                                <button type="button" class="remove-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" width="16" height="16"
+                                        fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6" />
+                                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                        <path d="M10 11v6" />
+                                        <path d="M14 11v6" />
+                                        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                    </svg>
+                                    REMOVE
+                                </button>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="profile-picture-section-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25"
+                                    role="img" aria-label="User icon" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" style="color: white;">
+                                    <title>User</title>
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                                <span class="section-title">Basic Information</span>
+                            </div>
+                            <div class="">
+                                <div class="label">
+                                    <label for="username">username*</label>
+                                </div>
+                                <input class="textbox user-name-icon" id="username" name="username" type="text"
+                                    placeholder="username" pattern="^(?![_.])(?!.*[_.]{2})[a-z0-9._]{3,20}(?<![_.])$"
+                                    title="3–20 chars, lowercase letters, numbers, underscores (_) and dots (.) only. Cannot start or end with _ or ., or contain consecutive _ or ."
+                                    required />
+                            </div>
+                            <div class="">
+                                <div class="label">
+                                    <label for="fullname">Full Name*</label>
+                                </div>
+                                <input class="textbox full-name-icon" id="fullname" name="fullname" type="text"
+                                    placeholder="Full Name" required />
+                            </div>
+                            <div class="">
+                                <div class="label">
+                                    <label for="professionaltitle">Professional Title*</label>
+                                </div>
+                                <input class="textbox professional-title-icon" name="professional_title" type="text"
+                                    placeholder="Professional Title" required />
+                            </div>
+                            <div class="">
+                                <div class="label">
+                                    <label for="location">Location*</label>
+                                </div>
+                                <input class="textbox location-icon" id="location" name="location" type="text"
+                                    placeholder="Location: City, Country" required />
+                            </div>
+                            <div class="">
+                                <div class="label">
+                                    <label for="aboutme">About Me</label>
+                                </div>
+                                <textarea class="textbox" id="about-me" name="about_me" name="aboutme"
+                                    style="height: 15rem; padding-left: 10px;" id="" placeholder="About Me"></textarea>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="profile-picture-section-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25"
+                                    role="img" aria-label="Settings icon" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="color: white;">
+                                    <title>Settings</title>
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33
+                                        1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51
+                                        1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06
+                                        a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3
+                                        a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1
+                                        1.65 1.65 0 0 0-.33-1.82l-.06-.06
+                                        a2 2 0 1 1 2.83-2.83l.06.06
+                                        a1.65 1.65 0 0 0 1.82.33H9
+                                        a1.65 1.65 0 0 0 1-1.51V3
+                                        a2 2 0 0 1 4 0v.09
+                                        a1.65 1.65 0 0 0 1 1.51
+                                        1.65 1.65 0 0 0 1.82-.33l.06-.06
+                                        a2 2 0 1 1 2.83 2.83l-.06.06
+                                        a1.65 1.65 0 0 0-.33 1.82V9
+                                        a1.65 1.65 0 0 0 1.51 1H21
+                                        a2 2 0 0 1 0 4h-.09
+                                        a1.65 1.65 0 0 0-1.51 1z" />
+                                </svg>
+                                <span class="section-title">Contact Information</span>
+                            </div>
+                            <div class="">
+                                <div class="label">
+                                    <label for="email">Email*</label>
+                                </div>
+                                <input class="textbox email-icon" id="email" name="email" type="email"
+                                    placeholder="Email" required />
+                            </div>
+                            <div class="">
+                                <div class="label">
+                                    <label for="phone">Phone*</label>
+                                </div>
+                                <input class="textbox phone-icon" id="phone" name="phone" type="tel" placeholder="Phone"
+                                    required />
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="profile-picture-section-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25"
+                                    role="img" aria-label="Award icon" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="color: white;">
+                                    <title>Award</title>
+                                    <circle cx="12" cy="8" r="7" />
+                                    <path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.11" />
+                                </svg>
+
+                                <span class="section-title">Skills You're Offering</span>
+                            </div>
+                            <div class="cards-section">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Web Development</h3>
+                                        <button class="delete-skill">×</button>
+                                    </div>
+
+                                    <div class="proficiency-section">
+                                        <div class="section-header">
+                                            <span class="label">Proficiency Level</span>
+                                            <span class="proficiency-value">80%</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <div class="slider-track">
+                                                <div class="slider-fill" style="--val: 80"></div>
+                                            </div>
+                                            <div class="slider-thumb" style="--val: 80"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-section">
+                                        <div class="label">
+                                            <label for="rate">Rate (credits/hour)*</label>
+                                        </div>
+                                        <input type="text" id="rate-web-dev" class="textbox" value="50" required>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Database</h3>
+                                        <button class="delete-skill">×</button>
+                                    </div>
+
+                                    <div class="proficiency-section">
+                                        <div class="section-header">
+                                            <span class="label">Proficiency Level</span>
+                                            <span class="proficiency-value">65%</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <div class="slider-track">
+                                                <div class="slider-fill" style="--val: 65"></div>
+                                            </div>
+                                            <div class="slider-thumb" style="--val: 65"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-section">
+                                        <div class="label">
+                                            <label for="rate-database">Rate (credits/hour)*</label>
+                                        </div>
+                                        <input type="number" id="rate-database" name="rate_database" class="textbox"
+                                            value="45" min="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+
+
+                                <div class="title">Add New Skill</div>
+                                <div class="select-wrap">
+                                    <label for="category"><span class="label">Choose a
+                                            Category:</span></label><br>
+                                    <select class="select dropdown" id="offering-category">
+                                        <option value="">Choose a Category</option>
+                                        <option value="technology-programming">Technology & Programming</option>
+                                        <option value="creative-arts-design">Creative Arts & Design</option>
+                                        <option value="languages-communication">Languages & Communication
+                                        </option>
+                                        <option value="business-professional">Business & Professional</option>
+                                        <option value="home-services-diy">Home Services & DIY</option>
+                                        <option value="fitness-wellness">Fitness & Wellness</option>
+                                        <option value="music-entertainment">Music & Entertainment</option>
+                                        <option value="cooking-culinary">Cooking & Culinary</option>
+                                        <option value="education-tutoring">Education & Tutoring</option>
+                                        <option value="crafts-hobbies">Crafts & Hobbies</option>
+                                    </select>
+                                </div>
+
+                                <div class="select-wrap">
+                                    <label for="skills"><span class="label">Choose a Skill:</span></label><br>
+                                    <select class="select dropdown" id="offering-skills" disabled>
+                                        <option value="">Choose a Skill</option>
+
+                                        <!-- Technology & Programming -->
+                                        <option data-category="technology-programming">Web Development</option>
+                                        <option data-category="technology-programming">App Development</option>
+                                        <option data-category="technology-programming">Cybersecurity</option>
+                                        <option data-category="technology-programming">AI & Machine Learning
+                                        </option>
+                                        <option data-category="technology-programming">Data Science</option>
+
+                                        <!-- Creative Arts & Design -->
+                                        <option data-category="creative-arts-design">Graphic Design</option>
+                                        <option data-category="creative-arts-design">UI/UX Design</option>
+                                        <option data-category="creative-arts-design">Illustration</option>
+                                        <option data-category="creative-arts-design">Animation</option>
+                                        <option data-category="creative-arts-design">Photography</option>
+
+                                        <!-- Languages & Communication -->
+                                        <option data-category="languages-communication">English Translation
+                                        </option>
+                                        <option data-category="languages-communication">Public Speaking</option>
+                                        <option data-category="languages-communication">Writing & Editing
+                                        </option>
+                                        <option data-category="languages-communication">Language Tutoring
+                                        </option>
+                                        <option data-category="languages-communication">Sign Language</option>
+
+                                        <!-- Business & Professional -->
+                                        <option data-category="business-professional">Marketing</option>
+                                        <option data-category="business-professional">Accounting</option>
+                                        <option data-category="business-professional">Project Management
+                                        </option>
+                                        <option data-category="business-professional">Human Resources</option>
+                                        <option data-category="business-professional">Entrepreneurship</option>
+
+                                        <!-- Home Services & DIY -->
+                                        <option data-category="home-services-diy">Plumbing</option>
+                                        <option data-category="home-services-diy">Electrical Work</option>
+                                        <option data-category="home-services-diy">Home Painting</option>
+                                        <option data-category="home-services-diy">Furniture Assembly</option>
+                                        <option data-category="home-services-diy">Gardening</option>
+
+                                        <!-- Fitness & Wellness -->
+                                        <option data-category="fitness-wellness">Yoga</option>
+                                        <option data-category="fitness-wellness">Personal Training</option>
+                                        <option data-category="fitness-wellness">Nutrition Coaching</option>
+                                        <option data-category="fitness-wellness">Meditation</option>
+                                        <option data-category="fitness-wellness">Pilates</option>
+
+                                        <!-- Music & Entertainment -->
+                                        <option data-category="music-entertainment">Singing</option>
+                                        <option data-category="music-entertainment">Guitar</option>
+                                        <option data-category="music-entertainment">Piano</option>
+                                        <option data-category="music-entertainment">Acting</option>
+                                        <option data-category="music-entertainment">DJing</option>
+
+                                        <!-- Cooking & Culinary -->
+                                        <option data-category="cooking-culinary">Baking</option>
+                                        <option data-category="cooking-culinary">Grilling</option>
+                                        <option data-category="cooking-culinary">Food Styling</option>
+                                        <option data-category="cooking-culinary">Meal Prep</option>
+                                        <option data-category="cooking-culinary">Pastry Art</option>
+
+                                        <!-- Education & Tutoring -->
+                                        <option data-category="education-tutoring">Math Tutoring</option>
+                                        <option data-category="education-tutoring">Science Tutoring</option>
+                                        <option data-category="education-tutoring">Exam Prep</option>
+                                        <option data-category="education-tutoring">Early Childhood Education
+                                        </option>
+                                        <option data-category="education-tutoring">Special Education</option>
+
+                                        <!-- Crafts & Hobbies -->
+                                        <option data-category="crafts-hobbies">Sewing</option>
+                                        <option data-category="crafts-hobbies">Knitting</option>
+                                        <option data-category="crafts-hobbies">Woodworking</option>
+                                        <option data-category="crafts-hobbies">Candle Making</option>
+                                        <option data-category="crafts-hobbies">Jewelry Design</option>
+                                    </select>
+                                </div>
+                                <div class="proficiency-section">
+                                    <div class="section-header">
+                                        <span class="label">Proficiency Level*</span>
+                                        <span class="proficiency-value" id="new-skill-proficiency-display">50%</span>
+                                    </div>
+                                    <div class="slider-container" id="new-skill-slider">
+                                        <div class="slider-track">
+                                            <div class="slider-fill" id="new-skill-fill" style="--val: 50"></div>
+                                        </div>
+                                        <div class="slider-thumb" id="new-skill-thumb" style="--val: 50"></div>
+                                    </div>
+
+                                    <input type="hidden" id="offering-proficiency" name="offering_proficiency"
+                                        value="50">
+                                </div>
+
+                                <div class="rate-section">
+                                    <div class="label">
+                                        <label for="offering-rate">Rate (credits/hour)*</label>
+                                    </div>
+                                    <input type="number" id="offering-rate" name="offering_rate" class="textbox"
+                                        placeholder="50" min="1" />
+                                </div>
+
+                                <div>
+                                    <button type="button" class="btn btn-1" id="add-offering-skill-btn">
+                                        Add Skill
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="profile-picture-section-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25"
+                                    role="img" aria-label="Award icon" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="color: white;">
+                                    <title>Award</title>
+                                    <circle cx="12" cy="8" r="7" />
+                                    <path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.11" />
+                                </svg>
+
+                                <span class="section-title">Skills You're Seeking</span>
+                            </div>
+                            <div>
+                                <ul class="list">
+                                    <li>Graphic Design<span class="delete-from-list">&times;</span>
+                                    </li>
+                                    <li>Logo Creation
+                                        <span class="delete-from-list">&times;</span>
+                                    </li>
+                                    <li>Video Editing
+                                        <span class="delete-from-list">&times;</span>
+                                    </li>
+                                    <li>Content Writing
+                                        <span class="delete-from-list">&times;</span>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <h3>
+                                        <span class="muted-text">
+                                            <p id="skill-counter" style="color:white; margin-top:8px;">4/10 Skills
+                                                selected</p>
+                                        </span>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="section sub-section">
+                                <div class="select-wrap">
+                                    <label for="category"><span class="label">Choose a
+                                            Category:</span></label><br>
+                                    <select class="select dropdown" id="seeking-category">
+                                        <option value="">Choose a Category</option>
+                                        <option value="technology-programming">Technology & Programming</option>
+                                        <option value="creative-arts-design">Creative Arts & Design</option>
+                                        <option value="languages-communication">Languages & Communication
+                                        </option>
+                                        <option value="business-professional">Business & Professional</option>
+                                        <option value="home-services-diy">Home Services & DIY</option>
+                                        <option value="fitness-wellness">Fitness & Wellness</option>
+                                        <option value="music-entertainment">Music & Entertainment</option>
+                                        <option value="cooking-culinary">Cooking & Culinary</option>
+                                        <option value="education-tutoring">Education & Tutoring</option>
+                                        <option value="crafts-hobbies">Crafts & Hobbies</option>
+                                    </select>
+                                </div>
+
+                                <div class="select-wrap">
+                                    <label for="skills"><span class="label">Choose a
+                                            Skill:</span></label><br>
+                                    <select class="select dropdown" id="seeking-skills" disabled>
+                                        <option value="">Choose a Skill</option>
+
+                                        <!-- Technology & Programming -->
+                                        <option data-category="technology-programming">Web Development</option>
+                                        <option data-category="technology-programming">App Development</option>
+                                        <option data-category="technology-programming">Cybersecurity</option>
+                                        <option data-category="technology-programming">AI & Machine Learning
+                                        </option>
+                                        <option data-category="technology-programming">Data Science</option>
+
+                                        <!-- Creative Arts & Design -->
+                                        <option data-category="creative-arts-design">Graphic Design</option>
+                                        <option data-category="creative-arts-design">UI/UX Design</option>
+                                        <option data-category="creative-arts-design">Illustration</option>
+                                        <option data-category="creative-arts-design">Animation</option>
+                                        <option data-category="creative-arts-design">Photography</option>
+
+                                        <!-- Languages & Communication -->
+                                        <option data-category="languages-communication">English Translation
+                                        </option>
+                                        <option data-category="languages-communication">Public Speaking</option>
+                                        <option data-category="languages-communication">Writing & Editing
+                                        </option>
+                                        <option data-category="languages-communication">Language Tutoring
+                                        </option>
+                                        <option data-category="languages-communication">Sign Language</option>
+
+                                        <!-- Business & Professional -->
+                                        <option data-category="business-professional">Marketing</option>
+                                        <option data-category="business-professional">Accounting</option>
+                                        <option data-category="business-professional">Project Management
+                                        </option>
+                                        <option data-category="business-professional">Human Resources</option>
+                                        <option data-category="business-professional">Entrepreneurship</option>
+
+                                        <!-- Home Services & DIY -->
+                                        <option data-category="home-services-diy">Plumbing</option>
+                                        <option data-category="home-services-diy">Electrical Work</option>
+                                        <option data-category="home-services-diy">Home Painting</option>
+                                        <option data-category="home-services-diy">Furniture Assembly</option>
+                                        <option data-category="home-services-diy">Gardening</option>
+
+                                        <!-- Fitness & Wellness -->
+                                        <option data-category="fitness-wellness">Yoga</option>
+                                        <option data-category="fitness-wellness">Personal Training</option>
+                                        <option data-category="fitness-wellness">Nutrition Coaching</option>
+                                        <option data-category="fitness-wellness">Meditation</option>
+                                        <option data-category="fitness-wellness">Pilates</option>
+
+                                        <!-- Music & Entertainment -->
+                                        <option data-category="music-entertainment">Singing</option>
+                                        <option data-category="music-entertainment">Guitar</option>
+                                        <option data-category="music-entertainment">Piano</option>
+                                        <option data-category="music-entertainment">Acting</option>
+                                        <option data-category="music-entertainment">DJing</option>
+
+                                        <!-- Cooking & Culinary -->
+                                        <option data-category="cooking-culinary">Baking</option>
+                                        <option data-category="cooking-culinary">Grilling</option>
+                                        <option data-category="cooking-culinary">Food Styling</option>
+                                        <option data-category="cooking-culinary">Meal Prep</option>
+                                        <option data-category="cooking-culinary">Pastry Art</option>
+
+                                        <!-- Education & Tutoring -->
+                                        <option data-category="education-tutoring">Math Tutoring</option>
+                                        <option data-category="education-tutoring">Science Tutoring</option>
+                                        <option data-category="education-tutoring">Exam Prep</option>
+                                        <option data-category="education-tutoring">Early Childhood Education
+                                        </option>
+                                        <option data-category="education-tutoring">Special Education</option>
+
+                                        <!-- Crafts & Hobbies -->
+                                        <option data-category="crafts-hobbies">Sewing</option>
+                                        <option data-category="crafts-hobbies">Knitting</option>
+                                        <option data-category="crafts-hobbies">Woodworking</option>
+                                        <option data-category="crafts-hobbies">Candle Making</option>
+                                        <option data-category="crafts-hobbies">Jewelry Design</option>
+                                    </select>
+
+                                    
+                                    <button type="button" class="btn" id="add-skill-btn" style="margin-top:10px;">Add
+                                        Skill</button>
+
+                                </div>
+
+                            </div>
+                            <div>
+                                <span class="muted-text">Add skills you're interested in learning to help us find better
+                                    matches for you.</span>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="profile-picture-section-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="25" height="25"
+                                    role="img" aria-label="Clock icon" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    style="color: white;">
+                                    <title>Clock</title>
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg>
+                                <span class="section-title">Availability Schedule</span>
+                            </div>
+
+                            <div>
+                                <p class="availability-schedule-description">
+                                    Set your available days and hours for skill exchange sessions.
+                                </p>
+
+                                <div id="availability-container">
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-monday" name="day-monday" class="day-checkbox">
+                                        <label for="day-monday">Monday</label>
+                                        <input type="time" id="time-monday-start" name="time-monday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-monday-end" name="time-monday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-tuesday" name="day-tuesday" class="day-checkbox">
+                                        <label for="day-tuesday">Tuesday</label>
+                                        <input type="time" id="time-tuesday-start" name="time-tuesday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-tuesday-end" name="time-tuesday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-wednesday" name="day-wednesday"
+                                            class="day-checkbox">
+                                        <label for="day-wednesday">Wednesday</label>
+                                        <input type="time" id="time-wednesday-start" name="time-wednesday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-wednesday-end" name="time-wednesday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-thursday" name="day-thursday"
+                                            class="day-checkbox">
+                                        <label for="day-thursday">Thursday</label>
+                                        <input type="time" id="time-thursday-start" name="time-thursday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-thursday-end" name="time-thursday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-friday" name="day-friday" class="day-checkbox">
+                                        <label for="day-friday">Friday</label>
+                                        <input type="time" id="time-friday-start" name="time-friday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-friday-end" name="time-friday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-saturday" name="day-saturday"
+                                            class="day-checkbox">
+                                        <label for="day-saturday">Saturday</label>
+                                        <input type="time" id="time-saturday-start" name="time-saturday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-saturday-end" name="time-saturday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+
+                                    <div class="availability-day">
+                                        <input type="checkbox" id="day-sunday" name="day-sunday" class="day-checkbox">
+                                        <label for="day-sunday">Sunday</label>
+                                        <input type="time" id="time-sunday-start" name="time-sunday-start"
+                                            class="time-input" value="09:00">
+                                        <span>to</span>
+                                        <input type="time" id="time-sunday-end" name="time-sunday-end"
+                                            class="time-input" value="17:00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: center; align-items: flex-end;">
+                            <button class="btn btn-2-save" type="submit">
+                                Save Changes
+                            </button>
+                            <div class="">
+                                <button class="btn cancel-btn">
+                                    <a name="Cancelbutton" href="profile.html">Cancel</a>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../assets/js/profileData.js"></script>
+    <script src="../../assets/js/editProfile.js"></script>
+
+
+
+
+</body>
+
+</html>
