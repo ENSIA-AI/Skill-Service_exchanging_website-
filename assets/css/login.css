@@ -1,6 +1,4 @@
-/* CSS Variables */
 
-/* Reset */
 @import url(style.css);
 * {
     margin: 0;
@@ -21,7 +19,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Main Container - Compact */
 .login-container {
     display: flex;
     width: 90%;
@@ -34,7 +31,6 @@ body {
     min-height: auto;
 }
 
-/* Left Side - Compact Image */
 .login-left {
     flex: 1;
     background: var(--clr-lighter);
@@ -71,7 +67,6 @@ body {
     }
 }
 
-/* Right Side - Fixed Spacing */
 .login-right {
     flex: 1;
     padding: 8px 20px;
@@ -80,10 +75,9 @@ body {
     position: relative;
 }
 
-/* Fixed Header Spacing */
 .logo {
     text-align: center;
-    margin-bottom: 5px; /* Reduced space below logo */
+    margin-bottom: 5px; 
 }
 
 .logo h1 {
@@ -93,37 +87,34 @@ body {
     margin: 0;
 }
 
-/* Fixed Title Spacing */
 .login-right > h2 {
     font-size: 1.4rem;
-    margin-bottom: 2px; /* Reduced space below welcome back */
+    margin-bottom: 2px; 
     text-align: center;
 }
 
 .subtitle {
     color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 15px; /* Reduced space below subtitle */
+    margin-bottom: 15px; 
     text-align: center;
     font-size: 0.9rem;
 }
 
-/* Compact Divider */
 .divider {
     
     background: var(--clr-lighter);
-    margin: 5px 0 5px 0; /* Reduced top margin, kept bottom */
+    margin: 5px 0 5px 0; 
 }
 
-/* Compact Form */
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Reduced gap */
+    gap: 12px; 
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 4px; /* Reduced spacing */
+    margin-bottom: 4px; 
     font-weight: 600;
     font-size: 0.85rem;
 }
@@ -148,13 +139,21 @@ body {
     color: rgba(233, 214, 214, 0.6);
     font-style: italic;
 }
+/* Fix autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    background-color: var(--clr-main) !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--clr-main) inset !important;
+    box-shadow: 0 0 0 1000px var(--clr-main) inset !important;
+    -webkit-text-fill-color: var(--clr-font) !important;
+}
 
-/* Compact Form Options */
 .form-options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 8px 0 12px 0; /* Reduced top and bottom margins */
+    margin: 8px 0 12px 0; 
     flex-wrap: wrap;
     gap: 8px;
 }
@@ -182,7 +181,6 @@ body {
     font-size: 0.85rem;
 }
 
-/* Compact Buttons */
 .btn-login {
     width: 100%;
     padding: 12px;
@@ -193,7 +191,7 @@ body {
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    margin: 5px 0 8px 0; /* Reduced margins */
+    margin: 5px 0 8px 0;
     transition: all 0.3s ease;
 }
 
@@ -206,7 +204,7 @@ body {
 /* Compact Social Login */
 .social-divider {
     text-align: center;
-    margin: 12px 0 8px 0; /* Reduced top margin, smaller bottom */
+    margin: 12px 0 8px 0; 
     color: rgba(255, 255, 255, 0.7);
     position: relative;
     font-size: 0.85rem;
@@ -231,7 +229,7 @@ body {
 .social-login {
     display: flex;
     gap: 10px;
-    margin-bottom: 12px; /* Reduced bottom margin */
+    margin-bottom: 12px; 
 }
 
 .btn-social {
@@ -259,12 +257,11 @@ body {
     height: 16px;
 }
 
-/* Compact Sign Up Link */
 .signup-link {
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     font-size: 0.85rem;
-    margin-top: 5px; /* Reduced top margin */
+    margin-top: 5px; 
 }
 
 .signup-link a {
@@ -276,14 +273,14 @@ body {
 @media (min-width: 1440px) {
   .login-container {
     max-width: 1300px;
-    height: auto;         /* FIX */
+    height: auto;         
     min-height: auto;   
   }
   .logo h1 { font-size: 2.4rem; }
 }
 @media (max-width: 1439px) and (min-width: 1024px) {
   .login-container {
-    height: auto;         /* FIX */
+    height: auto;         
     min-height: auto;
   }
 }

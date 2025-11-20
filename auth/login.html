@@ -9,14 +9,14 @@
 </head>
 <body>
     <div class="login-container">
-        <!-- Left Side - Image/Illustration -->
+        <!-- Left Side -->
         <div class="login-left">
             <div class="illustration">
                 <img src="../assets/images/7943139_3779554.svg" alt="Welcome Back">
             </div>
         </div>
 
-        <!-- Right Side - Login Form -->
+        <!-- Right Side -->
         <div class="login-right">
             <div class="logo">
                 <h1>Swap</h1>
@@ -73,7 +73,7 @@
     </div>
 
     
-    <!-- Login logic using home.js functions -->
+    
     <script>
     window.addEventListener("load", () => {
     const form = document.querySelector('.login-form');
@@ -108,7 +108,7 @@
         return password.length >= 6 && /[A-Za-z]/.test(password) && /\d/.test(password);
     }
 
-    // Live input validation
+    // input validation
     [emailInput, passwordInput].forEach(input => {
         input.addEventListener('input', () => {
             if (input === emailInput) {
@@ -148,7 +148,7 @@
         else localStorage.removeItem("rememberedUser");
 
         // Redirect if valid
-        window.location.href = "/components/posts.html";
+        window.location.href = "/Skill-Service_exchanging_website-/dashboard/post/posts.php";
     });
 
     toggleButton();
