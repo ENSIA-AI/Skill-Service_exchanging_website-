@@ -10,7 +10,8 @@ body {
     color: var(--clr-font);
     display: block;
     position: relative;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family:  'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    padding-top: 70rem !important;
 }
 
 .page-container {
