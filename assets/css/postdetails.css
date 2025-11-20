@@ -10,7 +10,7 @@ body {
     display: block;
     position: relative;
     font-family:  'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    padding-top: 70rem !important;
+    padding-top: 1rem !important;
 }
 
 /* FIXED: Account for both header AND sidebar */
