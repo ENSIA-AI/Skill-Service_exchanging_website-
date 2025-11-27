@@ -18,9 +18,10 @@ body {
 }
 
 .notif-container {
-    padding: 30px;
+   
     width: 100%;
-    margin: 0 auto;
+    margin-left: 0 auto;
+   padding-top: 50px;
 }
 
 .header-section {
@@ -43,7 +44,7 @@ body {
 .markall {
     margin-left: auto;
     padding: 8px 20px;
-    background: var(--clr-org);
+    background: var(--clr-btn);
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -58,6 +59,8 @@ body {
     gap: 12px;
     margin: 20px 0 30px 0;
     flex-wrap: wrap;
+    z-index: 1;
+    position: relative;
 }
 
 .tab {
@@ -71,7 +74,7 @@ body {
 }
 
 .tab.active {
-    background: var(--clr-org);
+    background: var(--clr-btn);
     color: #000;
     font-weight: 500;
 }
@@ -85,11 +88,11 @@ body {
     gap: 20px;
     margin-bottom: 20px;
     position: relative;
-    border-left: 4px solid var(--clr-org);
+    border-left: 4px solid var(--clr-btn);
 }
 
 .notification-card.new {
-    border-left-color: var(--clr-org-dark);
+    border-left-color: var(--clr-btn-dark);
 }
 
 .notification-icons img {
@@ -115,7 +118,7 @@ body {
 }
 
 .notification-badge {
-    background: var(--clr-org-dark);
+    background: var(--clr-btn-dark);
     padding: 3px 8px;
     font-size: 12px;
     border-radius: 20px;
@@ -152,8 +155,8 @@ body {
 
 .btn-secondary {
     background: transparent;
-    border: 1px solid var(--clr-org);
-    color: var(--clr-org);
+    border: 1px solid var(--clr-btn);
+    color: var(--clr-btn);
     padding: 6px 14px;
     border-radius: 10px;
     cursor: pointer;
