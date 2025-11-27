@@ -58,11 +58,13 @@
         <div class="form-group">
           <label for="first-name">First Name</label>
           <input type="text" id="first-name" name="first-name" placeholder="Your first name" required>
+          <span id="first-name-error" class="error-message">Please enter your first name</span>
         </div>
 
         <div class="form-group">
           <label for="last-name">Last Name</label>
           <input type="text" id="last-name" name="last-name" placeholder="Your last name" required>
+          <span id="last-name-error" class="error-message">Please enter your last name</span>
         </div>
       
 
@@ -74,6 +76,7 @@
       <div class="form-group">
         <label for="message">Message</label>
         <textarea id="message" name="message" rows="5" placeholder="Tell us more about your inquiry..." required></textarea>
+         <span id="message-error" class="error-message">Please enter your message</span>
       </div>
 
       <div class="form-group"><button type="submit" class="send-btn">Send</button></div>
@@ -98,15 +101,72 @@
  
  <script src="assets/js/home.js"></script>
  <script>
-document.querySelector(".contact-form").addEventListener("submit", function(event) {
-    event.preventDefault();  // stops page reload / redirect
+ //document.querySelector(".contact-form").addEventListener("submit", function(event) {
+   // event.preventDefault();  // stops page reload / redirect
     
     // Show success message
-    const successMessage = document.getElementById("success-message");
-    successMessage.style.display = "block";
+   // const successMessage = document.getElementById("success-message");
+    //successMessage.style.display = "block";
     
     // Optional: Clear the form
-    this.reset();
+    //this.reset();
+//});
+document.querySelector(".contact-form").addEventListener("submit", function(event) {
+    event.preventDefault();  
+    
+    // Reset previous error messages
+    document.querySelectorAll('.error-message').forEach(error => {
+        error.style.display = 'none';
+    });
+    
+    let isValid = true;
+    
+    // Validate first name
+    const firstName = document.getElementById("first-name").value.trim();
+    if (firstName === "") {
+        document.getElementById("first-name-error").style.display = 'block';
+        isValid = false;
+    }
+    
+    // Validate last name
+    const lastName = document.getElementById("last-name").value.trim();
+    if (lastName === "") {
+        document.getElementById("last-name-error").style.display = 'block';
+        isValid = false;
+    }
+    
+    // Validate message
+    const message = document.getElementById("message").value.trim();
+    if (message === "") {
+        document.getElementById("message-error").style.display = 'block';
+        isValid = false;
+    }
+    
+    // If all validations pass, show success message and reset form
+    if (isValid) {
+        const successMessage = document.getElementById("success-message");
+        successMessage.style.display = "block";
+        this.reset();
+    }
+});
+
+// Optional: Add real-time validation as user types
+document.getElementById("first-name").addEventListener("input", function() {
+    if (this.value.trim() !== "") {
+        document.getElementById("first-name-error").style.display = 'none';
+    }
+});
+
+document.getElementById("last-name").addEventListener("input", function() {
+    if (this.value.trim() !== "") {
+        document.getElementById("last-name-error").style.display = 'none';
+    }
+});
+
+document.getElementById("message").addEventListener("input", function() {
+    if (this.value.trim() !== "") {
+        document.getElementById("message-error").style.display = 'none';
+    }
 });
 </script>
 

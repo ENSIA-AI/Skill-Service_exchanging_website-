@@ -657,6 +657,18 @@ textarea {
    
 }
 
+.error-message {
+    display: none;
+    color: #d32f2f;
+    font-size: 0.8em;
+    margin-top: 4px;
+    padding: 4px 8px;
+    background-color: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    animation: fadeIn 0.3s ease-in;
+}
+
 
 
 
