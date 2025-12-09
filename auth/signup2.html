@@ -20,7 +20,7 @@
         <div class="signup-right">
             <h2>Your Skills & Interests</h2>
             
-            <form action="signup3.html" method="post">
+            <form action="signup3.html" method="post" id="skillsForm" >
             <!--Skills i can teach section -->
                 <div class="skills-section">
                     <div class="section-header">
@@ -317,6 +317,20 @@
             const currentSkills = skillsList.querySelectorAll('.skill-item').length;
             skillsCounter.textContent = `${currentSkills}/5 skills selected`;
         }
+
+        // Prevent submitting if skills not selected
+      document.getElementById("skillsForm").addEventListener("submit", function(event) {
+      const teachCount = document.querySelectorAll("#teachSkillsList .skill-item").length;
+      const learnCount = document.querySelectorAll("#learnSkillsList .skill-item").length;
+
+     if (teachCount < 1 || learnCount < 1) {
+        event.preventDefault(); // stop going to next page
+        alert("Please select at least 1 skill you can teach and 1 skill you want to learn.");
+    }
+   });
+
+
+
     </script>
 </body>
 </html>
