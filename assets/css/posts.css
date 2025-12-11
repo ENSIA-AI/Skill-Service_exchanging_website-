@@ -264,6 +264,7 @@ h3 {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   flex: 1 1 280px;
   min-height: 100%;
+  gap: 10px;
 }
 
 .post-card:hover {
@@ -281,13 +282,16 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
-  gap: 0.5rem;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 /* Like button */
 .like-btn {
-  width: 60px;
-  height: 10px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
   border-radius: 8px;
   border: none;
   background: transparent;
@@ -299,16 +303,15 @@ h3 {
   transition: 0.2s ease;
 }
 .like-btn svg {
-  width: 30px;
-  height: 40px;
-  stroke: rgb(244, 109, 12);
+  width: 24px;
+  height: 24px;
+  stroke: rgb(243, 102, 8);
   fill: transparent;
-  stroke-width: 1;
+  stroke-width: 1.5;
   transition: 0.2s ease;
-  fill: var(--clr-bars);
 }
 .like-btn.liked svg {
-  fill: rgb(244, 109, 12);
+  fill: rgb(243, 102, 8);
 }
 
 
@@ -373,7 +376,7 @@ h3 {
 
 /* See details button */
 .see-details-btn {
-  margin-top: auto;
+  flex: 1;
   background-color: var(--clr-btn);
   color: white;
   border: none;
@@ -383,6 +386,7 @@ h3 {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  white-space: nowrap;
 }
 
 .see-details-btn:hover {
