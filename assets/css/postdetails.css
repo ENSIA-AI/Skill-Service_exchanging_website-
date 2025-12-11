@@ -26,7 +26,7 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 380px;
+    grid-template-columns: 1fr 480px;
     gap: 30px;
     padding: 0 20px;
     width: 100%;
@@ -66,7 +66,7 @@ body {
 @media (min-width: 2000px) {
     .service-detail-container {
         max-width: 95%; /* Use percentage instead of fixed width */
-        grid-template-columns: 1fr 450px;
+        grid-template-columns: 1fr 520px;
         gap: 50px;
         padding: 0 2.5%; /* Percentage-based padding */
     }
@@ -75,7 +75,7 @@ body {
 @media (min-width: 2400px) {
     .service-detail-container {
         max-width: 92%;
-        grid-template-columns: 1fr 500px;
+        grid-template-columns: 1fr 570px;
         gap: 60px;
         padding: 0 4%;
     }
@@ -84,7 +84,7 @@ body {
 @media (min-width: 2800px) {
     .service-detail-container {
         max-width: 90%;
-        grid-template-columns: 1fr 550px;
+        grid-template-columns: 1fr 620px;
         gap: 70px;
         padding: 0 5%;
     }
@@ -162,6 +162,16 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+}
+
+.favorite-btn svg {
+    display: block;
+    margin: auto;
 }
 
 .favorite-btn:hover {
@@ -214,6 +224,12 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .info-card svg {
@@ -283,6 +299,15 @@ body {
     padding: 25px;
     border-radius: 15px;
     margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.service-description:hover,
+.skills-section:hover,
+.exchange-section:hover,
+.requirements-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .service-description h2,
@@ -417,117 +442,146 @@ body {
 }
 
 .availability-card {
-    background-color: var(--clr-lighter);
-    padding: 25px;
+    background-color: #5a6b8f;
+    padding: 20px;
     border-radius: 15px;
 }
 
-.availability-card h2 {
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-    color: var(--clr-font);
-}
-
-/* Calendar */
-.calendar-container {
+.availability-header {
+    display: flex;
+    gap: 15px;
     margin-bottom: 25px;
 }
 
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+.availability-header svg {
+    color: var(--clr-btn);
+    min-width: 24px;
 }
 
-.calendar-month {
-    font-size: 1.1rem;
-    font-weight: 600;
+.availability-header h2 {
+    font-size: 1.3rem;
+    margin: 0 0 5px 0;
     color: var(--clr-font);
 }
 
-.calendar-nav-btn {
-    background-color: var(--clr-main);
-    border: none;
-    color: var(--clr-font);
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.calendar-nav-btn:hover {
-    background-color: var(--clr-btn);
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
-
-.calendar-day-header {
-    text-align: center;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--clr-secondary-font);
-    padding: 10px 0;
-}
-
-.calendar-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: var(--clr-font);
+.availability-header p {
     font-size: 0.9rem;
+    color: #c5c7d9;
+    margin: 0;
 }
 
-.calendar-day:hover {
-    background-color: var(--clr-main);
+/* Schedule Container */
+.schedule-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.calendar-day.prev-month,
-.calendar-day.next-month {
-    color: #777;
+.schedule-day {
+    background-color: var(--clr-bars);
+    padding: 12px 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
 }
 
-.calendar-day.selected {
-    background-color: var(--clr-btn);
-    color: var(--clr-font);
+.schedule-day:disabled,
+.schedule-day[disabled] {
+    pointer-events: none;
+}
+
+.schedule-day.unavailable {
+    filter: blur(3px);
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.schedule-day.unavailable .day-check,
+.schedule-day.unavailable input {
+    cursor: not-allowed;
+}
+
+.day-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    min-width: fit-content;
+}
+
+.day-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--clr-btn);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.day-checkbox input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.day-label {
     font-weight: 600;
-}
-
-/* Available Slots */
-.available-slots {
-    margin-bottom: 0;
-}
-
-.available-slots h3 {
-    font-size: 1rem;
-    margin-bottom: 12px;
     color: var(--clr-font);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 85px;
 }
 
-.time-slot {
+.time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.time-input {
     background-color: var(--clr-main);
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 10px;
+    border: 1px solid #7a8599;
     color: var(--clr-font);
+    padding: 8px 12px;
+    border-radius: 8px;
     font-size: 0.9rem;
+    width: 95px;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: var(--clr-btn);
+    box-shadow: 0 0 5px rgba(249, 177, 122, 0.3);
+}
+
+.time-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.time-input:enabled {
+    cursor: time;
+}
+
+.time-separator {
+    color: #c5c7d9;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
     .service-detail-container {
-        grid-template-columns: 1fr 320px;
+        grid-template-columns: 1fr 420px;
     }
 }
 
