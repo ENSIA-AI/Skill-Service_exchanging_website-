@@ -7,11 +7,11 @@
  */
 
 // Path to .env.local file (contains credentials that vary per teammate)
-$envFilePath = __DIR__ . '/.env.local.user';
+$envFilePath = __DIR__ . '/.env.local';
 
-// Check if .env.local exists; if not, copy from example or use defaults
+// Check if .env.local exists; if not, provide helpful error
 if (!file_exists($envFilePath)) {
-    die("Error: .env.local file not found. Please copy .env.local.example to .env.local and configure your database credentials.");
+    die("Error: .env.local file not found in DataBaseManagement/ directory. Please configure your database credentials in DataBaseManagement/.env.local");
 }
 
 // Load environment variables from .env.local
