@@ -1,3 +1,4 @@
+<?php require_once '../../DataBaseManagement/config.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,6 @@
     <main class="php-content">
         <?php include './posts.html';?>
     </main>
-        
         
 </body>
 </html>
