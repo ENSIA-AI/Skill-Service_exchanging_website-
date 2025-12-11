@@ -27,7 +27,7 @@ body {
 
 .signup-container {
     display: flex;
-    width: 100%;
+    width: 80%;
     max-width: 1400px;
     min-height: 600px;
     background-color: var(--clr-bars);
@@ -137,7 +137,7 @@ body {
     padding: 15px 20px;
     border: none;
     border-radius: 10px;
-    background-color: var(--clr-bars);
+    background-color: var(--clr-main);
     color: var(--clr-font);
     font-size: 1rem;
     transition: all 0.3s ease;

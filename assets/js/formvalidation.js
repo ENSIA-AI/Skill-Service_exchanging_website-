@@ -8,7 +8,8 @@ function isValidEmail(email) {
 }
 
 function isValidName(name) {
-    const regex = /^[a-zA-Z]{2,30}$/;
+   
+    const regex = /^[a-zA-Z\s]{2,30}$/;
     return regex.test(name);
 }
 
@@ -17,6 +18,13 @@ function isValidPassword(password) {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
     return regex.test(password);
 }
+
+function isValidAlgerianPhone(phone) {
+   
+    const regex = /^(?:\+213\s?)?(?:0)?(5|6|7)[0-9]{8}$/;
+    return regex.test(phone);
+}
+
 
 function showError(input, message) {
     const formGroup = input.closest('.form-group');
@@ -48,11 +56,14 @@ if(contactForm) {
         const lastName = document.getElementById('last-name');
         const email = document.getElementById('email');
         const message = document.getElementById('message');
+      
+
 
         clearError(firstName);
         clearError(lastName);
         clearError(email);
         clearError(message);
+       
 
         if(!isValidName(firstName.value)) {
             showError(firstName, 'Please enter a valid first name');
@@ -66,6 +77,7 @@ if(contactForm) {
             showError(email, 'Please enter a valid email');
             valid = false;
         }
+       
         if(message.value.trim().length < 5) {
             showError(message, 'Message should be at least 5 characters');
             valid = false;
@@ -82,18 +94,23 @@ if(signupForm) {
         event.preventDefault();
         let valid = true;
 
+
         const fullName = document.getElementById('fullName');
         const email = document.getElementById('email');
         const password = document.getElementById('password');
         const confirmPassword = document.getElementById('confirmPassword');
         const location = document.getElementById('location');
         const terms = document.getElementById('terms');
+        const phone = document.getElementById('phone');
+        const gender = document.getElementById('gender');
+        const birthdate = document.getElementById('birthdate');
 
         clearError(fullName);
         clearError(email);
         clearError(password);
         clearError(confirmPassword);
         clearError(location);
+        clearError(phone);
 
         if(!isValidName(fullName.value)) {
             showError(fullName, 'Please enter a valid name');
@@ -107,6 +124,17 @@ if(signupForm) {
             showError(password, 'Password must be at least 6 characters and contain letters and numbers');
             valid = false;
         }
+         if(!isValidAlgerianPhone(phone.value)) {
+            showError(phone, 'Please enter a valid Algerian phone number (05/06/07 followed by 8 digits)');
+            valid = false;
+        }
+
+        if(!gender.value || gender.value === '') {
+       showError(gender, 'Please select your gender');
+        valid = false;
+       }
+       
+
         if(password.value !== confirmPassword.value) {
             showError(confirmPassword, 'Passwords do not match');
             valid = false;
