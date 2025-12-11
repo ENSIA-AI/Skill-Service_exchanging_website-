@@ -1,84 +1,147 @@
 export const events = [
     {
+      id: 1,
       title: 'Web Development Workshop',
       date: 'October 15, 2025' ,
-      location: 'Community Center',
+      time: '10:00 AM - 04:00 PM',
+      location: 'Community Center, Room 304',
       maxAttendees: 15,
       attendees: 8,
       organizer: `Sarah Chen`,
-      skills: ['HTML','CSS' , 'JavaScript']
+      skills: ['HTML','CSS' , 'JavaScript'],
+      cost: '50 Credits',
+      type: 'In-Person',
+      duration: '6 hours',
+      createdDate: 'Saturday, September 20, 2025 at 02:30 PM',
+      description: 'Join us for an intensive hands-on workshop where we\'ll dive deep into modern web development practices. This workshop is designed for both beginners and intermediate developers who want to enhance their skills in HTML, CSS, and JavaScript. We\'ll cover responsive design principles, modern CSS techniques including Flexbox and Grid, and JavaScript best practices. Participants will work on real-world projects and receive personalized feedback from experienced instructors. By the end of this workshop, you\'ll have built a complete portfolio website from scratch. Don\'t miss this opportunity to level up your web development skills and connect with fellow developers in the community!'
     },
     {
+      id: 2,
       title: 'Photography Basics Meetup',
       date: 'October 18, 2025' ,
+      time: '02:00 PM - 05:00 PM',
       location: 'City Park',
       maxAttendees: 20,
       attendees: 12,
       organizer: `Michael Torres`,
-      skills: ['Photography','Editing']
+      skills: ['Photography','Editing'],
+      cost: '25 Credits',
+      type: 'In-Person',
+      duration: '3 hours',
+      createdDate: 'Monday, September 15, 2025 at 10:00 AM',
+      description: 'Learn the fundamentals of photography in this practical meetup. We\'ll explore camera settings, composition techniques, and lighting principles. Bring your camera or smartphone and join us for hands-on practice in a beautiful outdoor setting.'
     },
     {
+      id: 3,
       title: 'Design Thinking Session',
       date: 'October 20, 2025' ,
+      time: '03:00 PM - 06:00 PM',
       location: 'Online',
       maxAttendees: 15,
       attendees: 15,
       organizer: `Emma Johnson`,
-      skills: ['Design','UX/UI']
+      skills: ['Design','UX/UI'],
+      cost: '30 Credits',
+      type: 'Online',
+      duration: '3 hours',
+      createdDate: 'Tuesday, September 16, 2025 at 04:15 PM',
+      description: 'This workshop explores the design thinking methodology for solving complex problems creatively. Perfect for UX/UI designers and anyone interested in user-centered design approaches.'
     },
     {
+      id: 4,
       title: 'Skill Exchange Fair',
       date: 'October 22, 2025' ,
+      time: '10:00 AM - 06:00 PM',
       location: 'Main Square',
       maxAttendees: 50,
       attendees: 34,
       organizer: `Community Admin`,
-      skills: ['All Skills Welcome']
+      skills: ['All Skills Welcome'],
+      cost: 'Free',
+      type: 'In-Person',
+      duration: '8 hours',
+      createdDate: 'Wednesday, September 17, 2025 at 09:00 AM',
+      description: 'A large community event celebrating skill exchange. Meet various instructors and learners, explore different skill categories, and connect with people in the community. Free entry for all!'
     },
     {
+      id: 5,
       title: 'Business & Marketing Workshop',
       date: 'October 25, 2025' ,
+      time: '11:00 AM - 03:00 PM',
       location: 'Business Hub',
       maxAttendees: 12,
       attendees: 6,
       organizer: `David Kim`,
-      skills: ['Marketing' , 'Social Media']
+      skills: ['Marketing' , 'Social Media'],
+      cost: '40 Credits',
+      type: 'In-Person',
+      duration: '4 hours',
+      createdDate: 'Thursday, September 18, 2025 at 02:30 PM',
+      description: 'Learn modern marketing strategies and social media best practices. This workshop covers content creation, audience engagement, and analytics.'
     },
     {
+      id: 6,
       title: 'Language Exchange Meetup',
       date: 'October 28, 2025' ,
+      time: '04:00 PM - 06:00 PM',
       location: 'Coffee Shop',
       maxAttendees: 20,
       attendees: 10,
       organizer: `Lisa Anderson`,
-      skills: ['Language Teaching']
+      skills: ['Language Teaching'],
+      cost: 'Free',
+      type: 'In-Person',
+      duration: '2 hours',
+      createdDate: 'Friday, September 19, 2025 at 11:00 AM',
+      description: 'A casual meetup for language learners and teachers to practice different languages and exchange cultural knowledge in a relaxed coffee shop environment.'
     },
     {
+      id: 7,
       title: 'Math Meetup',
       date: 'October 19, 2025' ,
+      time: '01:00 PM - 04:00 PM',
       location: 'Student hub',
       maxAttendees: 25,
       attendees: 16,
       organizer: `Math club`,
-      skills: ['Analysis','Algebra' , 'Probabilities']
+      skills: ['Analysis','Algebra' , 'Probabilities'],
+      cost: '15 Credits',
+      type: 'In-Person',
+      duration: '3 hours',
+      createdDate: 'Saturday, September 20, 2025 at 03:00 PM',
+      description: 'Deep dive into mathematical concepts including analysis, algebra, and probability theory. Suitable for students and enthusiasts looking to strengthen their mathematical foundation.'
     },
     {
+      id: 8,
       title: 'Painting workshop',
       date: 'October 18, 2025' ,
-      location: 'Coffe shop',
+      time: '05:00 PM - 08:00 PM',
+      location: 'Coffee shop',
       maxAttendees: 8,
       attendees: 4,
       organizer: `David Con`,
-      skills: ['Creativity']
+      skills: ['Creativity'],
+      cost: '35 Credits',
+      type: 'In-Person',
+      duration: '3 hours',
+      createdDate: 'Sunday, September 21, 2025 at 05:30 PM',
+      description: 'Unleash your creativity in this hands-on painting workshop. Learn various painting techniques and styles while creating your own masterpiece in a supportive environment.'
     },
     {
+      id: 9,
       title: 'Music workshop',
       date: 'October 11, 2025' ,
+      time: '06:00 PM - 08:00 PM',
       location: 'Music association',
       maxAttendees: 15,
       attendees: 9,
       organizer: `Sarah Lynn`,
-      skills: ['Piano','Guitar' , 'Singing']
+      skills: ['Piano','Guitar' , 'Singing'],
+      cost: '20 Credits',
+      type: 'In-Person',
+      duration: '2 hours',
+      createdDate: 'Monday, September 22, 2025 at 01:15 PM',
+      description: 'Learn music fundamentals and instrument basics. Whether you\'re interested in piano, guitar, or singing, this workshop provides a great introduction to music education.'
     },
 ];
     
