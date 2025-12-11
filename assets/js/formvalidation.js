@@ -89,6 +89,58 @@ if(contactForm) {
 //sign up form validation 
 const signupForm = document.querySelector('.signup-form');
 
+// Set up birthdate min/max and immediate input validation to prevent invalid entries
+if(signupForm) {
+    const birthdateInput = document.getElementById('birthdate');
+    if(birthdateInput) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        birthdateInput.max = todayStr;
+        birthdateInput.min = '1900-01-01';
+
+        birthdateInput.addEventListener('input', function() {
+            // clear any previous error shown by our helper
+            clearError(birthdateInput);
+
+            const v = birthdateInput.value;
+            if(!v) {
+                birthdateInput.setCustomValidity('');
+                return;
+            }
+
+            const bd = new Date(v);
+            if(isNaN(bd.getTime())) {
+                // Invalid date string — prevent keeping it
+                birthdateInput.value = '';
+                birthdateInput.setCustomValidity('Invalid date');
+                showError(birthdateInput, 'Please enter a valid date');
+                return;
+            }
+
+            const year = bd.getFullYear();
+            const today = new Date();
+            const minYear = 1900;
+
+            if(year < minYear) {
+                birthdateInput.value = '';
+                birthdateInput.setCustomValidity('Year too early');
+                showError(birthdateInput, `Year must be ${minYear} or later`);
+                return;
+            }
+
+            if(bd > today) {
+                birthdateInput.value = '';
+                birthdateInput.setCustomValidity('Future date not allowed');
+                showError(birthdateInput, 'Birth date cannot be in the future');
+                return;
+            }
+
+            // valid
+            birthdateInput.setCustomValidity('');
+            clearError(birthdateInput);
+        });
+    }
+}
+
 if(signupForm) {
     signupForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -104,13 +156,14 @@ if(signupForm) {
         const phone = document.getElementById('phone');
         const gender = document.getElementById('gender');
         const birthdate = document.getElementById('birthdate');
-
         clearError(fullName);
         clearError(email);
         clearError(password);
         clearError(confirmPassword);
         clearError(location);
         clearError(phone);
+        clearError(gender);
+        clearError(birthdate);
 
         if(!isValidName(fullName.value)) {
             showError(fullName, 'Please enter a valid name');
@@ -142,6 +195,28 @@ if(signupForm) {
         if(location.value.trim() === '') {
             showError(location, 'Please enter your location');
             valid = false;
+        }
+        // Birthdate validation: ensure a valid date, not in the future, and not an unrealistically early year
+        if(!birthdate.value) {
+            showError(birthdate, 'Please enter your birth date');
+            valid = false;
+        } else {
+            const bd = new Date(birthdate.value);
+            if(isNaN(bd.getTime())) {
+                showError(birthdate, 'Please enter a valid date');
+                valid = false;
+            } else {
+                const year = bd.getFullYear();
+                const today = new Date();
+                const minYear = 1900; // adjust if you want a different lower bound
+                if(year < minYear) {
+                    showError(birthdate, `Year must be ${minYear} or later`);
+                    valid = false;
+                } else if(bd > today) {
+                    showError(birthdate, 'Birth date cannot be in the future');
+                    valid = false;
+                }
+            }
         }
         if(!terms.checked) {
             alert('You must agree to terms and conditions');
