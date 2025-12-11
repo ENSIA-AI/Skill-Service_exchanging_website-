@@ -27,15 +27,14 @@
      
     </button>
     <!-- Browse Categories Section -->
-<section class="browse-category">
+<section class="browse-category"> 
   <h2>Browse Categories</h2>
   <div class="category-scroll">
 
-    <div class="category-card " data-category="Technology & Programming">
+    <div class="category-card" data-category="Technology & Programming">
       <img src="../../assets/icons/laptop-open-icon.svg" alt="Technology & Programming">
       <div class="category-info">
         <h3>Technology & Programming</h3>
-        <p class="posts-available"></p>
       </div>
     </div>
 
@@ -43,7 +42,6 @@
       <img src="../../assets/icons/paint-palette-clipart.svg" alt="Creative Arts & Design">
       <div class="category-info">
         <h3>Creative Arts & Design</h3>
-        <p class="posts-available"></p>
       </div>
     </div>
 
@@ -51,7 +49,6 @@
       <img src="../../assets/icons/online-community-icon.svg" alt="Languages & Communication">
       <div class="category-info">
         <h3>Languages & Communication</h3>
-        <p class="posts-available"></p>
       </div>
     </div>
 
@@ -59,7 +56,6 @@
       <img src="../../assets/icons/briefcase-emoji-clipart-original.svg" alt="Business & Professional">
       <div class="category-info">
         <h3>Business & Professional</h3>
-        <p class="posts-available"></p>
       </div>
     </div>
 
@@ -67,7 +63,6 @@
       <img src="../../assets/icons/service-provider-icon.svg" alt="Home Services & DIY">
       <div class="category-info">
         <h3>Home Services & DIY</h3>
-        <p class="posts-available"></p>
       </div>
     </div>
 
@@ -75,15 +70,15 @@
       <img src="../../assets/icons/yoga-meditation-girl-clipart.svg" alt="Fitness & Wellness" class="fitness-img">
       <div class="category-info">
         <h3>Fitness & Wellness</h3>
-        <p class="posts-available"></p>
       </div>
     </div>
 
   </div>
 </section>
+
 <section class="browse-posts">
   <h2 id="posts-title">Browse All Posts</h2>
-  <button id="show-all-btn">Show All Posts</button>
+  <button class="show-all-btn">Show All Posts</button>
   <div class="posts-grid">
     <!-- Post 1 -->
     <div class="post-card" data-category="Technology & Programming">
@@ -107,12 +102,18 @@
         <span>Hooks</span>
         <span>Redux</span>
       </div>
-
+      <div class="post-actions">
       <button class="see-details-btn" onclick="window.location.href='/Skill-Service_exchanging_website-/dashboard/post/postdetails.php'">See Details</button>
+       <button class="like-btn">
+        <svg viewBox="0 0 24 24">
+        <path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>
+        </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Post 2 -->
-    <div class="post-card" data-category="reative Arts & Design">
+    <div class="post-card" data-category="Creative Arts & Design">
       <div class="post-header">
         <img src="../../assets/images/Default_pfp.svg" alt="Profile Picture" class="profile-pic">
         <div class="profile-info">
@@ -133,8 +134,16 @@
         <span>Illustrator</span>
         <span>Brand Strategy</span>
       </div>
-
+      <div class="post-actions">
       <button class="see-details-btn" onclick="window.location.href='/Skill-Service_exchanging_website-/dashboard/post/postdetails.php'">See Details</button>
+       <button class="like-btn">
+        <svg viewBox="0 0 24 24">
+        <path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>
+        </svg>
+        </button>
+      </div>
+
+  
     </div>
 
     <!-- Post 3 -->
@@ -161,7 +170,14 @@
         <span>MongoDB</span>
       </div>
 
+      <div class="post-actions">
       <button class="see-details-btn" onclick="window.location.href='/Skill-Service_exchanging_website-/dashboard/post/postdetails.php'">See Details</button>
+       <button class="like-btn">
+        <svg viewBox="0 0 24 24">
+        <path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>
+        </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Post 4 -->
@@ -187,7 +203,14 @@
         <span>Editing</span>
       </div>
 
+      <div class="post-actions">
       <button class="see-details-btn" onclick="window.location.href='/Skill-Service_exchanging_website-/dashboard/post/postdetails.php'">See Details</button>
+       <button class="like-btn">
+        <svg viewBox="0 0 24 24">
+        <path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>
+        </svg>
+        </button>
+      </div>
     </div>
     <!-- Post 5 -->
     <div class="post-card" data-category="Fitness & Wellness">
@@ -212,7 +235,14 @@
         <span>Motivation</span>
       </div>
 
+      <div class="post-actions">
       <button class="see-details-btn" onclick="window.location.href='/Skill-Service_exchanging_website-/dashboard/post/postdetails.php'">See Details</button>
+       <button class="like-btn">
+        <svg viewBox="0 0 24 24">
+        <path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>
+        </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Post 6 -->
@@ -238,12 +268,19 @@
         <span>Renovation</span>
       </div>
 
+      <div class="post-actions">
       <button class="see-details-btn" onclick="window.location.href='/Skill-Service_exchanging_website-/dashboard/post/postdetails.php'">See Details</button>
+       <button class="like-btn">
+        <svg viewBox="0 0 24 24">
+        <path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>
+        </svg>
+        </button>
+      </div>
     </div>
 
   </div>
 </section>
-<section class="sessions-activities">
+<!-- <section class="sessions-activities">
 <div class="Upcoming-sessions">
   <div class="sessions-grid">
     <h3>your upcoming sessions</h3>
@@ -318,7 +355,7 @@
     </div>
   </div>
 </div>
-</section>
+</section> --> 
   </main>
   
 <script src="../../assets/js/posts.js"></script>
