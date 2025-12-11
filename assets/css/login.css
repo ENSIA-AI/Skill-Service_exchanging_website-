@@ -22,7 +22,7 @@ body {
 .login-container {
     display: flex;
     width: 90%;
-    max-width: 11100px;
+    max-width: 1400px;
     background: var(--clr-bars);
     border-radius: 12px;
     overflow: hidden;

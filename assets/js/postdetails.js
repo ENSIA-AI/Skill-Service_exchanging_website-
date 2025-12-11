@@ -213,6 +213,95 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add resize listener
     window.addEventListener('resize', handleResize);
+
+    // Schedule functionality for availability - Single selection mode
+    const dayCheckboxes = document.querySelectorAll('.day-check');
+    const scheduleDays = document.querySelectorAll('.schedule-day');
+    let selectedCheckbox = null; // Track the currently selected checkbox
+    
+    // Initialize unavailable days (Monday and Sunday)
+    const unavailableDays = ['monday', 'sunday'];
+    unavailableDays.forEach(dayName => {
+        const dayElement = document.querySelector(`[data-day="${dayName}"]`);
+        if (dayElement) {
+            dayElement.classList.add('unavailable');
+            const checkbox = dayElement.querySelector('.day-check');
+            if (checkbox) {
+                checkbox.disabled = true;
+            }
+            const timeInputs = dayElement.querySelectorAll('.time-input');
+            timeInputs.forEach(input => {
+                input.disabled = true;
+            });
+        }
+    });
+    
+    dayCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('click', function(e) {
+            // If this checkbox is disabled, prevent the click
+            if (this.disabled) {
+                e.preventDefault();
+                return;
+            }
+            
+            // Prevent unchecking - always keep one checked
+            if (!this.checked && selectedCheckbox === this) {
+                e.preventDefault();
+                this.checked = true;
+                return;
+            }
+            
+            // If trying to check this box
+            if (this.checked) {
+                // Uncheck all other checkboxes (strict single selection)
+                dayCheckboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== this && !otherCheckbox.disabled) {
+                        otherCheckbox.checked = false;
+                        const otherDay = otherCheckbox.closest('.schedule-day');
+                        const otherTimeInputs = otherDay.querySelectorAll('.time-input');
+                        otherTimeInputs.forEach(input => {
+                            input.disabled = true;
+                        });
+                    }
+                });
+                
+                // Enable time inputs for selected day
+                selectedCheckbox = this;
+                const selectedDay = this.closest('.schedule-day');
+                const timeInputs = selectedDay.querySelectorAll('.time-input');
+                timeInputs.forEach(input => {
+                    input.disabled = false;
+                });
+                
+                console.log('Selected day: ' + this.id);
+            }
+        });
+        
+        // Also add change listener as backup
+        checkbox.addEventListener('change', function(e) {
+            // Ensure only this checkbox can be checked
+            if (this.checked && !this.disabled) {
+                dayCheckboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== this && !otherCheckbox.disabled) {
+                        otherCheckbox.checked = false;
+                        const otherDay = otherCheckbox.closest('.schedule-day');
+                        const otherTimeInputs = otherDay.querySelectorAll('.time-input');
+                        otherTimeInputs.forEach(input => {
+                            input.disabled = true;
+                        });
+                    }
+                });
+                
+                // Enable time inputs
+                selectedCheckbox = this;
+                const selectedDay = this.closest('.schedule-day');
+                const timeInputs = selectedDay.querySelectorAll('.time-input');
+                timeInputs.forEach(input => {
+                    input.disabled = false;
+                });
+            }
+        });
+    });
     
     // Add loading animation
     const mainContent = document.querySelector('.main-content');

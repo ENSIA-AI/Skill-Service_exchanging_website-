@@ -31,8 +31,8 @@ body {
     max-width: 1400px;
     min-height: 600px;
     background-color: var(--clr-bars);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
@@ -67,7 +67,7 @@ body {
 /* Right Side - Form */
 .signup-right {
     flex: 1;
-    padding: 80px 60px;
+    padding: 20px 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -75,10 +75,10 @@ body {
 }
 
 .signup-right h2 {
-    font-size: 2.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: white;
-    margin-bottom: 40px;
+    margin-bottom: 15px;
     text-align: center;
 }
 
@@ -88,27 +88,26 @@ body {
 
 /* Form Elements */
 .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 12px;
 }
 
 .form-group label {
     display: block;
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 4px;
     color: white;
 }
 
 .form-group input {
     width: 100%;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--clr-lighter);
+    border-radius: 6px;
     background-color: var(--clr-main);
     color: var(--clr-font);
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
 }
 
 .form-group input:focus {
@@ -139,15 +138,14 @@ body {
     border-radius: 10px;
     background-color: var(--clr-main);
     color: var(--clr-font);
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
     appearance: none;
     
     background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 16px;
-    padding-right: 45px;
+    background-position: right 12px center;
+    background-size: 14px;
+    padding-right: 35px;
 }
 
 .form-group select:focus {
@@ -183,13 +181,13 @@ body {
 .form-check {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin: 30px 0;
+    gap: 6px;
+    margin: 12px 0;
 }
 
 .form-check input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     accent-color: var(--clr-btn);
     cursor: pointer;
 }
@@ -638,15 +636,15 @@ body {
     }
 
     .signup-right {
-        padding: 30px 20px;
+        padding: 20px 20px;
         flex: none;
         overflow-y: visible;
         max-height: none;
     }
 
     .signup-right h2 {
-        font-size: 1.8rem;
-        margin-bottom: 25px;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
     }
 
     .form-group {
@@ -801,12 +799,12 @@ body {
 /* Extra small devices */
 @media (max-width: 375px) {
     .signup-right {
-        padding: 25px 15px;
+        padding: 20px 15px;
     }
     
     .signup-right h2 {
-        font-size: 1.6rem;
-        margin-bottom: 20px;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
     }
     
     .form-group input,
