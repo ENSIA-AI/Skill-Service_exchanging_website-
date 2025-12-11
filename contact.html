@@ -72,6 +72,7 @@
       <div class="form-group">
         <label for="email">Email Address</label>
         <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+         <span id="email-error" class="error-message">Please enter a valid email address</span>
       </div>
 
       <div class="form-group">
@@ -101,17 +102,16 @@
  
  
  <script src="assets/js/home.js"></script>
+  
  <script>
- //document.querySelector(".contact-form").addEventListener("submit", function(event) {
-   // event.preventDefault();  // stops page reload / redirect
-    
-    // Show success message
-   // const successMessage = document.getElementById("success-message");
-    //successMessage.style.display = "block";
-    
-    // Optional: Clear the form
-    //this.reset();
-//});
+ 
+ // Function to validate email format
+    function validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+
 document.querySelector(".contact-form").addEventListener("submit", function(event) {
     event.preventDefault();  
     
@@ -135,6 +135,19 @@ document.querySelector(".contact-form").addEventListener("submit", function(even
         document.getElementById("last-name-error").style.display = 'block';
         isValid = false;
     }
+
+     
+    // Validate email
+      const email = document.getElementById("email").value.trim();
+      if (email === "") {
+        document.getElementById("email-error").textContent = "Please enter your email address";
+        document.getElementById("email-error").style.display = 'block';
+        isValid = false;
+      } else if (!validateEmail(email)) {
+        document.getElementById("email-error").textContent = "Please enter a valid email address (e.g., name@example.com)";
+        document.getElementById("email-error").style.display = 'block';
+        isValid = false;
+      }
     
     // Validate message
     const message = document.getElementById("message").value.trim();
