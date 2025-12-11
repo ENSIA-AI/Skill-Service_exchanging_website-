@@ -201,61 +201,7 @@ input:-webkit-autofill:focus {
     transform: translateY(-1px);
 }
 
-/* Compact Social Login */
-.social-divider {
-    text-align: center;
-    margin: 12px 0 8px 0; 
-    color: rgba(255, 255, 255, 0.7);
-    position: relative;
-    font-size: 0.85rem;
-}
 
-.social-divider span {
-    background: var(--clr-bars);
-    padding: 0 12px;
-}
-
-.social-divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--clr-lighter);
-    z-index: -1;
-}
-
-.social-login {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px; 
-}
-
-.btn-social {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--clr-lighter);
-    border-radius: 6px;
-    color: var(--clr-font);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.85rem;
-}
-
-.btn-social:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.btn-social img {
-    width: 16px;
-    height: 16px;
-}
 
 .signup-link {
     text-align: center;
