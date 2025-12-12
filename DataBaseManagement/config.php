@@ -9,7 +9,7 @@
 // Path to .env.local file (contains credentials that vary per teammate)
 $envFilePath = __DIR__ . '/.env.local';
 
-// Check if .env.local exists; if not, provide helpful error
+
 if (!file_exists($envFilePath)) {
     die("Error: .env.local file not found in DataBaseManagement/ directory. Please configure your database credentials in DataBaseManagement/.env.local");
 }
@@ -36,7 +36,6 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Set charset to utf8
 $conn->set_charset("utf8");
 
 ?>
