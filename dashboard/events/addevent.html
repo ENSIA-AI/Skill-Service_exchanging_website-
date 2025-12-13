@@ -65,6 +65,7 @@
                             >
                             <span class="error-message">End date and time is required</span>
                         </div>
+                        <input type="hidden" name="timezone" id="timezone">
                     </div>
 
                     <div class="form-row">
@@ -169,6 +170,10 @@
         </div>
     </div>
 
-    <script src="eventsJs/addevent.js"></script>
+    <script src="eventsJs/addevent.js">
+        //set time zone based on user browser
+        document.getElementById('timezone').value =
+        Intl.DateTimeFormat().resolvedOptions().timeZone;
+    </script>
 </body>
 </html>
