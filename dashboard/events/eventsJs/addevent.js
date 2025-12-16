@@ -221,17 +221,44 @@ document.addEventListener('DOMContentLoaded', function() {
             isValid = false;
         }
         
-        // Event date validation
-        const eventDate = document.getElementById('eventDate');
-        if (!eventDate.value) {
-            showFieldError(eventDate, 'Event date is required');
+        // Event start date validation
+        const eventStartDate = document.getElementById('eventStartDate');
+        if (!eventStartDate.value) {
+            showFieldError(eventStartDate, 'Start date and time is required');
             isValid = false;
         } else {
-            const selectedDate = new Date(eventDate.value);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            if (selectedDate < today) {
-                showFieldError(eventDate, 'Event date cannot be in the past');
+            const startDate = new Date(eventStartDate.value);
+            const now = new Date();
+            
+            // Check if start date is in the past
+            if (startDate < now) {
+                showFieldError(eventStartDate, 'Event start date cannot be in the past');
+                isValid = false;
+            }
+        }
+        
+        // Event end date validation
+        const eventEndDate = document.getElementById('eventEndDate');
+        if (!eventEndDate.value) {
+            showFieldError(eventEndDate, 'End date and time is required');
+            isValid = false;
+        } else {
+            const startDate = new Date(eventStartDate.value);
+            const endDate = new Date(eventEndDate.value);
+            const now = new Date();
+            
+            // Check if end date is before start date
+            if (endDate <= startDate) {
+                showFieldError(eventEndDate, 'End date must be after start date');
+                isValid = false;
+            }
+            
+            // Check if event ends more than one year after start
+            const oneYearAfterStart = new Date(startDate);
+            oneYearAfterStart.setFullYear(oneYearAfterStart.getFullYear() + 1);
+            
+            if (endDate > oneYearAfterStart) {
+                showFieldError(eventEndDate, 'Event cannot last longer than one year');
                 isValid = false;
             }
         }
@@ -314,6 +341,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Real-time validation for start date
+    const eventStartDate = document.getElementById('eventStartDate');
+    eventStartDate.addEventListener('change', function() {
+        if (this.value) {
+            const startDate = new Date(this.value);
+            const now = new Date();
+            
+            if (startDate < now) {
+                showFieldError(this, 'Event start date cannot be in the past');
+            } else {
+                this.classList.remove('error');
+                const errorElement = this.closest('.form-group').querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+        }
+    });
+    
+    // Real-time validation for end date
+    const eventEndDate = document.getElementById('eventEndDate');
+    eventEndDate.addEventListener('change', function() {
+        validateEndDate();
+    });
+    
+    eventStartDate.addEventListener('change', function() {
+        if (eventEndDate.value) {
+            validateEndDate();
+        }
+    });
+    
+    function validateEndDate() {
+        if (!eventEndDate.value || !eventStartDate.value) {
+            return;
+        }
+        
+        const startDate = new Date(eventStartDate.value);
+        const endDate = new Date(eventEndDate.value);
+        const oneYearAfterStart = new Date(startDate);
+        oneYearAfterStart.setFullYear(oneYearAfterStart.getFullYear() + 1);
+        
+        eventEndDate.classList.remove('error');
+        const errorElement = eventEndDate.closest('.form-group').querySelector('.error-message');
+        if (errorElement) {
+            errorElement.style.display = 'none';
+        }
+        
+        if (endDate <= startDate) {
+            showFieldError(eventEndDate, 'End date must be after start date');
+        } else if (endDate > oneYearAfterStart) {
+            showFieldError(eventEndDate, 'Event cannot last longer than one year');
+        }
+    }
+    
     // Form submission
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -329,7 +410,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Gather form data
         const formData = {
             title: document.getElementById('eventTitle').value.trim(),
-            date: document.getElementById('eventDate').value,
+            startDate: document.getElementById('eventStartDate').value,
+            endDate: document.getElementById('eventEndDate').value,
+            eventType: document.getElementById('eventType').value,
             location: document.getElementById('location').value.trim(),
             description: document.getElementById('description').value.trim(),
             maxAttendees: document.getElementById('maxAttendees').value,

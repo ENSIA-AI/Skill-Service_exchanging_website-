@@ -78,6 +78,9 @@ function renderEventDetails() {
             <button class="join-event-button-detail" data-event-id="${event.id}" ${buttonDisabled}>
                 ${buttonText}
             </button>
+            <button class="unsend-request-button" data-event-id="${event.id}" style="display: none;">
+                <i class="fas fa-times"></i> Unsend Request
+            </button>
         </div>
 
         <div class="event-detail-card">
@@ -133,13 +136,30 @@ function setupEventListeners() {
 
     // Join event button
     const joinButton = document.querySelector('.join-event-button-detail');
+    const unsendButton = document.querySelector('.unsend-request-button');
+
     if (joinButton && !joinButton.disabled) {
         joinButton.addEventListener('click', () => {
             const eventId = joinButton.getAttribute('data-event-id');
             // Handle join event logic here
+            joinButton.style.display = 'none';
+            unsendButton.style.display = 'block';
             joinButton.textContent = 'Requested';
             joinButton.disabled = true;
             // You can add a success message or redirect here
+        });
+    }
+
+    // Unsend request button
+    if (unsendButton) {
+        unsendButton.addEventListener('click', () => {
+            const eventId = unsendButton.getAttribute('data-event-id');
+            // Handle unsend request logic here
+            unsendButton.style.display = 'none';
+            joinButton.style.display = 'block';
+            joinButton.textContent = 'Join Event';
+            joinButton.disabled = false;
+            // You can add a confirmation message here
         });
     }
 }
