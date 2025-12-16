@@ -294,6 +294,13 @@ body {
 }
 
 /* Join Event Button */
+.event-action-buttons {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 3rem;
+}
+
 .join-event-button-detail {
     display: inline-flex;
     align-items: center;
@@ -309,8 +316,8 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
+    flex: 1;
     width: 100%;
-    margin-top: 1.5rem;
 }
 
 .join-event-button-detail:hover:not(:disabled) {
@@ -323,6 +330,35 @@ body {
     background-color: #7a8599;
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+.unsend-request-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--clr-font);
+    background-color: #d32f2f;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    white-space: nowrap;
+    min-height: 2.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    flex: 1;
+}
+
+.unsend-request-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+}
+
+.unsend-request-button i {
+    font-size: 0.9rem;
 }
 
 /* Additional Information Section */

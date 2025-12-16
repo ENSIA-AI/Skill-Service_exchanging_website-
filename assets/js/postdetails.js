@@ -105,45 +105,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize calendar
     updateCalendar();
     
-    // Favorite Button Toggle
-    const favoriteBtn = document.querySelector('.favorite-btn');
-    let isFavorited = false;
-    
-    if (favoriteBtn) {
-        favoriteBtn.addEventListener('click', function() {
-            isFavorited = !isFavorited;
-            
-            if (isFavorited) {
-                this.style.backgroundColor = 'var(--clr-btn)';
-                this.querySelector('svg').setAttribute('fill', 'currentColor');
-                console.log('Service added to favorites');
-            } else {
-                this.style.backgroundColor = 'var(--clr-main)';
-                this.querySelector('svg').setAttribute('fill', 'none');
-                console.log('Service removed from favorites');
-            }
-        });
-    }
-    
     // Book This Service Button
-    const bookBtn = document.querySelector('.btn-primary');
-    
     if (bookBtn) {
         bookBtn.addEventListener('click', function() {
             console.log('Book This Service clicked');
             alert('Booking functionality will be implemented here!');
             // In a real implementation, this would open a booking modal or redirect to booking page
-        });
-    }
-    
-    // Message Provider Button
-    const messageBtn = document.querySelector('.btn-secondary');
-    
-    if (messageBtn) {
-        messageBtn.addEventListener('click', function() {
-            console.log('Message Provider clicked');
-            alert('Messaging functionality will be implemented here!');
-            // In a real implementation, this would open a messaging interface
         });
     }
     

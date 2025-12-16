@@ -25,7 +25,7 @@
                 </button>
             </div>
 
-            <form id="createEventForm">
+            <form id="createEventForm" action="addevent.php" method="POST" >
                 <!-- First Container: Event Details -->
                 <div class="form-container">
                     <div class="form-group">
@@ -33,6 +33,7 @@
                         <input 
                             type="text" 
                             id="eventTitle" 
+                            name="eventTitle"
                             class="form-input" 
                             placeholder="e.g., Web Development Workshop"
                             required
@@ -42,33 +43,60 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="eventDate">Event Date</label>
+                            <label for="eventStartDate">Start Date & Time</label>
                             <input 
-                                type="date" 
-                                id="eventDate" 
+                                type="datetime-local" 
+                                id="eventStartDate" 
+                                name="eventStartDate"
                                 class="form-input date-input" 
-                                placeholder="dd/mm/yyyy"
                                 required
                             >
-                            <span class="error-message">Event date is required</span>
+                            <span class="error-message">Start date and time is required</span>
                         </div>
 
                         <div class="form-group">
-                            <label for="location">Location</label>
+                            <label for="eventEndDate">End Date & Time</label>
                             <input 
-                                type="text" 
-                                id="location" 
-                                class="form-input" 
-                                placeholder="e.g., Community Center"
+                                type="datetime-local" 
+                                id="eventEndDate" 
+                                name="eventEndDate"
+                                class="form-input date-input" 
                                 required
                             >
+                            <span class="error-message">End date and time is required</span>
                         </div>
+                        <input type="hidden" name="timezone" id="timezone">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eventType">Event Type</label>
+                            <select id="eventType" name="eventType" class="form-input form-select" required>
+                                <option value="">Select event type</option>
+                                <option value="in-person">In-Person</option>
+                                <option value="online">Online</option>
+                            </select>
+                            <span class="error-message">Event type is required</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input 
+                            type="text" 
+                            id="location" 
+                            name="location"
+                            class="form-input" 
+                            placeholder="e.g., Community Center"
+                            required
+                        >
                     </div>
 
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea 
                             id="description" 
+                            name="description"
                             class="form-input form-textarea" 
                             placeholder="Describe your event..."
                             rows="4"
@@ -80,6 +108,7 @@
                         <input 
                             type="number" 
                             id="maxAttendees" 
+                            name="maxAttendees"
                             class="form-input" 
                             placeholder="e.g., 20"
                             min="1" max="100"
@@ -97,7 +126,7 @@
                     <div class="skills-inputs">
                         <div class="form-group">
                             <label for="category">Category</label>
-                            <select id="category" class="form-input form-select">
+                            <select id="category" name="category" class="form-input form-select">
                                 <option value="">Select category</option>
                                 <option value="technology">Technology & Programming</option>
                                 <option value="design">Design & Creative</option>
@@ -112,7 +141,7 @@
 
                         <div class="form-group">
                             <label for="skill">Skill</label>
-                            <select id="skill" class="form-input form-select" disabled>
+                            <select id="skill" name="skill[]" class="form-input form-select" multiple disabled>
                                 <option value="">Select category first</option>
                             </select>
                         </div>
@@ -141,6 +170,10 @@
         </div>
     </div>
 
-    <script src="eventsJs/addevent.js"></script>
+    <script src="eventsJs/addevent.js">
+        //set time zone based on user browser
+        document.getElementById('timezone').value =
+        Intl.DateTimeFormat().resolvedOptions().timeZone;
+    </script>
 </body>
 </html>
