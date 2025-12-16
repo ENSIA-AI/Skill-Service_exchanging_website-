@@ -3,6 +3,7 @@
  require_once '../../DataBaseManagement/config.php';
 
 $errors = [];
+$data = [];
 
 $event_title = $_POST['eventTitle'];
 $event_start_date = $_POST['eventStartDate'];
@@ -14,14 +15,96 @@ $event_max_attendees = $_POST['maxAttendees'];
 $event_category = $_POST['category'];
 $event_skill = $_POST['skill'];
 
-//To validate required fields
+$data['title'] = validateRequired(
+    $errors,
+    'Event Title',
+    $_POST['eventTitle'],
+    5
+);
+
+$data['description'] = validateRequired(
+    $errors,
+    'Description',
+    $_POST['description'],
+    20
+);
+
+$startDate = validateDate(
+    $errors,
+    'Start Date',
+    $_POST['eventStartDate'],
+    "d-m-Y H:i"
+);
+
+$endDate = validateDate(
+    $errors,
+    'End Date',
+    $_POST['eventEndDate'],
+    "d-m-Y H:i"
+);
+
+
+if ($startDate['success'] && $endDate['success']) {
+    $data['event_dates'] = validateStartEndDates(
+        $errors,
+        "d-m-Y H:i",
+        $startDate['valid_field_value'],
+        $endDate['valid_field_value']
+    );
+}
+
+$data['location'] = validateRequired(
+    $errors,
+    'Location',
+    $_POST['location'],
+    3
+);
+
+
+$data['type'] = validateEventType(
+    $errors,
+    $_POST['eventType']
+);
+
+$data['max_attendees'] = validateNumber(
+    $errors,
+    'Max Attendees',
+    $_POST['maxAttendees'],
+    100,
+    1
+);
+
+$category = validateCategory(
+    $errors,
+    $conn,
+    $_POST['category']
+);
+
+$data['category'] = $category;
+
+$data['skills'] = validateSkill(
+    $errors,
+    $conn,
+    $_POST['skill'],
+    $category['category_id'] ?? null
+);
+
+if(!empty($errors)){
+    //ajax code
+}
+else {
+    saveToDataBase($data , $conn);
+}
+
+//To validate required input fields
 function validateRequired(&$errors, $field_name , $field_value, $required_chars){
-    if(empty(trim($field_value))){
+    $field_value = trim($field_value);
+    if(empty($field_value)){
         $errors[] = "error: $field_name is required";
         return ['success' => false , 'valid_field_value' => ''];
     }
-    elseif(preg_match('/[^a-zA-Z0-9 \-\,.&]/' , $field_value)){
-        $errors[] = "error: $field_name mustn't have special charachters";
+    elseif(!preg_match('/[a-zA-Z0-9]/' , $field_value)){
+        $errors[] = "error: $field_name must contain meaningful text";
         return ['success' => false , 'valid_field_value' => ''];
     }
     elseif(strlen($field_value) < $required_chars ){
@@ -29,14 +112,14 @@ function validateRequired(&$errors, $field_name , $field_value, $required_chars)
         return ['success' => false , 'valid_field_value' => ''];
     }
     else{
-        $cleaned = trim($field_value);
-        return ['success' => true , 'valid_field_value' => $cleaned];
+        return ['success' => true , 'valid_field_value' => $field_value];
     } 
 }
 
 //To validate the max number of attendees
 function validateNumber(&$errors , $field_name , $field_value , $max , $min){
-    if(empty(trim($field_value))){
+    $field_value = trim($field_value);
+    if(empty($field_value)){
         $errors[] = "error: $field_name is required";
         return ['success' => false , 'valid_field_value' => ''];
     }
@@ -53,7 +136,8 @@ function validateNumber(&$errors , $field_name , $field_value , $max , $min){
 //To validate the start date and end date of the events input
 function validateDate(&$errors, $field_name , $field_value, $format = "d-m-Y H:i"){
 
-    if($_POST['timezone'] || !in_array($_POST['timezone'], timezone_identifiers_list(),true)){
+    $field_value = trim($field_value);
+    if(empty($_POST['timezone']) || !in_array($_POST['timezone'], timezone_identifiers_list(),true)){
         $errors[] = "error: {$_POST['timezone']}  is not a valid time zone";
         return ['success' =>  false , 'valid_field_value' => ''];
     }
@@ -79,7 +163,7 @@ function validateDate(&$errors, $field_name , $field_value, $format = "d-m-Y H:i
     }
 
     elseif($current->diff($date)->days > 365){
-        $error[] = "error: $field_name can't be more than one year later";
+        $errors[] = "error: $field_name can't be more than one year later";
         return ['success' =>  false , 'valid_field_value' => ''];
     }
 
@@ -101,7 +185,7 @@ function validateStartEndDates(&$errors , $format , $start_date_value , $finish_
         $errors[] = "error: finish date can't be before start date";
         return ['success' =>  false , 'valid_start_value' => '' , 'valid_finish_value' => ''];
     }
-    elseif($finish_date->diff($start_date) > 365){
+    elseif($finish_date->diff($start_date)->days > 365){
         $errors[] = "error: event can't last for more than a year";
         return ['success' =>  false , 'valid_start_value' => '' , 'valid_finish_value' => ''];
     }
@@ -141,33 +225,109 @@ function validateCategory(&$errors , mysqli $conn , $field_value){
     else{
         $stmt->bind_result($category_id); //store the found id in $category_id
         $stmt->fetch();
-    }
-    $stmt->close();
-    return ['success' => true , 'category_id' => $category_id];
-    
+        $stmt->close();
+        return ['success' => true , 'category_id' => $category_id];
+    }   
 }
 
-function validateSkill(&$errors , mysqli $conn , $skill_field_value , $category_id){
+function validateSkill(&$errors , mysqli $conn , array $skills , $category_id){
 
-    $skill_field_value = trim($skill_field_value);
+    if($category_id === null){
+        $errors[] = "error: select category first";
+        return ['success' => false , 'skill_id' => null];
+        }
+    $skills = array_map('trim', $skills);
+    $count = count($skills);
+    if ($count < 1 || $count > 5) {
+        $errors[] = "error: select between 1 and 5 skills";
+        return ['success' => false, 'skill_ids' => []];
+    }
+
+    $skill_ids = [];
     $category_id = trim($category_id);
     $stmt = $conn->prepare("SELECT skillid FROM skills WHERE skillname = ? AND categoryid = ?");
-    $stmt->bind_param("si" , $skill_field_value , $category_id);
+
+    foreach ($skills as $skill_name) {
+    $stmt->bind_param("si" , $skill_name , $category_id);
     $stmt->execute();
     $stmt->store_result();
 
     $skill_id = NULL;
     if($stmt->num_rows === 0){
         $errors[] = "error: skill does not exist or skill is not from selected category";
-        $stmt->close();
-        return ['success' => false , 'skill_id' => $skill_id];
+        continue;
     }
-
-    else{
+    
         $stmt->bind_result($skill_id);
         $stmt->fetch();
+        $skill_ids[] = $skill_id;
+    }
+    $stmt->close();
+    
+    if (!empty($errors)) {
+        return ['success' => false, 'skill_ids' => []];
+    }
+
+    $skill_ids = array_unique($skill_ids);
+
+    return ['success' => true, 'skill_ids' => $skill_ids];
+}
+
+function saveToDataBase($data, mysqli $conn) {
+
+    $conn->begin_transaction();
+
+    try {
+        // Insert event
+        $stmt = $conn->prepare("
+            INSERT INTO events
+            (EventTitle, EventDescription, EventLocation, EventType, EventStartDate, EventEndDate, MaxAttendees)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        $stmt->bind_param(
+            "ssssssi",
+            $data['title']['valid_field_value'],
+            $data['description']['valid_field_value'],
+            $data['location']['valid_field_value'],
+            $data['type']['valid_field_value'],
+            $data['event_dates']['valid_start_value'],
+            $data['event_dates']['valid_finish_value'],
+            $data['max_attendees']['valid_field_value']
+        );
+
+        $stmt->execute();
+
+        if ($stmt->affected_rows !== 1) {
+            throw new Exception('Event insertion failed');
+        }
+
+        $event_id = $stmt->insert_id;
         $stmt->close();
-        return ['success' => true , 'skill_id' => $skill_id];
+
+        $stmt = $conn->prepare("
+            INSERT INTO eventskills (EventId, SkillId)
+            VALUES (?, ?)
+        ");
+
+         foreach ($data['skills']['skill_ids'] as $skill_id) {
+            $stmt->bind_param("ii", $event_id, $skill_id);
+            $stmt->execute();
+
+            if ($stmt->affected_rows !== 1) {
+                throw new Exception("Event-skill insert failed for skill ID: $skill_id");
+            }
+        }
+
+        $stmt->close();
+        $conn->commit();
+
+        return $event_id;
+
+    } catch (Throwable $e) {
+        $conn->rollback();
+        throw $e;
     }
 }
+
 ?>
