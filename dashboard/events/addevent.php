@@ -329,5 +329,4 @@ function saveToDataBase($data, mysqli $conn) {
         throw $e;
     }
 }
-
 ?>
