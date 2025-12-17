@@ -26,7 +26,7 @@
         .notif-container {
             padding: 30px;
             width: 100%;
-            margin: 0 auto;
+            margin-top:30px ;
         }
 
         .header-section {
@@ -102,6 +102,7 @@
             width: 55px;
             height: 55px;
             border-radius: 50%;
+            object-fit: cover;
         }
 
         .notification-body {
@@ -173,8 +174,13 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #ff8080;
-            font-size: 16px;
+            padding: 0;
+        }
+
+        .notification-delete img {
+            width: 20px;
+            height: 20px;
+            display: block;
         }
 
         .divider {
@@ -198,7 +204,7 @@
         <div class="notifications-tabs">
             <button class="tab active">All (14)</button>
             <button class="tab">Unread (5)</button>
-            <button class="tab">Matches</button>
+            <button class="tab">Exchange History </button>
             <button class="tab">Events</button>
             <button class="tab">Credits</button>
             <button class="tab">Reviews</button>
@@ -214,54 +220,130 @@
 <script>
 /* NOTIFICATION DATA*/
 const notifications = [
+    // Example row shaped like UserNotifications table
     {
-        id: 1,
-        title: "New Match Found!",
-        message: "Sarah Chen is looking for Web Development and offers Graphic Design - Perfect match!",
-        time: "5 minutes ago",
-        image: "https://i.pravatar.cc/60?img=12",
-        category: "matches",
-        isNew: true,
-        action: "View Details"
+        NotificationId: 1,
+        UserId: 1,
+        NotificationType: "booking",
+        Title: "New exchange request",
+        Message: "User Sarah requested an exchange for your JavaScript course.",
+        IsRead: "no",
+        CreatedAt: "5 minutes ago", // in real app: server-formatted datetime
+        NotificationSection: "Exchange",
+        // Web avatar image
+        image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
     },
     {
-        id: 2,
-        title: "Credits Earned!",
-        message: "You earned 50 credits for completing a session with Michael Torres",
-        time: "1 hour ago",
-        image: "https://i.pravatar.cc/60?img=33",
-        category: "credits",
-        isNew: true,
-        action: "✔️ Mark as Read"
+        NotificationId: 2,
+        UserId: 1,
+        NotificationType: "earned",
+        Title: "Credits Earned!",
+        Message: "You earned 50 credits for completing a session.",
+        IsRead: "no",
+        CreatedAt: "1 hour ago",
+        NotificationSection: "credits",
+        image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
     }
 ];
 
-/* TEMPLATE RENDERING*/
+/* TEMPLATE RENDERING
+ * This now accepts either:
+ *  - a front-end object (id, title, message, time, image, category, isNew, action)
+ *  - a raw row from UserNotifications table (NotificationId, Title, Message, IsRead, CreatedAt, NotificationSection, NotificationType)
+ */
 function renderNotification(n) {
+    // Normalize fields from DB-style object or front-end style object
+    const id = n.NotificationId ?? n.notificationId ?? n.id;
+    const title = n.Title ?? n.title ?? '';
+    const message = n.Message ?? n.message ?? '';
+    const isRead = (n.IsRead ?? n.is_read ?? (n.isNew === false ? 'yes' : 'no')).toString().toLowerCase();
+    const createdAt = n.CreatedAt ?? n.created_at ?? n.time ?? '';
+    const section = (n.NotificationSection ?? n.notification_section ?? n.category ?? '').toString();
+    const type = (n.NotificationType ?? n.notification_type ?? '').toString();
+
+    // Compute "new" state
+    const isNew = isRead === 'no';
+
+    // Category (used in data-category + tab filtering)
+    let category = section.toLowerCase();
+    if (!category) {
+        const t = type.toLowerCase();
+        if (t.includes('earned') || t.includes('spent') || t.includes('credit')) category = 'credits';
+        else if (t.includes('event')) category = 'events';
+        else if (t.includes('rating') || t.includes('review')) category = 'reviews';
+        else category = (n.category || 'general').toString().toLowerCase();
+    }
+
+    // Icon based on section/type
+    let image = n.image || '../../assets/icons/bell2.svg';
+    const lowerType = type.toLowerCase();
+    if (category === 'credits' || lowerType === 'earned' || lowerType === 'spent') {
+        image = '../../assets/icons/coinss.png';
+    } else if (category === 'events' || lowerType.includes('event')) {
+        image = '../../assets/icons/calendar.svg';
+    } else if (category === 'reviews' || lowerType === 'rating') {
+        image = '../../assets/icons/five-star-rating-icon.svg';
+    } else if (category === 'exchange') {
+        image = '../../assets/icons/people_4.svg';
+    }
+
+    // Time label – if backend already formatted, use that string
+    let timeLabel = createdAt;
+    if (createdAt instanceof Date) {
+        timeLabel = createdAt.toLocaleString('en-DZ', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // Primary action text
+    let action = n.action || '';
+    if (!action) {
+        switch (category) {
+            case 'exchange':
+                action = 'View Exchange';
+                break;
+            case 'events':
+                action = 'View Event';
+                break;
+            case 'credits':
+                action = 'View Wallet';
+                break;
+            case 'reviews':
+                action = 'View Review';
+                break;
+            default:
+                action = '';
+        }
+    }
+
     return `
-    <div class="notification-card ${n.isNew ? 'new' : ''}" data-id="${n.id}" data-category="${n.category}">
+    <div class="notification-card ${isNew ? 'new' : ''}" data-id="${id}" data-category="${category}">
         
         <div class="notification-icons">
-            <img src="${n.image}" alt="Profile">
+            <img src="${image}" alt="Profile">
         </div>
 
         <div class="notification-body">
             <div class="notification-header">
-                <span class="notification-title">${n.title}</span>
-                ${n.isNew ? '<span class="notification-badge">New</span>' : ''}
-                <span class="notification-time">${n.time}</span>
+                <span class="notification-title">${title}</span>
+                ${isNew ? '<span class="notification-badge">New</span>' : ''}
+                <span class="notification-time">${timeLabel}</span>
             </div>
 
-            <p class="notification-text">${n.message}</p>
+            <p class="notification-text">${message}</p>
 
             <div class="notification-actions">
-                ${n.action ? `<button class="btn-primary">${n.action}</button>` : ""}
+                ${action ? `<button class="btn-primary">${action}</button>` : ""}
                 <button class="btn-secondary mark-read-btn">Mark as Read</button>
             </div>
         </div>
 
-        <button class="notification-delete">
-            <i class="fa fa-trash">🗑️</i>
+        <button class="notification-delete" title="Delete notification">
+            <img src="../../assets/icons/trash.svg" alt="Delete notification">
         </button>
 
     </div>`;
@@ -316,6 +398,13 @@ document.querySelector(".markall").addEventListener("click", () => {
 
 /* 
    TAB FUNCTIONALITY
+   Tabs:
+   - All (...)
+   - Unread (...)
+   - Exchange History
+   - Events
+   - Credits
+   - Reviews
 */
 document.querySelectorAll(".tab").forEach(tab => {
     tab.addEventListener("click", function() {
@@ -323,13 +412,35 @@ document.querySelectorAll(".tab").forEach(tab => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         // Add active class to clicked tab
         this.classList.add("active");
-        
-        // Here you would typically filter notifications by category
-        // For now, we'll just show all
-        const category = this.textContent.toLowerCase();
-        if (category.includes("all")) {
-            document.querySelectorAll(".notification-card").forEach(card => {
-                card.style.display = "flex";
+
+        const label = this.textContent.toLowerCase();
+        const cards = document.querySelectorAll(".notification-card");
+
+        // Show all by default
+        cards.forEach(card => (card.style.display = "flex"));
+
+        // All tab: nothing else to do
+        if (label.includes("all")) return;
+
+        // Unread tab: only show cards with "new" class
+        if (label.includes("unread")) {
+            cards.forEach(card => {
+                card.style.display = card.classList.contains("new") ? "flex" : "none";
+            });
+            return;
+        }
+
+        // Other tabs filter by data-category set in renderNotification()
+        let targetCategory = "";
+        if (label.includes("exchange")) targetCategory = "exchange";
+        else if (label.includes("events")) targetCategory = "events";
+        else if (label.includes("credits")) targetCategory = "credits";
+        else if (label.includes("reviews")) targetCategory = "reviews";
+
+        if (targetCategory) {
+            cards.forEach(card => {
+                const cat = (card.getAttribute("data-category") || "").toLowerCase();
+                card.style.display = cat === targetCategory ? "flex" : "none";
             });
         }
     });
