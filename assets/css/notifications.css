@@ -151,6 +151,14 @@ body {
     border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
