@@ -112,7 +112,7 @@ body {
 }
 
 /* Buttons */
-.add-event-button, .join-event-button, .full-event-button {
+.add-event-button, .join-event-button, .view-details-button, .full-event-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,7 +129,7 @@ body {
     transition: all 0.3s ease;
 }
 
-.add-event-button:hover, .join-event-button:hover {
+.add-event-button:hover, .join-event-button:hover, .view-details-button:hover {
     opacity: 0.8;
     transform: translateY(-2px);
 }
@@ -141,7 +141,7 @@ body {
     cursor: not-allowed;
 }
 
-.join-event-button {
+.join-event-button, .view-details-button {
     width: 100%;
     margin: 0.5rem 0;
 }
@@ -347,30 +347,37 @@ body {
 
 .event-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
-    gap: 0.5rem;
+    margin-bottom: 2rem;
+    gap: 1rem;
 }
 
 .event-title {
     color: var(--clr-font);
     font-size: 1.2rem;
     font-weight: 600;
-    margin: 0;
-    flex: 1;
+    margin: 0 0 0.75rem 0;
     line-height: 1.3;
+    text-align: left;
 }
 
 .event-date {
     color: var(--clr-secondary-font);
     font-size: 0.85rem;
     white-space: nowrap;
+    text-align: left;
+    margin: 0;
+    padding: 0;
 }
 
 .event-text {
     color: var(--clr-font);
-    margin-bottom: 1rem;
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: left;
+    flex: 1;
 }
 
 .event-location {
@@ -496,29 +503,7 @@ body {
 }
 
 /* Fluid card content spacing */
-.event-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: clamp(0.75rem, 2vw, 1rem);
-    gap: 0.75rem;
-}
-
-.event-title {
-    color: var(--clr-font);
-    font-size: clamp(1.1rem, 3vw, 1.3rem);
-    font-weight: 600;
-    margin: 0;
-    line-height: 1.3;
-    flex: 1;
-}
-
-.event-date {
-    color: var(--clr-secondary-font);
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
-    white-space: nowrap;
-    margin-left: clamp(0.5rem, 2vw, 1rem);
-}
+/* event-header styles moved to earlier section to avoid conflicts */
 
 /* Fluid detail spacing */
 .event-details {

@@ -105,45 +105,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize calendar
     updateCalendar();
     
-    // Favorite Button Toggle
-    const favoriteBtn = document.querySelector('.favorite-btn');
-    let isFavorited = false;
-    
-    if (favoriteBtn) {
-        favoriteBtn.addEventListener('click', function() {
-            isFavorited = !isFavorited;
-            
-            if (isFavorited) {
-                this.style.backgroundColor = 'var(--clr-btn)';
-                this.querySelector('svg').setAttribute('fill', 'currentColor');
-                console.log('Service added to favorites');
-            } else {
-                this.style.backgroundColor = 'var(--clr-main)';
-                this.querySelector('svg').setAttribute('fill', 'none');
-                console.log('Service removed from favorites');
-            }
-        });
-    }
-    
     // Book This Service Button
-    const bookBtn = document.querySelector('.btn-primary');
-    
     if (bookBtn) {
         bookBtn.addEventListener('click', function() {
             console.log('Book This Service clicked');
             alert('Booking functionality will be implemented here!');
             // In a real implementation, this would open a booking modal or redirect to booking page
-        });
-    }
-    
-    // Message Provider Button
-    const messageBtn = document.querySelector('.btn-secondary');
-    
-    if (messageBtn) {
-        messageBtn.addEventListener('click', function() {
-            console.log('Message Provider clicked');
-            alert('Messaging functionality will be implemented here!');
-            // In a real implementation, this would open a messaging interface
         });
     }
     
@@ -213,6 +180,95 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add resize listener
     window.addEventListener('resize', handleResize);
+
+    // Schedule functionality for availability - Single selection mode
+    const dayCheckboxes = document.querySelectorAll('.day-check');
+    const scheduleDays = document.querySelectorAll('.schedule-day');
+    let selectedCheckbox = null; // Track the currently selected checkbox
+    
+    // Initialize unavailable days (Monday and Sunday)
+    const unavailableDays = ['monday', 'sunday'];
+    unavailableDays.forEach(dayName => {
+        const dayElement = document.querySelector(`[data-day="${dayName}"]`);
+        if (dayElement) {
+            dayElement.classList.add('unavailable');
+            const checkbox = dayElement.querySelector('.day-check');
+            if (checkbox) {
+                checkbox.disabled = true;
+            }
+            const timeInputs = dayElement.querySelectorAll('.time-input');
+            timeInputs.forEach(input => {
+                input.disabled = true;
+            });
+        }
+    });
+    
+    dayCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('click', function(e) {
+            // If this checkbox is disabled, prevent the click
+            if (this.disabled) {
+                e.preventDefault();
+                return;
+            }
+            
+            // Prevent unchecking - always keep one checked
+            if (!this.checked && selectedCheckbox === this) {
+                e.preventDefault();
+                this.checked = true;
+                return;
+            }
+            
+            // If trying to check this box
+            if (this.checked) {
+                // Uncheck all other checkboxes (strict single selection)
+                dayCheckboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== this && !otherCheckbox.disabled) {
+                        otherCheckbox.checked = false;
+                        const otherDay = otherCheckbox.closest('.schedule-day');
+                        const otherTimeInputs = otherDay.querySelectorAll('.time-input');
+                        otherTimeInputs.forEach(input => {
+                            input.disabled = true;
+                        });
+                    }
+                });
+                
+                // Enable time inputs for selected day
+                selectedCheckbox = this;
+                const selectedDay = this.closest('.schedule-day');
+                const timeInputs = selectedDay.querySelectorAll('.time-input');
+                timeInputs.forEach(input => {
+                    input.disabled = false;
+                });
+                
+                console.log('Selected day: ' + this.id);
+            }
+        });
+        
+        // Also add change listener as backup
+        checkbox.addEventListener('change', function(e) {
+            // Ensure only this checkbox can be checked
+            if (this.checked && !this.disabled) {
+                dayCheckboxes.forEach(otherCheckbox => {
+                    if (otherCheckbox !== this && !otherCheckbox.disabled) {
+                        otherCheckbox.checked = false;
+                        const otherDay = otherCheckbox.closest('.schedule-day');
+                        const otherTimeInputs = otherDay.querySelectorAll('.time-input');
+                        otherTimeInputs.forEach(input => {
+                            input.disabled = true;
+                        });
+                    }
+                });
+                
+                // Enable time inputs
+                selectedCheckbox = this;
+                const selectedDay = this.closest('.schedule-day');
+                const timeInputs = selectedDay.querySelectorAll('.time-input');
+                timeInputs.forEach(input => {
+                    input.disabled = false;
+                });
+            }
+        });
+    });
     
     // Add loading animation
     const mainContent = document.querySelector('.main-content');

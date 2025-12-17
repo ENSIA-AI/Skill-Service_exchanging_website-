@@ -7,8 +7,8 @@ function renderEvents(){
     events.forEach((event) => {
         const skillsHtml = skillsList(event.skills);
         const isEventFull = event.attendees >= event.maxAttendees;
-        const joinButtonText = isEventFull ? 'Full' : 'Join Event';
-        const joinButtonClass = isEventFull ?  'full-event-button' : 'join-event-button';
+        const viewButtonClass = isEventFull ?  'full-event-button' : 'view-details-button';
+        const viewButtonText = 'View Details';
         eventsHtml +=
         `
             <div class="event-card">
@@ -41,14 +41,14 @@ function renderEvents(){
                         </div>
                     </div>
                     <div class="join-event-div">
-                        <button class="${joinButtonClass} js-join-event-button" ${isEventFull ? 'disabled' : ''}>${joinButtonText}</button>
+                        <button class="${viewButtonClass} js-view-details-button" data-event-id="${event.id}" ${isEventFull ? 'disabled' : ''}>${viewButtonText}</button>
                     </div>
             </div>
         `
 
     })
     document.querySelector('.js-events-list').innerHTML = eventsHtml ;
-    joinEvent();
+    viewEventDetails();
 
 }
 
@@ -63,21 +63,15 @@ function skillsList(skills){
         else return `<span class="skill-tag">No prior knowledge required</span>`;
 }
 
-//change join event styles
-function joinEvent(){
+// view event details
+function viewEventDetails(){
 
-    let joinButtons = document.querySelectorAll('.js-join-event-button');
-    joinButtons.forEach(button =>{
+    let viewButtons = document.querySelectorAll('.js-view-details-button');
+    viewButtons.forEach(button =>{
         
         button.addEventListener('click' , () =>{
-            if(button.textContent === "Join Event"){
-                button.classList.add('joined-event');
-                button.textContent = "Requested";
-            }
-            else if(button.textContent === "Requested"){
-                button.classList.remove('joined-event');
-                button.textContent = 'Join Event';
-            }
+            const eventId = button.getAttribute('data-event-id');
+            window.location.href = `eventdetails.php?id=${eventId}`;
         }
     )
 })

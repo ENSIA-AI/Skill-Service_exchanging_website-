@@ -3,11 +3,11 @@
 <head>   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events</title>
+    <title>Event Details</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="../../assets/css/events.css">
+    <link rel="stylesheet" href="../../assets/css/eventdetails.css">
     <link rel="stylesheet" href="../../assets/css/header.css">
     <link rel="stylesheet" href="../../assets/css/sidebar.css">
 </head>
@@ -15,16 +15,17 @@
     
     <header class="main-header"></header> 
 
-        <main class="event-main-content" >
+        <main class="event-details-main-content">
 
-            <div class="event-header">    
-                <p class="event-text">Upcoming events</p>
-                <button class="add-event-button js-add-event-button">
-                    +&nbsp;&nbsp;&nbsp;create event
+            <div class="event-details-header">    
+                <button class="back-button js-back-button">
+                    <i class="fas fa-arrow-left"></i>
                 </button>
+                <h1>Back to Events</h1>
             </div>
 
-            <div class="events-list js-events-list">
+            <div class="event-details-container js-event-details-container">
+                <!-- Event details will be rendered here by JavaScript -->
             </div>
        
         </main>
@@ -32,6 +33,6 @@
         
         
       
-        <script type="module" src="eventsJs/renderEvents.js"></script>
+        <script type="module" src="eventsJs/eventdetails.js"></script>
 </body>
 </html>
