@@ -90,7 +90,8 @@ $data['skills'] = validateSkill(
 );
 
 if(!empty($errors)){
-    //ajax code
+    //ajax code 
+    
 }
 else {
     saveToDataBase($data , $conn);
