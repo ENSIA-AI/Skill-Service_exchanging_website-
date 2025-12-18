@@ -119,6 +119,27 @@
         .notification-title {
             font-weight: 600;
             font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notification-type-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--clr-btn);
+        }
+
+        .notification-type-icon img {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+
+        .notification-type-icon svg {
+            width: 18px;
+            height: 18px;
         }
 
         .notification-badge {
@@ -523,71 +544,108 @@ function renderNotification(n) {
     const lowerType = type.toLowerCase();
     
     // ============================================
-    // ICON SELECTION - Personalized for each type
+    // AVATAR (PFP) + TYPE ICON SELECTION
     // ============================================
-    let image = n.image || '../../assets/icons/bell2.svg';
-    let emoji = '';
+    // Main avatar: always a person/profile image (from DB or default)
+    let image = n.image || '../../assets/images/Default_pfp.svg';
+
+    // Small type icon shown next to the title, depends on notification type.
+    // Can be either:
+    //  - a URL to an image (string not starting with "<")
+    //  - an inline SVG string (string starting with "<")
+    let typeIcon = '';
     
     if (category === 'exchange') {
-        // Exchange History Section
+        // Exchange History Section – inline SVG icons colored via --clr-btn
+        const exchangeBookingIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>`;
+        const exchangeAcceptedIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M5 20c1.5-3 3.5-4.5 7-4.5s5.5 1.5 7 4.5" fill="none" stroke="currentColor" stroke-width="2"/>
+            </svg>`;
+        const exchangeCompletedIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 12l3 3 5-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`;
+        const exchangeRefusedIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>`;
+
         if (lowerType === 'booking') {
-            // 📅 Booking an exchange session
-            image = '../../assets/icons/calendar.svg';
-            emoji = '📅';
+            typeIcon = exchangeBookingIcon;
         } else if (lowerType === 'accepted') {
-            // ✅ Getting accepted into an exchange session
-            image = 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2';
-            emoji = '✅';
+            typeIcon = exchangeAcceptedIcon;
         } else if (lowerType === 'completing') {
-            // 🏁 Completing an exchange session
-            image = 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2';
-            emoji = '🏁';
+            typeIcon = exchangeCompletedIcon;
         } else if (lowerType === 'being_refused') {
-            // ❌ Exchange rejected
-            image = '../../assets/icons/people_4.svg';
-            emoji = '❌';
+            typeIcon = exchangeRefusedIcon;
         } else {
-            image = '../../assets/icons/people_4.svg';
+            typeIcon = exchangeAcceptedIcon;
         }
     } else if (category === 'reviews') {
+        // Use inline SVG icons so we can color them with --clr-btn
+        const reviewStarIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="M12 2 14.9 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 9.1 8.26 12 2z"/>
+            </svg>`;
+        const reviewCommentIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="M4 4h16v11a2 2 0 0 1-2 2H8l-4 3V4z"/>
+            </svg>`;
+
         if (lowerType === 'like') {
-            // 👍 Post/comment liked
-            image = '../../assets/icons/bell2.svg';
-            emoji = '👍';
+            // Post/comment liked
+            typeIcon = reviewStarIcon;
         } else if (lowerType === 'comment') {
-            // 💬 New comment on post
-            image = '../../assets/icons/bell2.svg';
-            emoji = '💬';
+            // New comment on post
+            typeIcon = reviewCommentIcon;
         } else if (lowerType === 'rating') {
-            // ⭐ New rating/review
-            image = '../../assets/icons/five-star-rating-icon.svg';
-            emoji = '⭐';
+            // New rating/review
+            typeIcon = reviewStarIcon;
         } else {
-            image = '../../assets/icons/five-star-rating-icon.svg';
+            typeIcon = reviewStarIcon;
         }
     } else if (category === 'events') {
+        // Events – inline calendar / cross icons with --clr-btn
+        const eventAcceptedIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M9 15l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`;
+        const eventRejectedIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M10 14l4 4M14 14l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>`;
+
         if (lowerType === 'acceptedinevent') {
-            // ✅ Accepted into event
-            image = '../../assets/icons/calendar.svg';
-            emoji = '✅';
+            typeIcon = eventAcceptedIcon;
         } else if (lowerType === 'rejectedfromevent') {
-            // ❌ Rejected from event
-            image = '../../assets/icons/calendar.svg';
-            emoji = '❌';
+            typeIcon = eventRejectedIcon;
         } else {
-            image = '../../assets/icons/calendar.svg';
+            typeIcon = eventAcceptedIcon;
         }
     } else if (category === 'credits') {
-        if (lowerType === 'earned') {
-            // 💰 Credits earned
-            image = '../../assets/icons/coinss.png';
-            emoji = '💰';
-        } else if (lowerType === 'spent') {
-            // 💸 Credits spent
-            image = '../../assets/icons/coinss.png';
-            emoji = '💸';
+        // Inline SVG coin icon, colored using --clr-btn
+        const creditsCoinIcon = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>`;
+
+        if (lowerType === 'earned' || lowerType === 'spent') {
+            typeIcon = creditsCoinIcon;
         } else {
-            image = '../../assets/icons/coinss.png';
+            typeIcon = creditsCoinIcon;
         }
     }
 
@@ -685,7 +743,16 @@ function renderNotification(n) {
         <div class="notification-body">
             <div class="notification-header">
                 <span class="notification-title">
-                    ${emoji ? emoji + ' ' : ''}${title}
+                    ${
+                        typeIcon
+                            ? (
+                                typeof typeIcon === 'string' && typeIcon.trim().startsWith('<')
+                                    ? `<span class="notification-type-icon">${typeIcon}</span>`
+                                    : `<span class="notification-type-icon"><img src="${typeIcon}" alt="type icon"></span>`
+                              )
+                            : ''
+                    }
+                    ${title}
                 </span>
                 ${isNew ? '<span class="notification-badge">New</span>' : ''}
                 <span class="notification-time">${timeLabel}</span>
@@ -769,7 +836,7 @@ document.querySelectorAll(".tab").forEach(tab => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         // Add active class to clicked tab
         this.classList.add("active");
-
+        
         const label = this.textContent.toLowerCase();
         const cards = document.querySelectorAll(".notification-card");
 
