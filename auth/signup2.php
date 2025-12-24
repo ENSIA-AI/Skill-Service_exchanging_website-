@@ -21,7 +21,9 @@ if ($categoryResult) {
 }
 
 // Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+{
+    //$teachSkills and $learnSkills contain arrays of Skill IDs that the user selected.
     $teachSkills = isset($_POST['teachSkills']) ? (array) $_POST['teachSkills'] : [];
     $learnSkills = isset($_POST['learnSkills']) ? (array) $_POST['learnSkills'] : [];
     
@@ -29,10 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($teachSkills) || empty($learnSkills)) {
         $error = "Please select at least 1 skill you can teach and 1 skill you want to learn.";
     } else {
-        // Get proficiency level from form
-        $proficiency = isset($_POST['proficiencyLevel']) ? $_POST['proficiencyLevel'] : 'beginner';
+        // Default proficiency level (no form input)
+        $proficiency = 'beginner';
         
-        // Save teach skills
+
+
+        // Save teach skills in the database
         foreach ($teachSkills as $skillId) {
             $stmt = $conn->prepare("INSERT INTO UserSkills (UserId, SkillId, SkillType, ProficiencyLevel) VALUES (?, ?, 'teach', ?)");
             if (!$stmt) {
@@ -46,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
         }
         
-        // Save learn skills
+        // Save learn skills in the database
         foreach ($learnSkills as $skillId) {
             $stmt = $conn->prepare("INSERT INTO UserSkills (UserId, SkillId, SkillType, ProficiencyLevel) VALUES (?, ?, 'learn', ?)");
             if (!$stmt) {
@@ -96,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
             
-            <form action="signup2.php" method="post" id="skillsForm" >
+            <form action="signup2.php" method="post" id="skillsForm">
             <!--Skills i can teach section -->
                 <div class="skills-section">
                     <div class="section-header">
@@ -106,20 +110,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="teachCategory">Category</label>
-                        <select id="teachCategory" name="teachCategory" onchange="updateSkills('teach')">
-                            <option value="">Select a category</option>
-                            <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo htmlspecialchars($cat['CategoryId']); ?>">
-                                    <?php echo htmlspecialchars($cat['CategoryName']); ?>
+                        <select id="teachCategory" name="teachCategory" class="form-input form-select">
+                            <option value="">-- Select a category first --</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= htmlspecialchars($category['CategoryId']) ?>">
+                                    <?= htmlspecialchars($category['CategoryName']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
-                    <div class="form-group skills-dropdown-container" id="teachSkillsContainer">
+                    <div class="form-group">
                         <label for="teachSkill">Skill</label>
-                        <select id="teachSkill" name="teachSkill">
-                            <option value="">Select a skill from the list</option>
+                        <select id="teachSkill" name="teachSkill" class="form-input form-select" disabled>
+                            <option value="">Select a category first</option>
                         </select>
                     </div>
 
@@ -128,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="selected-skills" id="teachSkillsList">
-                        <!--here the  Selected skills will appear  -->
+                        <!-- Selected skills will appear here -->
                     </div>
                 </div>
 
@@ -141,20 +145,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="form-group">
                         <label for="learnCategory">Category</label>
-                        <select id="learnCategory" name="learnCategory" onchange="updateSkills('learn')">
-                            <option value="">Select a category</option>
-                            <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo htmlspecialchars($cat['CategoryId']); ?>">
-                                    <?php echo htmlspecialchars($cat['CategoryName']); ?>
+                        <select id="learnCategory" name="learnCategory" class="form-input form-select">
+                            <option value="">-- Select a category first --</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= htmlspecialchars($category['CategoryId']) ?>">
+                                    <?= htmlspecialchars($category['CategoryName']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
-                    <div class="form-group skills-dropdown-container" id="learnSkillsContainer">
+                    <div class="form-group">
                         <label for="learnSkill">Skill</label>
-                        <select id="learnSkill" name="learnSkill">
-                            <option value="">Select a skill from the list</option>
+                        <select id="learnSkill" name="learnSkill" class="form-input form-select" disabled>
+                            <option value="">Select a category first</option>
                         </select>
                     </div>
 
@@ -180,51 +184,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        // Initialize skills when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            updateSkills('teach');
-            updateSkills('learn');
+        // Get DOM elements for teach section
+        const teachCategorySelect = document.getElementById('teachCategory');
+        const teachSkillSelect = document.getElementById('teachSkill');
+        
+        // Get DOM elements for learn section
+        const learnCategorySelect = document.getElementById('learnCategory');
+        const learnSkillSelect = document.getElementById('learnSkill');
+
+        // Update skill options when teach category changes
+        teachCategorySelect.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            teachSkillSelect.disabled = true;
+
+            if(!selectedCategory){
+                teachSkillSelect.innerHTML = '<option value="">Select a category first</option>';
+                return;
+            }
+            
+            // Fetch skills from the API endpoint
+            fetch(`../dashboard/events/eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(skills => { 
+                    teachSkillSelect.innerHTML = '<option value="">Select skill(s)</option>';
+
+                    skills.forEach(skill => {
+                        const option = document.createElement('option');
+                        option.value = skill.skillid; 
+                        option.textContent = skill.skillname;
+                        teachSkillSelect.appendChild(option);
+                    });
+                    teachSkillSelect.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching skills:', error);
+                    teachSkillSelect.innerHTML = '<option value="">Error loading skills</option>';
+                });
         });
 
-        function updateSkills(type) {
-            const categorySelect = document.getElementById(`${type}Category`);
-            const skillSelect = document.getElementById(`${type}Skill`);
-            
-            const selectedCategory = categorySelect.value;
-            
-            // Clear existing skills
-            skillSelect.innerHTML = '<option value="">Select a skill from the list</option>';
-            
-            // Fetch skills from server via AJAX
-            if (selectedCategory) {
-                fetch(`getSkills.php?categoryId=${selectedCategory}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.error) {
-                            console.error('Server error:', data.error);
-                            skillSelect.innerHTML = '<option value="">Error loading skills</option>';
-                            return;
-                        }
-                        
-                        // Populate skills dropdown with SkillId as value
-                        data.forEach(skill => {
-                            const option = document.createElement('option');
-                            option.value = skill.SkillId;  // Use SkillId as value
-                            option.textContent = skill.SkillName;
-                            skillSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching skills:', error);
-                        skillSelect.innerHTML = '<option value="">Error loading skills</option>';
-                    });
+        // Update skill options when learn category changes
+        learnCategorySelect.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            learnSkillSelect.disabled = true;
+
+            if(!selectedCategory){
+                learnSkillSelect.innerHTML = '<option value="">Select a category first</option>';
+                return;
             }
-        }
+            
+            // Fetch skills from the API endpoint
+            fetch(`../dashboard/events/eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(skills => { 
+                    learnSkillSelect.innerHTML = '<option value="">Select skill(s)</option>';
+
+                    skills.forEach(skill => {
+                        const option = document.createElement('option');
+                        option.value = skill.skillid; 
+                        option.textContent = skill.skillname;
+                        learnSkillSelect.appendChild(option);
+                    });
+                    learnSkillSelect.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching skills:', error);
+                    learnSkillSelect.innerHTML = '<option value="">Error loading skills</option>';
+                });
+        });
 
         function addSkill(type) {
             const categorySelect = document.getElementById(`${type}Category`);
@@ -236,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const skill = skillSelect.options[skillSelect.selectedIndex].text;
             const skillId = skillSelect.value;
             
-            if (!skill || skill === 'Select a skill from the list') {
+            if (!skill || skill === 'Select skill(s)' || skill === 'Select a category first') {
                 alert('Please select a skill');
                 return;
             }

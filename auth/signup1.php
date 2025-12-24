@@ -218,17 +218,13 @@ if ($_SERVER['REQUEST_METHOD']==='POST')
 
 
     //now if we passed all the validations then are input values are correct,we can insert them in the database 
-    // Check if any error exists
-    $hasErrors = false;
-    foreach ($errors as $error) {
-        if (!empty($error)) {
-            $hasErrors = true;
-            break;
-        }
-    }
 
-    if(!$hasErrors)
-    {
+    
+    //Check if any error exists
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty(array_filter($errors)))
+   { 
+
      $hashedPassword =password_hash($password,PASSWORD_BCRYPT);
 
      //this is to generate a random username 
