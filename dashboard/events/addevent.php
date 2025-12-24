@@ -1,9 +1,15 @@
 <?php
 
- require_once '../../DataBaseManagement/config.php';
+ require_once __DIR__  . "/../../DataBaseManagement/config.php";
 
 $errors = [];
 $data = [];
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
 
 $event_title = $_POST['eventTitle'];
 $event_start_date = $_POST['eventStartDate'];
@@ -13,7 +19,7 @@ $event_location = $_POST['location'];
 $event_description = $_POST['description'];
 $event_max_attendees = $_POST['maxAttendees'];
 $event_category = $_POST['category'];
-$event_skill = $_POST['skill'];
+$event_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
 
 $data['title'] = validateRequired(
     $errors,
@@ -82,18 +88,47 @@ $category = validateCategory(
 
 $data['category'] = $category;
 
+$event_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+
+
 $data['skills'] = validateSkill(
     $errors,
     $conn,
-    $_POST['skill'],
+    $event_skills,
     $category['category_id'] ?? null
 );
 
 if(!empty($errors)){
-    //ajax code
+    header('Content-Type: application/json');
+    http_response_code(400); // Bad Request
+    echo json_encode([
+        'success' => false,
+        'message' => 'Validation failed',
+        'errors' => $errors
+    ]);
+    exit;
 }
 else {
-    saveToDataBase($data , $conn);
+    try {
+        $event_id = saveToDataBase($data, $conn);
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'message' => 'Event created successfully',
+            'event_id' => $event_id
+        ]);
+        exit;
+        
+    } catch (Exception $e) {
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Database error: ' . $e->getMessage()
+        ]);
+        exit;
+    }
 }
 
 //To validate required input fields
@@ -134,44 +169,56 @@ function validateNumber(&$errors , $field_name , $field_value , $max , $min){
 }
 
 //To validate the start date and end date of the events input
-function validateDate(&$errors, $field_name , $field_value, $format = "d-m-Y H:i"){
-
+function validateDate(&$errors, $field_name, $field_value, $format = "Y-m-d\TH:i") {
     $field_value = trim($field_value);
-    if(empty($_POST['timezone']) || !in_array($_POST['timezone'], timezone_identifiers_list(),true)){
-        $errors[] = "error: {$_POST['timezone']}  is not a valid time zone";
-        return ['success' =>  false , 'valid_field_value' => ''];
-    }
-    else $user_time_zone = new DateTimeZone($_POST['timezone']);
-
-    $date = DateTime::createFromFormat($format , $field_value , $user_time_zone);
-    $date->setTimezone( new DateTimeZone('UTC'));
-    $current = new DateTime('now' , new DateTimeZone('UTC'));
-
-    if(empty(trim($field_value))){
+    
+    // Debug: Check what format we're getting
+    error_log("Validating date: $field_value with format: $format");
+    
+    if (empty($field_value)) {
         $errors[] = "error: $field_name is required";
-        return ['success' => false , 'valid_field_value' => ''];
+        return ['success' => false, 'valid_field_value' => ''];
     }
-
-    elseif( !$date || $date->format($format) !== $field_value){
-        $errors[] = "error: date is not in correct format";
-        return ['success' =>  false , 'valid_field_value' => ''];
+    
+    // Handle timezone - with better error checking
+    $timezone = 'UTC'; // default
+    if (isset($_POST['timezone']) && in_array($_POST['timezone'], timezone_identifiers_list(), true)) {
+        $timezone = $_POST['timezone'];
     }
-
-    elseif($date <= $current){
+    
+    $user_time_zone = new DateTimeZone($timezone);
+    
+    // Create DateTime object
+    $date = DateTime::createFromFormat($format, $field_value, $user_time_zone);
+    
+    // Check if creation was successful
+    if (!$date) {
+        $errors[] = "error: $field_name is not in correct format. Expected: $format";
+        return ['success' => false, 'valid_field_value' => ''];
+    }
+    
+    // Now it's safe to call setTimezone
+    $date->setTimezone(new DateTimeZone('UTC'));
+    $current = new DateTime('now', new DateTimeZone('UTC'));
+    
+    // Check if date is in the past
+    if ($date <= $current) {
         $errors[] = "error: $field_name can't be in the past";
-        return ['success' =>  false , 'valid_field_value' => ''];
+        return ['success' => false, 'valid_field_value' => ''];
     }
-
-    elseif($current->diff($date)->days > 365){
+    
+    // Check if date is more than 1 year in the future
+    $one_year_later = clone $current;
+    $one_year_later->modify('+1 year');
+    
+    if ($date > $one_year_later) {
         $errors[] = "error: $field_name can't be more than one year later";
-        return ['success' =>  false , 'valid_field_value' => ''];
+        return ['success' => false, 'valid_field_value' => ''];
     }
-
-    else{
-        $cleaned = $date->format($format);
-        return ['success' =>  true , 'valid_field_value' => $cleaned];
-    } 
-
+    
+    // Format for storage (MySQL DATETIME format)
+    $cleaned = $date->format('Y-m-d H:i:s');
+    return ['success' => true, 'valid_field_value' => $cleaned];
 }
 
 //To ensure end date after start date with less than one year duration 
@@ -230,46 +277,63 @@ function validateCategory(&$errors , mysqli $conn , $field_value){
     }   
 }
 
-function validateSkill(&$errors , mysqli $conn , array $skills , $category_id){
+function validateSkill(&$errors, mysqli $conn, array $skills, $category_id) {
 
-    if($category_id === null){
+    if ($category_id === null) {
         $errors[] = "error: select category first";
-        return ['success' => false , 'skill_id' => null];
-        }
-    $skills = array_map('trim', $skills);
+        return ['success' => false, 'skill_ids' => []];
+    }
+    
+    // Clean and validate skills array
+    $skills = array_filter(array_map('trim', $skills));
+    
+    // Check count
     $count = count($skills);
     if ($count < 1 || $count > 5) {
         $errors[] = "error: select between 1 and 5 skills";
         return ['success' => false, 'skill_ids' => []];
     }
-
-    $skill_ids = [];
-    $category_id = trim($category_id);
-    $stmt = $conn->prepare("SELECT skillid FROM skills WHERE skillname = ? AND categoryid = ?");
-
-    foreach ($skills as $skill_name) {
-    $stmt->bind_param("si" , $skill_name , $category_id);
-    $stmt->execute();
-    $stmt->store_result();
-
-    $skill_id = NULL;
-    if($stmt->num_rows === 0){
-        $errors[] = "error: skill does not exist or skill is not from selected category";
-        continue;
-    }
     
-        $stmt->bind_result($skill_id);
+    $skill_ids = [];
+    $category_id = (int)$category_id;
+    
+    // Prepare statement - check by skill ID (not name)
+    $stmt = $conn->prepare("SELECT skillid FROM skills WHERE skillid = ? AND categoryid = ?");
+    
+    foreach ($skills as $skill_id) {
+        // Skip if not numeric
+        if (!is_numeric($skill_id)) {
+            $errors[] = "error: invalid skill ID: $skill_id";
+            continue;
+        }
+        
+        $skill_id_int = (int)$skill_id;
+        $stmt->bind_param("ii", $skill_id_int, $category_id);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows === 0) {
+            $errors[] = "error: skill ID $skill_id does not exist or is not from selected category";
+            continue;
+        }
+        
+        $stmt->bind_result($valid_skill_id);
         $stmt->fetch();
-        $skill_ids[] = $skill_id;
+        $skill_ids[] = $valid_skill_id;
     }
     $stmt->close();
+    
+    if (empty($skill_ids)) {
+        $errors[] = "error: no valid skills selected";
+        return ['success' => false, 'skill_ids' => []];
+    }
     
     if (!empty($errors)) {
         return ['success' => false, 'skill_ids' => []];
     }
-
+    
     $skill_ids = array_unique($skill_ids);
-
+    
     return ['success' => true, 'skill_ids' => $skill_ids];
 }
 

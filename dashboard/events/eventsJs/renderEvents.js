@@ -78,7 +78,7 @@ function viewEventDetails(){
 
 // create event button
 document.querySelector('.js-add-event-button').addEventListener('click', () => {
-    window.location.href = "addevent.html";
+    window.location.href = "createEvent.php";
 });
 
 }

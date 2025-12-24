@@ -1,3 +1,4 @@
+
 // Skills data for each category
 const skillsData = {
     technology: [
@@ -59,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const categorySelect = document.getElementById('category');
     const skillSelect = document.getElementById('skill');
     const addSkillBtn = document.getElementById('addSkillBtn');
-    const selectedSkillsContainer = document.getElementById('selectedSkills');
+    const selectedSkillsContainer = document.getElementById('selectedSkillsDisplay');
     const skillsCountSpan = document.querySelector('.skills-count');
     
     // Selected skills array
@@ -69,33 +70,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update skill options when category changes
     categorySelect.addEventListener('change', function() {
         const selectedCategory = this.value;
-        skillSelect.innerHTML = '<option value="">Select skill</option>';
-        
-        if (selectedCategory && skillsData[selectedCategory]) {
-            skillsData[selectedCategory].forEach(skill => {
-                const option = document.createElement('option');
-                option.value = skill;
-                option.textContent = skill;
-                skillSelect.appendChild(option);
-            });
-            skillSelect.disabled = false;
-        } else {
-            skillSelect.disabled = true;
-            skillSelect.innerHTML = '<option value="">Select category first</option>';
+        skillSelect.disabled = true;
+
+        if(!selectedCategory){
+            skillSelect.innerHTML = '<option value="">Select a category first</option>';
+            return;
         }
+        
+        fetch(`/Skill-Service_exchanging_website-/dashboard/events/eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error status: ${response.status}`);
+                }
+                return response.json();
+            }
+                )
+                    .then(skills => { 
+                        
+                        skillSelect.innerHTML = '<option value="">Select skill(s)</option>';
+
+                        skills.forEach(skill => {
+                            const option = document.createElement('option');
+                            option.value = skill.skillid; 
+                            option.textContent = skill.skillname;
+                            skillSelect.appendChild(option);
+                        })
+                        skillSelect.disabled = false;
+                        }
+                    )
+                    .catch(() => {
+                        skillSelect.innerHTML = '<option value="">Error loading skills</option>';
+                    });
     });
     
     // Add skill functionality
     addSkillBtn.addEventListener('click', function() {
-        const category = categorySelect.value;
-        const skill = skillSelect.value;
-        
-        if (!category) {
+        const categoryId = categorySelect.value;
+        const skillId = skillSelect.value;
+        const skillName = skillSelect.options[skillSelect.selectedIndex].text;
+
+        if (!categoryId) {
             showError('Please select a category first');
             return;
         }
         
-        if (!skill) {
+        if (!skillId) {
             showError('Please select a skill');
             return;
         }
@@ -106,14 +125,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Check if skill already added
-        const skillExists = selectedSkills.some(s => s.skill === skill);
+        const skillExists = selectedSkills.some(s => s.skillid === skillId);
         if (skillExists) {
             showError('This skill is already added');
             return;
         }
         
         // Add skill to array
-        selectedSkills.push({ category, skill });
+        selectedSkills.push({ skillid:  skillId , skillname : skillName , categoryid : categoryId});
         
         // Update UI
         updateSkillsDisplay();
@@ -134,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const skillTag = document.createElement('div');
             skillTag.className = 'skill-tag';
             skillTag.innerHTML = `
-                <span>${skillObj.skill}</span>
+                <span>${skillObj.skillname}</span>
                 <button type="button" class="remove-skill" data-index="${index}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -406,35 +425,50 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return;
         }
+
+        const formData = new FormData(form);
         
-        // Gather form data
-        const formData = {
-            title: document.getElementById('eventTitle').value.trim(),
-            startDate: document.getElementById('eventStartDate').value,
-            endDate: document.getElementById('eventEndDate').value,
-            eventType: document.getElementById('eventType').value,
-            location: document.getElementById('location').value.trim(),
-            description: document.getElementById('description').value.trim(),
-            maxAttendees: document.getElementById('maxAttendees').value,
-            skills: selectedSkills
-        };
+        selectedSkills.forEach(skill => {
+            formData.append('skills[]', skill.skillid);
+        });
         
-        console.log('Event Created:', formData);
+        formData.append('category', categorySelect.value);
         
-        // Show success message
-        showSuccess('Event created successfully!');
+        formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
         
-        // Reset form after 2 seconds
-        setTimeout(() => {
-            form.reset();
-            selectedSkills = [];
-            updateSkillsDisplay();
-            updateSkillsCount();
-            skillSelect.disabled = true;
-            skillSelect.innerHTML = '<option value="">Select category first</option>';
-        }, 2000);
+        fetch('/Skill-Service_exchanging_website-/dashboard/events/addevent.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess('Event created successfully!');
+                
+                setTimeout(() => {
+                    form.reset();
+                    selectedSkills = [];
+                    updateSkillsDisplay();
+                    updateSkillsCount();
+                    skillSelect.disabled = true;
+                    skillSelect.innerHTML = '<option value="">Select category first</option>';
+                }, 2000);
+            } else {
+                showError(data.message || 'Error creating event');
+                
+                if (data.errors) {
+                    data.errors.forEach(error => {
+                        showError(error);
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError('Network error occurred');
+        });
     });
-    
+        
     function showSuccess(message) {
         let successContainer = document.getElementById('global-success');
         if (!successContainer) {
