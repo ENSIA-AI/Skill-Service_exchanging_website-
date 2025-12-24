@@ -1,9 +1,10 @@
 <?php 
-require_once '../../DataBaseManagement/config.php';
+
+require_once __DIR__ . "/../../DataBaseManagement/config.php";
 
 function getCategories(mysqli $conn){ 
     $categories = []; 
-    $result = $conn->query("SELECT categoryId, categoryName FROM category ORDER BY categoryName"); // Fixed typo: categroyName -> categoryName
+    $result = $conn->query("SELECT categoryId, categoryName FROM category ORDER BY categoryName"); 
     if($result){ 
         while($row = $result->fetch_assoc()) { 
             $categories[] = $row;
@@ -11,7 +12,9 @@ function getCategories(mysqli $conn){
     } 
     return $categories; 
 }
+
 $categories = getCategories($conn);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -142,10 +145,10 @@ $categories = getCategories($conn);
                         <div class="form-group">
                             <label for="category">Category</label>
                             <select id="category" name="category" class="form-input form-select">
-                                <option value="">-- Select a category --</option>
+                                <option value="">-- Select a category first--</option>
                                 <?php foreach ($categories as $category): ?>
-                                    <option value="<?= htmlspecialchars($category['categoryId']) ?>"> <!-- Fixed: category['id'] -> category['categoryId'] -->
-                                        <?= htmlspecialchars($category['categoryName']) ?> <!-- Fixed: category['name'] -> category['categoryName'] -->
+                                    <option value="<?= htmlspecialchars($category['categoryId']) ?>"> 
+                                        <?= htmlspecialchars($category['categoryName']) ?> 
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -154,7 +157,7 @@ $categories = getCategories($conn);
                         <div class="form-group">
                             <label for="skill">Skill</label>
                             <select id="skill" name="skill" class="form-input form-select" disabled>
-                                <option value="">Select category first</option>
+                                <option value="">Select a category first</option>
                             </select>
                         </div>
 
