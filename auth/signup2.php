@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     if (empty($teachSkills) || empty($learnSkills)) {
         $error = "Please select at least 1 skill you can teach and 1 skill you want to learn.";
     } else {
+
         // Default proficiency level (no form input)
         $proficiency = 'beginner';
         
@@ -101,6 +102,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             <?php endif; ?>
             
             <form action="signup2.php" method="post" id="skillsForm">
+
+
+           <div id="hiddenTeachSkills" style="display: none;"></div>
+           <div id="hiddenLearnSkills" style="display: none;"></div>
+
+
+
+
+
+
+
             <!--Skills i can teach section -->
                 <div class="skills-section">
                     <div class="section-header">
@@ -262,105 +274,121 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 });
         });
 
-        function addSkill(type) {
-            const categorySelect = document.getElementById(`${type}Category`);
-            const skillSelect = document.getElementById(`${type}Skill`);
-            const skillsList = document.getElementById(`${type}SkillsList`);
-            const skillsCounter = document.querySelector(`#${type}SkillsList`).closest('.skills-section').querySelector('.skills-counter');
-            
-            const category = categorySelect.options[categorySelect.selectedIndex].text;
-            const skill = skillSelect.options[skillSelect.selectedIndex].text;
-            const skillId = skillSelect.value;
-            
-            if (!skill || skill === 'Select skill(s)' || skill === 'Select a category first') {
-                alert('Please select a skill');
-                return;
-            }
-            
-            // Check if skill already added
-            const existingSkills = Array.from(skillsList.querySelectorAll('.skill-item')).map(item => 
-                item.getAttribute('data-skill-id')
-            );
-            if (existingSkills.includes(skillId)) {
-                alert('This skill is already added');
-                return;
-            }
-            
-            // Count current skills
-            const currentSkills = skillsList.querySelectorAll('.skill-item').length;
-            if (currentSkills >= 5) {
-                alert('Maximum 5 skills allowed');
-                return;
-            }
-            
-            // Create skill item
-            const skillItem = document.createElement('div');
-            skillItem.className = 'skill-item';
-            skillItem.setAttribute('data-skill-id', skillId);
-            skillItem.innerHTML = `
-                <span class="skill-name">${skill}</span>
-                <button type="button" class="remove-skill" onclick="removeSkill(this, '${type}')">×</button>
-            `;
-            
-            skillsList.appendChild(skillItem);
-            
-            // Update counter
-            const newCount = currentSkills + 1;
-            skillsCounter.textContent = `${newCount}/5 skills selected`;
-            
-            // Reset skill select
-            skillSelect.selectedIndex = 0;
+      function addSkill(type) {
+    const categorySelect = document.getElementById(`${type}Category`);
+    const skillSelect = document.getElementById(`${type}Skill`);
+    const skillsList = document.getElementById(`${type}SkillsList`);
+    const skillsCounter = document.querySelector(`#${type}SkillsList`).closest('.skills-section').querySelector('.skills-counter');
+    
+    const category = categorySelect.options[categorySelect.selectedIndex].text;
+    const skill = skillSelect.options[skillSelect.selectedIndex].text;
+    const skillId = skillSelect.value;
+    
+    if (!skillId || skill === 'Select skill(s)' || skill === 'Select a category first') {
+        alert('Please select a skill');
+        return;
+    }
+    
+    // Check if skill already added
+    const existingSkills = Array.from(skillsList.querySelectorAll('.skill-item')).map(item => 
+        item.getAttribute('data-skill-id')
+    );
+    if (existingSkills.includes(skillId)) {
+        alert('This skill is already added');
+        return;
+    }
+    
+    // Count current skills
+    const currentSkills = skillsList.querySelectorAll('.skill-item').length;
+    if (currentSkills >= 5) {
+        alert('Maximum 5 skills allowed');
+        return;
+    }
+    
+    // Create skill item for UI
+    const skillItem = document.createElement('div');
+    skillItem.className = 'skill-item';
+    skillItem.setAttribute('data-skill-id', skillId);
+    skillItem.innerHTML = `
+        <span class="skill-name">${skill}</span>
+        <button type="button" class="remove-skill" onclick="removeSkill(this, '${type}')">×</button>
+    `;
+    
+    skillsList.appendChild(skillItem);
+    
+    // Create hidden input for form submission
+    const hiddenContainer = document.getElementById(`hidden${type.charAt(0).toUpperCase() + type.slice(1)}Skills`);
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = `${type}Skills[]`;
+    hiddenInput.value = skillId;
+    hiddenInput.id = `${type}Skill_${skillId}`;
+    hiddenContainer.appendChild(hiddenInput);
+    
+    // Update counter
+    const newCount = currentSkills + 1;
+    skillsCounter.textContent = `${newCount}/5 skills selected`;
+    
+    // Reset skill select
+    skillSelect.selectedIndex = 0;
+}
+
+function removeSkill(button, type) {
+    const skillItem = button.parentElement;
+    const skillId = skillItem.getAttribute('data-skill-id');
+    const skillsList = document.getElementById(`${type}SkillsList`);
+    const skillsCounter = skillsList.closest('.skills-section').querySelector('.skills-counter');
+    
+    // Remove the hidden input
+    const hiddenInput = document.getElementById(`${type}Skill_${skillId}`);
+    if (hiddenInput) {
+        hiddenInput.remove();
+    }
+    
+    // Remove the UI element
+    skillItem.remove();
+    
+    // Update counter
+    const currentSkills = skillsList.querySelectorAll('.skill-item').length;
+    skillsCounter.textContent = `${currentSkills}/5 skills selected`;
+}
+
+
+// Handle form submission
+document.getElementById('skillsForm').addEventListener('submit', function(e) {
+    // Count selected skills
+    const teachSkills = document.querySelectorAll('#hiddenTeachSkills input').length;
+    const learnSkills = document.querySelectorAll('#hiddenLearnSkills input').length;
+    
+    if (teachSkills === 0 || learnSkills === 0) {
+        e.preventDefault(); // Prevent form submission
+        
+        // Show error message
+        const errorDiv = document.createElement('div');
+        errorDiv.style.color = 'red';
+        errorDiv.style.marginBottom = '15px';
+        errorDiv.style.padding = '10px';
+        errorDiv.style.border = '1px solid red';
+        errorDiv.style.borderRadius = '5px';
+        errorDiv.textContent = 'Please select at least 1 skill you can teach and 1 skill you want to learn.';
+        
+        // Insert error message at the top of the form
+        const formTop = document.querySelector('.signup-right h2').nextElementSibling;
+        if (formTop && formTop.classList.contains('error-message')) {
+            formTop.remove();
         }
+        document.querySelector('.signup-right h2').after(errorDiv);
+        
+        return false;
+    }
+    
+    return true;
+});
 
-        function removeSkill(button, type) {
-            const skillItem = button.parentElement;
-            const skillsList = document.getElementById(`${type}SkillsList`);
-            const skillsCounter = skillsList.closest('.skills-section').querySelector('.skills-counter');
-            
-            skillItem.remove();
-            
-            // Update counter
-            const currentSkills = skillsList.querySelectorAll('.skill-item').length;
-            skillsCounter.textContent = `${currentSkills}/5 skills selected`;
-        }
 
-        // Prevent submitting if skills not selected and collect skills for submission
-        document.getElementById("skillsForm").addEventListener("submit", function(event) {
-            const teachCount = document.querySelectorAll("#teachSkillsList .skill-item").length;
-            const learnCount = document.querySelectorAll("#learnSkillsList .skill-item").length;
-
-            if (teachCount < 1 || learnCount < 1) {
-                event.preventDefault();
-                alert("Please select at least 1 skill you can teach and 1 skill you want to learn.");
-            } else {
-                // Collect skills and add them as hidden inputs
-                const form = document.getElementById("skillsForm");
-                
-                // Remove any previous hidden inputs
-                document.querySelectorAll('input[name="teachSkills[]"]').forEach(el => el.remove());
-                document.querySelectorAll('input[name="learnSkills[]"]').forEach(el => el.remove());
-                
-                // Add teach skills (using SkillId)
-                document.querySelectorAll("#teachSkillsList .skill-item").forEach(item => {
-                    const skillId = item.getAttribute("data-skill-id");
-                    const input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = "teachSkills[]";
-                    input.value = skillId;
-                    form.appendChild(input);
-                });
-                
-                // Add learn skills (using SkillId)
-                document.querySelectorAll("#learnSkillsList .skill-item").forEach(item => {
-                    const skillId = item.getAttribute("data-skill-id");
-                    const input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = "learnSkills[]";
-                    input.value = skillId;
-                    form.appendChild(input);
-                });
-            }
-        });
     </script>
+
+
+
 </body>
 </html>
