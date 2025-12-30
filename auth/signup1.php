@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once '../utils/sendMailer.php';
+include_once '../utils/sendMailer.php';
 include_once '../DataBaseManagement/config.php';
 
 // Initialize session signup data if not exists
@@ -19,6 +19,7 @@ if (!isset($_SESSION['signup_data'])) {
 
 // Clear verification session if user comes back
 if (isset($_GET['resend'])) {
+   
     unset($_SESSION['verification_code']);
     unset($_SESSION['verification_expiry']);
 }
