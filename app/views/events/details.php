@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="<?= '/Skill-Service_exchanging_website-/public/assets/images/favicon.png' ?>">
+    <link rel="stylesheet" href="<?= '/Skill-Service_exchanging_website-/public/assets/css/style.css' ?>">
+    <link rel="stylesheet" href="<?= '/Skill-Service_exchanging_website-/public/assets/css/eventdetails.css' ?>">
+    <link rel="stylesheet" href="<?= '/Skill-Service_exchanging_website-/public/assets/css/header.css' ?>">
+    <link rel="stylesheet" href="<?= '/Skill-Service_exchanging_website-/public/assets/css/sidebar.css' ?>">
+</head>
+<body>
+    
+    <header class="main-header">
+         <div style="padding: 1rem; text-align: right;">
+             <a href="<?= '/Skill-Service_exchanging_website-/public/auth/logout' ?>">Logout</a>
+         </div>
+    </header> 
+
+    <main class="event-details-main-content">
+
+        <div class="event-details-header">    
+            <button class="back-button js-back-button" onclick="window.location.href='<?= '/Skill-Service_exchanging_website-/public/events' ?>'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Back to Events</h1>
+        </div>
+
+        <div class="event-details-container js-event-details-container">
+            <!-- Event details will be rendered here by JavaScript -->
+        </div>
+    
+    </main>
+      
+    <script type="module" src="<?= '/Skill-Service_exchanging_website-/public/assets/js/events/eventdetails.js' ?>"></script>
+</body>
+</html>

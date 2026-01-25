@@ -869,8 +869,6 @@ INSERT INTO UserSkills (UserId, SkillId, SkillType, ProficiencyLevel) VALUES
 -- Insert Events (10 events)
 -- ============================================
 INSERT INTO Events (OrganizerId, EventTitle, EventDescription, EventLocation, EventType, EventStartDate, EventEndDate, MaxAttendees, CurrentAttendeesNumber, EventCost, EventStatus) VALUES
-(1, 'Web Development Workshop', 'Practical workshop on React and modern JavaScript. Complete training from beginner to intermediate level.', 'Algiers, Kouba - Room 101', 'in-person', '2025-12-15 09:00:00', '2025-12-15 16:00:00', 20, 12, 50, 'upcoming'),
-(2, 'UI/UX Design Masterclass', 'Intensive session on Figma and modern design. Practical exercises and direct feedback.', 'Oran, Downtown - Design Studio', 'in-person', '2025-12-20 10:00:00', '2025-12-20 14:00:00', 15, 8, 60, 'upcoming'),
 (3, 'Product Photography', 'Professional photography techniques for e-commerce. Including lighting and post-production.', 'Constantine, Online', 'online', '2025-12-22 18:00:00', '2025-12-22 20:00:00', 25, 10, 30, 'upcoming'),
 (4, 'Algerian Literary Week', 'Conference on creative writing and copywriting. Discussion with local authors.', 'Annaba, Library - Main Hall', 'in-person', '2026-01-05 14:00:00', '2026-01-05 18:00:00', 50, 22, 0, 'upcoming'),
 (5, 'Intensive Guitar Course', 'Intensive training on acoustic and electric guitar. All levels welcome.', 'Tlemcen, Music Academy', 'in-person', '2026-01-10 11:00:00', '2026-01-10 15:00:00', 12, 6, 40, 'upcoming'),

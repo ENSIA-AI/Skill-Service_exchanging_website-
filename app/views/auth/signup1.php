@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="<?= '/Skill-Service_exchanging_website-/public/assets/images/favicon.png' ?>">
+    <link rel="stylesheet" href="<?= '/Skill-Service_exchanging_website-/public/assets/css/signuppages.css' ?>">
+    <title>Sign Up - Swap</title>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Left Side - Image/Illustration -->
+        <div class="signup-left">
+            <div class="illustration">
+                <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/signupside.jpg' ?>" alt="Join Community">
+            </div>
+        </div>
+
+        <!-- Right Side - Signup Form -->
+        <div class="signup-right">
+            <h2>Personal Information</h2>
+            
+            <!-- Submit to the next step via Controller -->
+            <form action="<?= '/Skill-Service_exchanging_website-/public/auth/signup2' ?>" method="post" class="signup-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="John Smith" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+              <div class="form-group">
+               <label for="gender">Gender</label>
+               <select id="gender" name="gender" required>
+               <option value="" disabled selected>Select your gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+             
+            </select>
+            </div>
+
+          <div class="form-group">
+           <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="+1 234 567 8900" required>
+          </div>
+
+                 <div class="form-group">
+                    <label for="birthdate">Birth Date</label>
+                     <input type="date" id="birthdate" name="birthdate" min="1900-01-01" required>
+                 </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" placeholder="City, Country" required>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to Terms & Conditions</label>
+                </div>
+
+                <button type="submit" class="btn-next">Next</button>
+            </form>
+
+            <p class="login-link">
+                Already have an account? <a href="<?= '/Skill-Service_exchanging_website-/public/auth/login' ?>">Login</a>
+            </p>
+        </div>
+    </div>
+
+   <script src="<?= '/Skill-Service_exchanging_website-/public/assets/js/formvalidation.js' ?>"></script>  
+</body>
+</html>

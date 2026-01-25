@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Swap</title>
-    <link rel="stylesheet" href="assets/css/intro-home.css">
+    <!-- UPDATED LINK -->
+    <link rel="stylesheet" href="<?= '/Skill-Service_exchanging_website-/public/assets/css/intro-home.css' ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="<?= '/Skill-Service_exchanging_website-/public/assets/images/favicon.png' ?>">
 </head>
 <body>
     <!--Header -->
     <header class="main-header">
        <div class="logo-section">
-          <img src="assets/images/homeinp/Swaplogo.png" >
+          <!-- UPDATED LINK -->
+          <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/Swaplogo.png' ?>" >
        </div>
       
        <div class="navigation-bar">
-         <div><a href="index.html" class="nav-link">Home</a></div> 
-         <div><a href="about.html" class="nav-link">About Us</a></div>
-         <div><a href="contact.html" class="nav-link">Contact Us</a></div>
+         <!-- UPDATED LINKS -->
+         <div><a href="<?= '/Skill-Service_exchanging_website-/public/home' ?>" class="nav-link">Home</a></div> 
+         <div><a href="<?= '/Skill-Service_exchanging_website-/public/home/about' ?>" class="nav-link">About Us</a></div>
+         <div><a href="<?= '/Skill-Service_exchanging_website-/public/home/contact' ?>" class="nav-link">Contact Us</a></div>
        </div>
 
        <div class="user-navigation-bar">
-         <a  href="auth/login.html" class="link-login-btn">Log in </a>
-         <a  href="auth/signup1.html" class="link-signup-btn">Sign Up</a>
+         <!-- UPDATED LINKS -->
+         <a  href="<?= '/Skill-Service_exchanging_website-/public/auth/login' ?>" class="link-login-btn">Log in </a>
+         <a  href="<?= '/Skill-Service_exchanging_website-/public/auth/signup' ?>" class="link-signup-btn">Sign Up</a>
         </div>
      
-
-      
     </header>
 
     <!-- Hero Section -->
@@ -37,13 +39,13 @@
                     <h1 class="main-title">Exchange Skills, Build Your Community</h1>
                     <p class="subtitle">Learn what you need, teach what you know - no money needed</p>
                     <div class="hero-buttons">
-                         <button type="button" class="get-started-btn" onclick="window.location.href='auth/signup1.html'">Get started</button>
+                         <!-- UPDATED LINK -->
+                         <button type="button" class="get-started-btn" onclick="window.location.href='<?= '/Skill-Service_exchanging_website-/public/auth/signup' ?>'">Get started</button>
                     </div>
                 </div>
                
-                <img src="assets/images/homeinp/home.png" class="image-content homepic float-animation "  >
+                <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/home.png' ?>" class="image-content homepic float-animation "  >
                   
-                    
                 
             </div>
         </div>
@@ -62,14 +64,14 @@
                     <div class="text-content">
                        
                         <h3>Smart Matching System
-                            <img class="feature-icon" src="assets/icons/homeinpicons/matching.png">
+                            <img class="feature-icon" src="<?= '/Skill-Service_exchanging_website-/public/assets/icons/homeinpicons/matching.png' ?>">
 
                         </h3>
                         <p>Our intelligent matching system connects you with the perfect skill exchange partners based on your expertise and learning goals. Find exactly who you need, when you need them.
                         </p>
                     </div>
                    
-                     <img src="assets/images/homeinp/matchpic.png"  class="image-content float-animation">
+                     <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/matchpic.png' ?>"  class="image-content float-animation">
                     
                 </div>
             </div>
@@ -77,13 +79,13 @@
             <!-- Feature 2 - -->
             <div class="feature-item reverse">
                 <div class="content-wrapper">
-                    <img src="assets/images/homeinp/creditpic.png" class="image-content float-animation ">
+                    <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/creditpic.png' ?>" class="image-content float-animation ">
                     
                     <div class="text-content">
                         
                         <h3>
                             Credit-Based System
-                            <img class="feature-icon"src="assets/icons/homeinpicons/coinss.png" >
+                            <img class="feature-icon"src="<?= '/Skill-Service_exchanging_website-/public/assets/icons/homeinpicons/coinss.png' ?>" >
 
                         </h3>
                         <p>No money involved! Earn credits by teaching your skills and spend them to learn new ones. Our fair credit system ensures balanced exchanges and encourages community participation.</p>
@@ -100,11 +102,11 @@
                         
                         <h3>
                             Community Events
-                            <img class="feature-icon" src="assets/icons/homeinpicons/eventsicon.png" >
+                            <img class="feature-icon" src="<?= '/Skill-Service_exchanging_website-/public/assets/icons/homeinpicons/eventsicon.png' ?>" >
                         </h3>
                         <p>Join group workshops, networking events, and skill-sharing sessions. Connect with like-minded learners and build lasting relationships in our vibrant community.</p>
                     </div>
-                     <img src="assets/images/homeinp/events.png"class="image-content float-animation">
+                     <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/events.png' ?>"class="image-content float-animation">
 
                     </div>
                 </div>
@@ -113,12 +115,12 @@
             <!-- Feature 4 -->
             <div class="feature-item reverse">
                 <div class="content-wrapper">
-                     <img src="assets/images/homeinp/matchingpic.png"placeholder="trusted profiles picture" class="image-content float-animation">
+                     <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/matchingpic.png' ?>"placeholder="trusted profiles picture" class="image-content float-animation">
                     <div class="text-content">
                         
                         <h3>
                             Verified & Trusted Profiles
-                            <img class="feature-icon"src="assets/icons/homeinpicons/trusticon.png" >
+                            <img class="feature-icon"src="<?= '/Skill-Service_exchanging_website-/public/assets/icons/homeinpicons/trusticon.png' ?>" >
                         </h3>
                         <p>Every member undergoes verification for your peace of mind. Our rating and review system ensures quality exchanges, and our support team is always ready to help.</p>
                     </div>
@@ -132,11 +134,11 @@
                        
                         <h3>
                             Track Your Progress
-                            <img class="feature-icon"src="assets/icons/homeinpicons/progressicon.png" >
+                            <img class="feature-icon"src="<?= '/Skill-Service_exchanging_website-/public/assets/icons/homeinpicons/progressicon.png' ?>" >
                         </h3>
                         <p>Monitor your skill development journey with our built-in progress tracking. Earn badges, celebrate milestones, and see your growth over time as you learn and teach.</p>
                     </div>
-                     <img src="assets/images/homeinp/progresspic.png"placeholder="credit picture" class="image-content float-animation">
+                     <img src="<?= '/Skill-Service_exchanging_website-/public/assets/images/homeinp/progresspic.png' ?>"placeholder="credit picture" class="image-content float-animation">
                </div>
           </div>
         
@@ -236,20 +238,14 @@
     </div>
   </section>
 
-
-
-
-
-
-
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
             <div class="cta-content">
                 <h2>Ready to Start Your Swap Journey?</h2>
                 <p>Join thousands of learners and teachers building a better community</p>
-                 <button type="button" class="cta-button primary" onclick="window.location.href='auth/signup1.html'">Join Our Community</button>
-                <p class="login-link">Already a member? <a href="auth/login.html">Login here</a></p>
+                 <button type="button" class="cta-button primary" onclick="window.location.href='<?= '/Skill-Service_exchanging_website-/public/auth/signup' ?>'">Join Our Community</button>
+                <p class="login-link">Already a member? <a href="<?= '/Skill-Service_exchanging_website-/public/auth/login' ?>">Login here</a></p>
             </div>
         </div>
     </section>
@@ -262,33 +258,31 @@
         </div>
     </footer>
  
- <script src="assets/js/home.js"></script>
+ <script src="<?= '/Skill-Service_exchanging_website-/public/assets/js/home.js' ?>"></script>
  
     <script>
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent form submission
-            
-            // Show success message
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
-            
-            // Optional: Reset the form
-            this.reset();
-            
-            // Optional: Hide the success message after 5 seconds
-            setTimeout(function() {
-                successMessage.style.display = 'none';
-            }, 5000);
-        });
+        // Note: The original index.html had a contact form listener but no form with id 'contactForm'. 
+        // I'm keeping the JS logic just in case the form is dynamically loaded or hidden.
+        // If 'contactForm' doesn't exist on this page, this script will throw an innocuous error or just do nothing.
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent form submission
+                
+                // Show success message
+                const successMessage = document.getElementById('successMessage');
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                    // Optional: Hide after 5 seconds
+                     setTimeout(function() {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                }
+                
+                // Optional: Reset the form
+                this.reset();
+            });
+        }
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
