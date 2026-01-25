@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS CreditTransactions;
 DROP TABLE IF EXISTS Reports;
 DROP TABLE IF EXISTS Rating;
 DROP TABLE IF EXISTS Exchanges;
+DROP TABLE IF EXISTS PostAvailableDates;
 DROP TABLE IF EXISTS PostSkills;
 DROP TABLE IF EXISTS EventSkills;
 DROP TABLE IF EXISTS UserSkills;
@@ -97,6 +98,8 @@ CREATE TABLE Posts (
   Requirements TEXT,
   PaymentMethod ENUM('exchange','credit') NOT NULL,
   RequiredCredits INT DEFAULT 0 CHECK (RequiredCredits >= 0),
+  TeachingMethodology TEXT,
+  ExchangeExpectations TEXT,
   LikeCount INT DEFAULT 0 CHECK (LikeCount >= 0),
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
   
@@ -106,6 +109,19 @@ CREATE TABLE Posts (
   INDEX idx_posts_status_date (PostStatus, AvailableDate),
   INDEX idx_posts_user (UserId),
   INDEX idx_posts_category (CategoryId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- PostAvailableDates Table
+-- ============================================
+CREATE TABLE PostAvailableDates (
+  PostAvailableDateId INT AUTO_INCREMENT PRIMARY KEY,
+  PostId INT NOT NULL,
+  AvailableDate DATETIME NOT NULL,
+  
+  FOREIGN KEY (PostId) REFERENCES Posts(PostId) ON DELETE CASCADE,
+  
+  INDEX idx_post_available_dates (PostId, AvailableDate)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================

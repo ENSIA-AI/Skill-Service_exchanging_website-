@@ -1,5 +1,25 @@
 <?php
+session_start();
 
+// Initialize all variables with defaults
+$error = '';
+$success = '';
+$post = [];
+$user = ['FullName' => 'Unknown', 'ProfilePicture' => '../../assets/images/Default_pfp.svg', 'Rating' => 0, 'RatingCount' => 0];
+$postTitle = '';
+$postDescription = '';
+$postType = '';
+$postDuration = 0;
+$postLocation = '';
+$postDate = '';
+$paymentMethod = '';
+$requiredCredits = 0;
+$prerequisites = '';
+$requirements = '';
+$postUserId = 0;
+$datesByDay = [];
+$bookedDates = [];
+$weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 // Postid validity
 if (!isset($_GET['Postid'])||!is_numeric($_GET['Postid']))
@@ -20,17 +40,15 @@ if ($postId <= 0) {
 //Now we can  Connect to database
 require_once '../../DataBaseManagement/config.php';
 
+$error = '';
+$success = '';
+
 $sql = "SELECT * FROM Posts WHERE PostId = ? ";
 $stmt=$conn->prepare($sql);
-if (!$stmt) {  die('Database error');}
+if (!$stmt) {  die('Database error: ' . $conn->error);}
 
-//bind parameters 
 $stmt->bind_param('i',$postId);
-
-//Execute
 $stmt->execute();
-
-//getting the result 
 $result=$stmt->get_result();
 
 if($result->num_rows===0)
@@ -42,6 +60,31 @@ if($result->num_rows===0)
 //fetch post data 
 $post=mysqli_fetch_assoc($result);
 
+// Fetch user data for the post owner
+$userSql = "SELECT FullName, ProfilePicture, Rating, RatingCount FROM Users WHERE UserId = ?";
+$userStmt = $conn->prepare($userSql);
+if (!$userStmt) {  
+    die('Database error: ' . $conn->error); 
+}
+$userStmt->bind_param('i', $post['UserId']);
+$userStmt->execute();
+$userResult = $userStmt->get_result();
+
+// Initialize $user with default values FIRST
+$user = [
+    'FullName' => 'Unknown', 
+    'ProfilePicture' => '../../assets/images/Default_pfp.svg', 
+    'Rating' => 0, 
+    'RatingCount' => 0
+];
+
+// Then try to fetch from database
+if ($userResult && $userResult->num_rows > 0) {
+    $fetchedUser = mysqli_fetch_assoc($userResult);
+    if ($fetchedUser) {
+        $user = array_merge($user, $fetchedUser); // Merge with defaults
+    }
+}
 
 $postTitle        = $post['Title'];
 $postDescription  = $post['Description'];
@@ -54,12 +97,44 @@ $requiredCredits  = $post['RequiredCredits'];
 $prerequisites    = $post['Prerequisites'];
 $requirements     = $post['Requirements'];
 $postUserId       = $post['UserId'];
+$teachingMethodology = $post['TeachingMethodology'] ?? 'Not specified';
+$exchangeExpectations = $post['ExchangeExpectations'] ?? 'Not specified';
+
+// Fetch skills offered by this post
+$skillsSql = "SELECT s.SkillName, s.SkillId FROM PostSkills ps 
+              JOIN Skills s ON ps.SkillId = s.SkillId 
+              WHERE ps.PostId = ?";
+$skillsStmt = $conn->prepare($skillsSql);
+if (!$skillsStmt) { die('Database error: ' . $conn->error); }
+$skillsStmt->bind_param('i', $postId);
+$skillsStmt->execute();
+$skillsResult = $skillsStmt->get_result();
+$postSkills = [];
+while ($skill = $skillsResult->fetch_assoc()) {
+    $postSkills[] = $skill['SkillName'];
+}
+
+// Fetch skills being sought (from user preferences or post data)
+$seekingSkillsSql = "SELECT s.SkillName, s.SkillId FROM UserSkills us 
+                     JOIN Skills s ON us.SkillId = s.SkillId 
+                     WHERE us.UserId = ? LIMIT 5";
+$seekingStmt = $conn->prepare($seekingSkillsSql);
+if (!$seekingStmt) { die('Database error: ' . $conn->error); }
+$seekingStmt->bind_param('i', $postUserId);
+$seekingStmt->execute();
+$seekingResult = $seekingStmt->get_result();
+$seekingSkills = [];
+while ($skill = $seekingResult->fetch_assoc()) {
+    $seekingSkills[] = $skill['SkillName'];
+}
+
 
 //array to store the available dates of the post owner
 $dates = [];
-$Datesquery= "SELECT AvailableDate FROM PostAvailableDates WHERE PostId = ? ORDER BY AvailableDate ASC";
 
+$Datesquery= "SELECT AvailableDate FROM PostAvailableDates WHERE PostId = ? ORDER BY AvailableDate ASC";
 $stmtDates = $conn->prepare($Datesquery);
+if (!$stmtDates) {  die('Database error: ' . $conn->error); }
 $stmtDates->bind_param('i', $postId);
 $stmtDates->execute();
 $resultDates = $stmtDates->get_result();
@@ -69,15 +144,7 @@ while ($row = $resultDates->fetch_assoc())
     $dates[] = $row['AvailableDate'];
 }
 
-$weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-
-// Initialize array for all 7 days
-$datesByDay = [];
-foreach ($weekDays as $day) {
-    $datesByDay[$day] = [];
-}
-
-// Fill the array
+// Initialize array for all 7 days - fill in the array with dates
 foreach ($dates as $datetime) {
     $dayName = date('l', strtotime($datetime)); // Day of the week
     $timeSlot = date('H:i', strtotime($datetime)); // Hour:Minute
@@ -95,10 +162,10 @@ foreach ($dates as $datetime) {
 // Fetch existing exchanges to know which dates are already booked/completed 
 $sqlExchanges = "SELECT ProposedDate, Status FROM Exchanges WHERE PostId = ?";
 $stmtEx = $conn->prepare($sqlExchanges);
+if (!$stmtEx) {  die('Database error: ' . $conn->error); }
 $stmtEx->bind_param('i', $postId);
 $stmtEx->execute();
 $resultEx = $stmtEx->get_result();
-$bookedDates = [];
 while ($ex = $resultEx->fetch_assoc()) {
     if ($ex['Status'] === 'accepted' || $ex['Status'] === 'completed') {
         $bookedDates[] = $ex['ProposedDate'];
@@ -107,35 +174,41 @@ while ($ex = $resultEx->fetch_assoc()) {
 
 // Handle POST when user selects a date 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
-    $selectedDate = $_POST['SelectedDate'];
-    $userId = $_SESSION['userId']; // current logged-in user
-
-
-    // Validate user cannot book their own post
-    if ($userId == $postUserId) {
-        $error = "You cannot book your own post.";
-    } elseif (in_array($selectedDate, $bookedDates)) {
-        $error = "This date has already been booked.";
+    // Check if user is logged in
+    if (!isset($_SESSION['userId'])) {
+        $error = "Please log in to book this service.";
     } else {
-        // Insert new exchange
-        $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate) VALUES (?, ?, ?, ?)";
-        $stmtInsert = $conn->prepare($sqlInsert);
-        $stmtInsert->bind_param('iiis', $postId, $postUserId, $userId, $selectedDate);
-        $stmtInsert->execute();
+        $selectedDate = $_POST['SelectedDate'];
+        $userId = $_SESSION['userId']; // current logged-in user
 
-        $success = "Your booking request has been submitted!";
-        // Optionally refresh $bookedDates to disable clicked date
-        $bookedDates[] = $selectedDate;
+        // Validate user cannot book their own post
+        if ($userId == $postUserId) {
+            $error = "You cannot book your own post.";
+        } elseif (in_array($selectedDate, $bookedDates)) {
+            $error = "This date has already been booked.";
+        } else {
+            // Insert new exchange
+            $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate) VALUES (?, ?, ?, ?)";
+            $stmtInsert = $conn->prepare($sqlInsert);
+            if (!$stmtInsert) {
+                $error = "Database error: " . $conn->error;
+            } else {
+                $stmtInsert->bind_param('iiis', $postId, $postUserId, $userId, $selectedDate);
+                if ($stmtInsert->execute()) {
+                    $success = "Your booking request has been submitted!";
+                    $bookedDates[] = $selectedDate;
+                } else {
+                    $error = "Error submitting booking: " . $stmtInsert->error;
+                }
+            }
+        }
     }
 }
 
 
 
 
-$stmt->close();
-$conn->close();
-
-
+// Don't close connection yet - we need it for the view file
 
 ?>
 
@@ -157,3 +230,13 @@ $conn->close();
         
 </body>
 </html>
+
+<?php
+// Close connection after everything is done
+if (isset($stmt)) { $stmt->close(); }
+if (isset($userStmt)) { $userStmt->close(); }
+if (isset($stmtDates)) { $stmtDates->close(); }
+if (isset($stmtEx)) { $stmtEx->close(); }
+if (isset($stmtInsert)) { $stmtInsert->close(); }
+if (isset($conn)) { $conn->close(); }
+?>
