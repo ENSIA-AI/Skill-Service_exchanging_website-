@@ -1,5 +1,19 @@
 <?php
 
+// Start session to get current user
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if user is logged in, otherwise use test user 
+if (!isset($_SESSION['userId']) || empty($_SESSION['userId'])) {
+    // Development/Testing: Use default test user ID (1)
+    // TODO: Remove this later after implementing it
+    $organizerId = 1; // Default test user
+} else {
+    $organizerId = $_SESSION['userId'];
+}
+
  require_once __DIR__  . "/../../DataBaseManagement/config.php";
 
 $errors = [];
@@ -20,6 +34,7 @@ $event_description = $_POST['description'];
 $event_max_attendees = $_POST['maxAttendees'];
 $event_category = $_POST['category'];
 $event_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+$event_credit = isset($_POST['credit']) ? $_POST['credit'] : 0;
 
 $data['title'] = validateRequired(
     $errors,
@@ -28,35 +43,43 @@ $data['title'] = validateRequired(
     5
 );
 
-$data['description'] = validateRequired(
-    $errors,
-    'Description',
-    $_POST['description'],
-    20
-);
+// Description is optional - only validate if provided
+$description_value = isset($_POST['description']) ? $_POST['description'] : '';
+if (!empty(trim($description_value))) {
+    $data['description'] = validateRequired(
+        $errors,
+        'Description',
+        $description_value,
+        20
+    );
+} else {
+    $data['description'] = ['success' => true, 'valid_field_value' => ''];
+}
 
 $startDate = validateDate(
     $errors,
     'Start Date',
     $_POST['eventStartDate'],
-    "d-m-Y H:i"
+    "Y-m-d\TH:i"
 );
 
 $endDate = validateDate(
     $errors,
     'End Date',
     $_POST['eventEndDate'],
-    "d-m-Y H:i"
+    "Y-m-d\TH:i"
 );
 
 
 if ($startDate['success'] && $endDate['success']) {
     $data['event_dates'] = validateStartEndDates(
         $errors,
-        "d-m-Y H:i",
+        "",
         $startDate['valid_field_value'],
         $endDate['valid_field_value']
     );
+} else {
+    $data['event_dates'] = ['success' => false, 'valid_start_value' => '', 'valid_finish_value' => ''];
 }
 
 $data['location'] = validateRequired(
@@ -72,21 +95,39 @@ $data['type'] = validateEventType(
     $_POST['eventType']
 );
 
-$data['max_attendees'] = validateNumber(
-    $errors,
-    'Max Attendees',
-    $_POST['maxAttendees'],
-    100,
-    1
-);
+// Max attendees is optional - only validate if provided
+$max_attendees_value = isset($_POST['maxAttendees']) ? $_POST['maxAttendees'] : '';
+if (!empty(trim($max_attendees_value))) {
+    $data['max_attendees'] = validateNumber(
+        $errors,
+        'Max Attendees',
+        $max_attendees_value,
+        100,
+        1
+    );
+} else {
+    $data['max_attendees'] = ['success' => true, 'valid_field_value' => 100]; // Default value
+}
 
-$category = validateCategory(
-    $errors,
-    $conn,
-    $_POST['category']
-);
+// Validate category is selected
+if (!isset($_POST['category']) || empty(trim($_POST['category']))) {
+    $errors[] = "error: select category first";
+    $category = ['success' => false, 'category_id' => null];
+} else {
+    $category = validateCategory(
+        $errors,
+        $conn,
+        $_POST['category']
+    );
+}
 
 $data['category'] = $category;
+
+// Credit validation (optional - defaults to 0 if not provided)
+$data['credit'] = validateCredit(
+    $errors,
+    isset($_POST['credit']) ? $_POST['credit'] : '0'
+);
 
 $event_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
 
@@ -110,7 +151,7 @@ if(!empty($errors)){
 }
 else {
     try {
-        $event_id = saveToDataBase($data, $conn);
+        $event_id = saveToDataBase($data, $conn, $organizerId);
         
         header('Content-Type: application/json');
         echo json_encode([
@@ -221,26 +262,38 @@ function validateDate(&$errors, $field_name, $field_value, $format = "Y-m-d\TH:i
     return ['success' => true, 'valid_field_value' => $cleaned];
 }
 
-//To ensure end date after start date with less than one year duration 
+//To ensure end date after start date with less than one year duration and at least 15 minutes apart
 function validateStartEndDates(&$errors , $format , $start_date_value , $finish_date_value ){
 
-    $user_time_zone = new DateTimeZone($_POST['timezone']);
-    $start_date = DateTime::createFromFormat($format , $start_date_value , $user_time_zone);
-    $finish_date = DateTime::createFromFormat($format , $finish_date_value , $user_time_zone);
+    // Parse dates from MySQL format (Y-m-d H:i:s)
+    $start_date = DateTime::createFromFormat('Y-m-d H:i:s', $start_date_value);
+    $finish_date = DateTime::createFromFormat('Y-m-d H:i:s', $finish_date_value);
 
+    // Check if end date is after start date
     if($finish_date <= $start_date ){
-        $errors[] = "error: finish date can't be before start date";
+        $errors[] = "error: end date must be after start date";
         return ['success' =>  false , 'valid_start_value' => '' , 'valid_finish_value' => ''];
     }
-    elseif($finish_date->diff($start_date)->days > 365){
+    
+    // Check minimum 15 minutes apart
+    $interval = $start_date->diff($finish_date);
+    $minutes_apart = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+    
+    if ($minutes_apart < 15) {
+        $errors[] = "error: end date must be at least 15 minutes after start date";
+        return ['success' =>  false , 'valid_start_value' => '' , 'valid_finish_value' => ''];
+    }
+    
+    // Check if event lasts more than one year
+    if($interval->days > 365){
         $errors[] = "error: event can't last for more than a year";
         return ['success' =>  false , 'valid_start_value' => '' , 'valid_finish_value' => ''];
     }
-    else{
-        $cleaned_start = $start_date->format($format);
-        $cleaned_finish = $finish_date->format($format);
-        return ['success' =>  true , 'valid_start_value' => $cleaned_start , 'valid_finish_value' => $cleaned_finish];
-    }
+    
+    // Return in MySQL format
+    $cleaned_start = $start_date->format('Y-m-d H:i:s');
+    $cleaned_finish = $finish_date->format('Y-m-d H:i:s');
+    return ['success' =>  true , 'valid_start_value' => $cleaned_start , 'valid_finish_value' => $cleaned_finish];
 }
 
 function validateEventType(&$errors, $field_value){
@@ -255,11 +308,46 @@ function validateEventType(&$errors, $field_value){
     }
 }
 
+//To validate the credit field (optional, defaults to 0, range 0-100)
+function validateCredit(&$errors, $field_value){
+    $field_value = trim($field_value);
+    
+    // If empty, default to 0
+    if(empty($field_value)){
+        return ['success' => true , 'valid_field_value' => 0];
+    }
+    
+    // Check if it's a valid integer
+    if(!filter_var($field_value, FILTER_VALIDATE_INT)){
+        $errors[] = "error: credits must be a whole number";
+        return ['success' => false , 'valid_field_value' => 0];
+    }
+    
+    $credit_int = (int)$field_value;
+    
+    // Check range 0-100
+    if($credit_int < 0 || $credit_int > 100){
+        $errors[] = "error: credits must be between 0 and 100";
+        return ['success' => false , 'valid_field_value' => 0];
+    }
+    
+    return ['success' => true , 'valid_field_value' => $credit_int];
+}
+
 function validateCategory(&$errors , mysqli $conn , $field_value){
 
     $field_value = trim($field_value);
-    $stmt = $conn->prepare("SELECT categoryid FROM category WHERE categoryname = ?");
-    $stmt->bind_param("s" , $field_value);
+    
+    // Check if field_value is numeric (categoryid from form)
+    if(!is_numeric($field_value)){
+        $errors[] = "error: select category first";
+        return ['success' => false , 'category_id' => null];
+    }
+    
+    $category_id_int = (int)$field_value;
+    
+    $stmt = $conn->prepare("SELECT categoryid FROM category WHERE categoryid = ?");
+    $stmt->bind_param("i" , $category_id_int);
     $stmt->execute();
     $stmt->store_result(); 
 
@@ -337,7 +425,7 @@ function validateSkill(&$errors, mysqli $conn, array $skills, $category_id) {
     return ['success' => true, 'skill_ids' => $skill_ids];
 }
 
-function saveToDataBase($data, mysqli $conn) {
+function saveToDataBase($data, mysqli $conn, $organizerId) {
 
     $conn->begin_transaction();
 
@@ -345,19 +433,21 @@ function saveToDataBase($data, mysqli $conn) {
         // Insert event
         $stmt = $conn->prepare("
             INSERT INTO events
-            (EventTitle, EventDescription, EventLocation, EventType, EventStartDate, EventEndDate, MaxAttendees)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            (OrganizerId, EventTitle, EventDescription, EventLocation, EventType, EventStartDate, EventEndDate, MaxAttendees, EventCost)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->bind_param(
-            "ssssssi",
+            "issssssii",
+            $organizerId,
             $data['title']['valid_field_value'],
             $data['description']['valid_field_value'],
             $data['location']['valid_field_value'],
             $data['type']['valid_field_value'],
             $data['event_dates']['valid_start_value'],
             $data['event_dates']['valid_finish_value'],
-            $data['max_attendees']['valid_field_value']
+            $data['max_attendees']['valid_field_value'],
+            $data['credit']['valid_field_value']
         );
 
         $stmt->execute();
