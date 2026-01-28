@@ -266,6 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="john@example.com" required value="<?php echo htmlspecialchars($_SESSION['signup_data']['email'] ?? ''); ?>">
                     <small class="error-message"></small>
+                    <small id="emailMsg"></small>
                 </div>
 
                 <div class="form-group">
@@ -323,6 +324,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script src="../assets/js/formvalidation.js"></script>
+
+
+    <script>
+   const emailInput = document.getElementById("email");
+    const msg = document.getElementById("emailMsg");
+    emailInput.addEventListener("blur", function () {
+
+    let email = this.value.trim();
+    if(email === "") return;
+    fetch("checkEmail.php?email=" + encodeURIComponent(email))
+        .then(res => res.json())
+        .then(data => {
+
+            if(data.exists){
+                msg.textContent = "Email already registered ";
+                msg.style.color = "red";
+            }
+            else{
+                msg.textContent = "Email available ";
+                msg.style.color = "green";
+            }
+
+        });
+
+});
+
+</script>
    
     <?php
     // Display any PHP validation errors in the form

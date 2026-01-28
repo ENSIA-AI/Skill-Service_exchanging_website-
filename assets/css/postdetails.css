@@ -442,7 +442,7 @@ body {
 }
 
 .availability-card {
-    background-color: #5a6b8f;
+    background-color:var(--clr-lighter);
     padding: 20px;
     border-radius: 15px;
 }
@@ -479,11 +479,10 @@ body {
 
 .schedule-day {
     background-color: var(--clr-bars);
-    padding: 12px 15px;
-    border-radius: 12px;
+    padding: 7px 5px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 12px;
     transition: all 0.3s ease;
     overflow: hidden;
 }
@@ -723,14 +722,14 @@ body {
 }
 
 .day-header {
-    background-color: #f8f9fa;
+
     padding: 10px 15px;
     border-bottom: 1px solid #e0e0e0;
 }
 
 .day-label {
     font-weight: 600;
-    color: #333;
+    color: var(--clr-btn);
 }
 
 .time-slots {
@@ -782,7 +781,7 @@ body {
 }
 
 .btn-primary {
-    background-color: #007bff;
+    background-color:var(--clr-btn);
     color: white;
     border: none;
     padding: 12px 24px;

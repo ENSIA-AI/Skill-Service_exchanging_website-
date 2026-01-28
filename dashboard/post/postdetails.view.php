@@ -1,9 +1,8 @@
-<link rel="stylesheet" href="../../assets/css/style.css">
-<link rel="stylesheet" href="../../assets/css/postdetails.css">
-
-<div class="service-detail-container">
-    <!-- Left Section: Service Details -->
-    <div class="service-info-section">
+<div class="page-wrapper">
+    <div class="page-container">
+        <div class="service-detail-container">
+            <!-- Left Section: Service Details -->
+            <div class="service-info-section">
         <!-- Provider Header -->
         <div class="provider-header">
             <img src="<?php echo htmlspecialchars($user['ProfilePicture'] ?? '../../assets/images/Default_pfp.svg'); ?>" alt="<?php echo htmlspecialchars($user['FullName'] ?? 'Unknown'); ?>" class="provider-avatar">
@@ -103,9 +102,10 @@
                         <span class="skill-tag">No skills specified</span>
                     <?php endif; ?>
                 </div>
+            </div>
 
-                <h3>Teaching Methodology</h3>
-                <p><?php echo nl2br(htmlspecialchars($teachingMethodology ?? 'Teaching methodology not specified.')); ?></p>
+            <!-- What I'm Looking For in Exchange -->
+            <div class="exchange-section">
             <h2>What I'm Looking For in Exchange</h2>
             
             <div class="payment-options">
@@ -129,94 +129,139 @@
                     <?php endif; ?>
                 </div>
             </div>
-
-            <div class="exchange-expectations">
-                <h3>Exchange Expectations</h3>
-                <p><?php echo nl2br(htmlspecialchars($exchangeExpectations ?? 'Exchange expectations not specified.')); ?></p>
             </div>
-        </div>
 
-        <!-- What You'll Need -->
+            <!-- What You'll Need -->
         <div class="requirements-section">
             <h2>What You'll Need</h2>
             <p><?php echo nl2br(htmlspecialchars($requirements ?? 'No specific requirements.')); ?></p>
         </div>
     </div>
 
-    <!-- Right Section: Availability Schedule -->
-    <div class="availability-section">
-        <div class="availability-card">
-            <div class="availability-header">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                <div>
-                    <h2>Availability Schedule</h2>
-                    <p>Select an available date and time for this service.</p>
+            <!-- Right Section: Availability Schedule -->
+            <div class="availability-section">
+                <div class="availability-card">
+                    <div class="availability-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <div>
+                            <h2>Availability Schedule</h2>
+                            <p>Select an available date and time for this service.</p>
+                        </div>
+                    </div>
+
+                    <?php if (!empty($error)): ?>
+                        <div class="error-message" style="color: red; margin-bottom: 10px; padding: 10px; background: #ffe6e6; border-radius: 4px; border: 1px solid #ffcccc;">
+                            <?php echo htmlspecialchars($error); ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($success)): ?>
+                        <div class="success-message" style="color: green; margin-bottom: 10px; padding: 10px; background: #e6ffe6; border-radius: 4px; border: 1px solid #ccffcc;">
+                            <?php echo htmlspecialchars($success); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="" class="availability-form">
+                        <!-- Days Schedule -->
+                        <div class="schedule-container">
+                            <?php if (!empty($weekDays) && is_array($weekDays)): ?>
+                                <?php foreach ($weekDays as $day): ?>
+                                    <div class="schedule-day" data-day="<?php echo strtolower($day); ?>">
+                                        <div class="day-header">
+                                            <span class="day-label"><?php echo $day; ?></span>
+                                        </div>
+                                        <div class="time-slots">
+                                            <?php if (!empty($dayRanges[$day]['has_slots'])): 
+                                                $range = $dayRanges[$day];
+                                                // Create a sample datetime for this day's first available slot
+                                                // We need to find an actual date from $dates array for this day
+                                                $sampleDate = '';
+                                                foreach ($dates as $datetime) {
+                                                    if (date('l', strtotime($datetime)) === $day) {
+                                                        $sampleDate = date('Y-m-d', strtotime($datetime)) . ' ' . $range['start'] . ':00';
+                                                        break;
+                                                    }
+                                                }
+                                                
+                                                // Check if this day's slots are booked
+                                                $isDayBooked = false;
+                                                foreach ($bookedDates as $booked) {
+                                                    if (date('l', strtotime($booked)) === $day) {
+                                                        $isDayBooked = true;
+                                                        break;
+                                                    }
+                                                }
+                                                
+                                                $isPast = !empty($sampleDate) && strtotime($sampleDate) < time();
+                                                $isDisabled = $isDayBooked || $isPast;
+                                            ?>
+                                                <label class="time-slot-range <?php echo $isDisabled ? 'disabled' : ''; ?>">
+                                                    <input 
+                                                        type="radio" 
+                                                        name="SelectedDate" 
+                                                        value="<?php echo htmlspecialchars($sampleDate); ?>" 
+                                                        <?php echo $isDisabled ? 'disabled' : ''; ?>
+                                                        data-day="<?php echo $day; ?>"
+                                                    >
+                                                    <span class="time-range">
+                                                        <strong><?php echo htmlspecialchars($range['start']); ?></strong> 
+                                                        to 
+                                                        <strong><?php echo htmlspecialchars($range['end']); ?></strong>
+                                                    </span>
+                                                </label>
+                                            <?php else: ?>
+                                                <span class="no-slots">No available slots</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>No availability information available.</p>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <!-- Hidden submit button -->
+                        <input type="submit" id="submitBooking" style="display: none;">
+                    </form>
                 </div>
             </div>
-
-            <?php if (!empty($error)): ?>
-                <div class="error-message" style="color: red; margin-bottom: 10px; padding: 10px; background: #ffe6e6; border-radius: 4px; border: 1px solid #ffcccc;">
-                    <?php echo htmlspecialchars($error); ?>
-                </div>
-            <?php endif; ?>
-            <?php if (!empty($success)): ?>
-                <div class="success-message" style="color: green; margin-bottom: 10px; padding: 10px; background: #e6ffe6; border-radius: 4px; border: 1px solid #ccffcc;">
-                    <?php echo htmlspecialchars($success); ?>
-                </div>
-            <?php endif; ?>
-
-            <form method="POST" action="">
-                <!-- Days Schedule -->
-                <div class="schedule-container">
-                    <?php if (!empty($weekDays) && is_array($weekDays)): ?>
-                        <?php foreach ($weekDays as $day): ?>
-                            <div class="schedule-day" data-day="<?php echo strtolower($day); ?>">
-                                <div class="day-header">
-                                    <span class="day-label"><?php echo $day; ?></span>
-                                </div>
-                                <div class="time-slots">
-                                    <?php if (!empty($datesByDay[$day]) && is_array($datesByDay[$day])): ?>
-                                        <?php foreach ($datesByDay[$day] as $slot): ?>
-                                            <?php 
-                                            $slotDatetime = $slot['datetime'] ?? '';
-                                            $slotTime = $slot['time'] ?? '';
-                                            $isBooked = !empty($slotDatetime) && in_array($slotDatetime, $bookedDates ?? []);
-                                            $isPast = !empty($slotDatetime) && strtotime($slotDatetime) < time();
-                                            $isDisabled = $isBooked || $isPast;
-                                            ?>
-                                            <label class="time-slot <?php echo $isDisabled ? 'disabled' : ''; ?>">
-                                                <input 
-                                                    type="radio" 
-                                                    name="SelectedDate" 
-                                                    value="<?php echo htmlspecialchars($slotDatetime); ?>" 
-                                                    <?php echo $isDisabled ? 'disabled' : ''; ?>
-                                                >
-                                                <span><?php echo htmlspecialchars($slotTime); ?></span>
-                                            </label>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <span class="no-slots">No available slots</span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No availability information available.</p>
-                    <?php endif; ?>
-                </div>
-
-                <div class="booking-actions">
-                    <button type="submit" class="btn-primary" <?php echo isset($_SESSION['userId']) && $_SESSION['userId'] == ($postUserId ?? 0) ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''; ?>>
-                        <?php echo isset($_SESSION['userId']) && $_SESSION['userId'] == ($postUserId ?? 0) ? 'Cannot Book Your Own Service' : 'Book This Service'; ?>
-                    </button>
-                    <?php if (!isset($_SESSION['userId'])): ?>
-                        <p style="color: #666; font-size: 0.9rem; margin-top: 10px;">You need to be logged in to book this service.</p>
-                    <?php endif; ?>
-                </div>
-            </form>
         </div>
     </div>
 </div>
+
+<script>
+function bookService() {
+    const selectedSlot = document.querySelector('.time-slot-range.selected input[type="radio"]');
+    if (!selectedSlot) {
+        alert('Please select a time slot from the availability schedule first.');
+        return;
+    }
+    
+    if (selectedSlot.disabled) {
+        alert('This time slot is not available for booking.');
+        return;
+    }
+    
+    // Submit the form
+    document.getElementById('submitBooking').click();
+}
+
+// Add click handlers for time slots
+document.addEventListener('DOMContentLoaded', function() {
+    const timeSlots = document.querySelectorAll('.time-slot-range:not(.disabled)');
+    
+    timeSlots.forEach(slot => {
+        slot.addEventListener('click', function() {
+            // Remove selected class from all slots
+            document.querySelectorAll('.time-slot-range').forEach(s => {
+                s.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked slot
+            this.classList.add('selected');
+        });
+    });
+});
+</script>

@@ -97,8 +97,6 @@ $requiredCredits  = $post['RequiredCredits'];
 $prerequisites    = $post['Prerequisites'];
 $requirements     = $post['Requirements'];
 $postUserId       = $post['UserId'];
-$teachingMethodology = $post['TeachingMethodology'] ?? 'Not specified';
-$exchangeExpectations = $post['ExchangeExpectations'] ?? 'Not specified';
 
 // Fetch skills offered by this post
 $skillsSql = "SELECT s.SkillName, s.SkillId FROM PostSkills ps 
@@ -130,33 +128,58 @@ while ($skill = $seekingResult->fetch_assoc()) {
 
 
 //array to store the available dates of the post owner
-$dates = [];
 
-$Datesquery= "SELECT AvailableDate FROM PostAvailableDates WHERE PostId = ? ORDER BY AvailableDate ASC";
+// Fetch available dates
+$dates = [];
+$Datesquery = "SELECT AvailableDate FROM PostAvailableDates WHERE PostId = ? ORDER BY AvailableDate ASC";
 $stmtDates = $conn->prepare($Datesquery);
 if (!$stmtDates) {  die('Database error: ' . $conn->error); }
 $stmtDates->bind_param('i', $postId);
 $stmtDates->execute();
 $resultDates = $stmtDates->get_result();
 
-while ($row = $resultDates->fetch_assoc())
- {
+while ($row = $resultDates->fetch_assoc()) {
     $dates[] = $row['AvailableDate'];
 }
 
-// Initialize array for all 7 days - fill in the array with dates
+// NEW: Process dates into time ranges per day (like first image)
+$timeSlotsByDay = [];
+
 foreach ($dates as $datetime) {
     $dayName = date('l', strtotime($datetime)); // Day of the week
     $timeSlot = date('H:i', strtotime($datetime)); // Hour:Minute
     
-    // Store both the full datetime and the time for later use
-    $datesByDay[$dayName][] = [
-        'datetime' => $datetime, // full datetime (needed for booking & comparison)
-        'time' => $timeSlot      // display to user
-    ];
+    if (!isset($timeSlotsByDay[$dayName])) {
+        $timeSlotsByDay[$dayName] = [];
+    }
+    $timeSlotsByDay[$dayName][] = $timeSlot;
 }
 
-
+// Find time ranges for each day
+$dayRanges = [];
+foreach ($timeSlotsByDay as $dayName => $times) {
+    if (!empty($times)) {
+        // Sort times
+        sort($times);
+        
+        // Find earliest and latest time
+        $earliest = $times[0];
+        $latest = $times[count($times)-1];
+        
+        // Store as range
+        $dayRanges[$dayName] = [
+            'start' => $earliest,
+            'end' => $latest,
+            'has_slots' => true
+        ];
+    } else {
+        $dayRanges[$dayName] = [
+            'start' => '',
+            'end' => '',
+            'has_slots' => false
+        ];
+    }
+}
 
 
 // Fetch existing exchanges to know which dates are already booked/completed 
@@ -206,10 +229,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
 }
 
 
-
-
-// Don't close connection yet - we need it for the view file
-
 ?>
 
 <!DOCTYPE html>
@@ -219,6 +238,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
     <title>Swap</title>
     <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/postdetails.css">
 </head>
 <body>
     <?php include '../../components/header.html'; ?>
