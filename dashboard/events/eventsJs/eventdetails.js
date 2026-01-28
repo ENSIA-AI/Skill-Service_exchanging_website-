@@ -1,17 +1,56 @@
-import {events} from './eventsData.js'
-
+/**
+ * Get event ID from URL parameters
+ */
 function getEventIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     return parseInt(urlParams.get('id'));
 }
 
-function findEventById(eventId) {
-    return events.find(event => event.id === eventId);
+/**
+ * Fetch event details from database API
+ */
+async function fetchEventDetails(eventId) {
+    try {
+        const apiUrl = `./eventsAPI/getEventDetailsAPI.php?id=${eventId}`;
+        console.log('Fetching event details from:', apiUrl);
+        
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('API Data:', data);
+        
+        if (data && data.success) {
+            return data.data;
+        } else {
+            console.error('API Error:', data);
+            return null;
+        }
+    } catch (error) {
+        console.error('Fetch Error:', error);
+        return null;
+    }
 }
 
-function renderEventDetails() {
+/**
+ * Render event details to the page
+ */
+async function renderEventDetails() {
     const eventId = getEventIdFromURL();
-    const event = findEventById(eventId);
+    
+    if (!eventId || isNaN(eventId)) {
+        document.querySelector('.js-event-details-container').innerHTML = `
+            <div class="event-detail-card">
+                <p style="text-align: center; font-size: 1.2rem; color: #c5c7d9;">Invalid event ID</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const event = await fetchEventDetails(eventId);
 
     if (!event) {
         document.querySelector('.js-event-details-container').innerHTML = `
@@ -29,7 +68,8 @@ function renderEventDetails() {
     const isEventFull = event.attendees >= event.maxAttendees;
     const buttonText = isEventFull ? 'Event is Full' : 'Join Event';
     const buttonDisabled = isEventFull ? 'disabled' : '';
-    const organiserInitials = event.organizer.split(' ').map(n => n.charAt(0)).join('').toUpperCase();
+    const organizerName = event.organizer || 'Community Admin';
+    const organiserInitials = organizerName.split(' ').map(n => n.charAt(0)).join('').toUpperCase();
 
     const detailsHtml = `
         <div class="event-detail-card main-info">
@@ -71,14 +111,14 @@ function renderEventDetails() {
                 <div class="organizer-avatar">${organiserInitials}</div>
                 <div class="organizer-info">
                     <h3>Organized by</h3>
-                    <p>${event.organizer}</p>
+                    <p>${organizerName}</p>
                 </div>
             </div>
 
-            <button class="join-event-button-detail" data-event-id="${event.id}" ${buttonDisabled}>
+            <button class="join-event-button-detail" data-event-id="${event.EventId}" ${buttonDisabled}>
                 ${buttonText}
             </button>
-            <button class="unsend-request-button" data-event-id="${event.id}" style="display: none;">
+            <button class="unsend-request-button" data-event-id="${event.EventId}" style="display: none;">
                 <i class="fas fa-times"></i> Unsend Request
             </button>
         </div>
@@ -168,10 +208,3 @@ function setupEventListeners() {
 document.addEventListener('DOMContentLoaded', () => {
     renderEventDetails();
 });
-
-// Also render immediately in case DOM is already loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderEventDetails);
-} else {
-    renderEventDetails();
-}
