@@ -25,14 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors['password'] = 'Password must contain at least one number!';
   }
   if (empty($errors)) {
-    $stmt = $conn->prepare('SELECT UserName, Email, Password FROM Users WHERE Email=? OR UserName=?');
+    $stmt = $conn->prepare('SELECT UserId, UserName, Email, Password FROM Users WHERE Email=? OR UserName=?');
     $stmt->bind_param('ss', $email_uid, $email_uid);
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0) {
-      $stmt->bind_result($db_username, $db_email, $db_password);
+      $stmt->bind_result($db_userid, $db_username, $db_email, $db_password);
       $stmt->fetch();
       if (password_verify($password, $db_password)) {
+        $_SESSION['user_id'] = $db_userid;
         $_SESSION['username'] = $db_username;
         $_SESSION['email'] = $db_email;
         session_regenerate_id(true);
