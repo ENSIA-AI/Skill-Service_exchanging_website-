@@ -1,0 +1,131 @@
+<?php
+require_once 'includes/dbh.inc.php';
+
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] :
+            (isset($_GET['id']) ? (int)$_GET['id'] : 0);
+
+try {
+    $stmt = $connection->prepare("SELECT * FROM users WHERE UserId = :id");
+    $stmt->execute([':id' => $userId]);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $currentPhoto    = !empty($user['ProfilePicture']) ? $user['ProfilePicture'] : '../../assets/images/Default_pfp.svg';
+    } else {
+        $currentPhoto = '../../assets/images/Default_pfp.svg';
+    }
+} catch (PDOException $e) {
+    echo "Query failed: " . $e->getMessage();
+}
+
+?>
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="../../assets/css/header.css">
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <style>
+        .header-avatar {
+            grid-area: avatar;
+            border: 2px solid var(--color2);
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-self: center;
+        }
+
+        .header-avatar img {
+            width: 55px;
+            height: 55px;
+            object-fit: cover;
+            object-position: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="humberger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-menu h-6 w-6" aria-hidden="true">
+                    <path d="M4 5h16"></path>
+                    <path d="M4 12h16"></path>
+                    <path d="M4 19h16"></path>
+                </svg>
+            </div>
+            <a href="/Skill-Service_exchanging_website-/dashboard/post/posts.php" class="header-logo">
+                <img src="../../assets/images/homeinp/Swaplogo.png">
+            </a>
+            <!--<a href="/dashboard/home.html"class="Swap">Swap</a>-->
+
+        </div>
+        <div class="header-right">
+            <span class="credit-span-small">50</span>
+            <div class="header-credit">
+                Credits:
+                <span class="credit-span">50</span>
+            </div>
+            <a href="/Skill-Service_exchanging_website-/dashboard/notification/notifications.php"
+                class="header-notification">
+
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell h-5 w-5"
+                    aria-hidden="true">
+                    <path d="M10.268 21a2 2 0 0 0 3.464 0"></path>
+                    <path
+                        d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326">
+                    </path>
+                </svg>
+
+            </a>
+            <a href="/Skill-Service_exchanging_website-/dashboard/profile/profile.php"
+                class="header-profile header-avatar">
+                <img src="<?= $currentPhoto; ?>" alt="Profile Picture">
+            </a>
+        </div>
+    </div>
+    <script>
+        // Header functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.humberger');
+
+            console.log('Header script loaded, hamburger found:', !!hamburger);
+
+            // Hamburger menu click event
+            if (hamburger) {
+                hamburger.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('Hamburger clicked');
+
+                    // Dispatch custom event to toggle sidebar
+                    const toggleEvent = new CustomEvent('toggleSidebar');
+                    document.dispatchEvent(toggleEvent);
+                });
+            }
+
+            // Add hover effects to header elements
+            const headerElements = document.querySelectorAll('.header-credit, .header-notification, .header-profile');
+            headerElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.style.opacity = '0.8';
+                });
+                element.addEventListener('mouseleave', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

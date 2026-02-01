@@ -1,450 +1,249 @@
-document.addEventListener("DOMContentLoaded", () => {
-    loadUserDataIntoForm();
-    setupOfferingDropdowns();
-    setupSeekingDropdowns();
-    setupOfferingSkillsManagement();
-    setupSeekingSkillsManagement();
-    setupAvailability();
-    setupFormSubmission();
-    setupSliders();
-});
+$(document).ready(function () {
 
-function loadUserDataIntoForm() {
-    const userData = window.profileManager.getData();
+    $("#upload-picture-desktop, #upload-picture-mobile").on("change", function () {
+        const file = this.files[0];
+        if (file) {
+            if (file.size > 2 * 1024 * 1024) {
+                alert("File is too large! Max 2MB.");
+                $(this).val('');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $('#profile-preview').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-    document.getElementById('username').value = userData.username;
-    document.getElementById('fullname').value = userData.fullname;
-    document.querySelector('input[name="professional_title"]').value = userData.professionalTitle;
-    document.getElementById('location').value = userData.location;
-    document.getElementById('email').value = userData.email;
-    document.getElementById('phone').value = userData.phone;
-    document.getElementById('about-me').value = userData.aboutMe;
+    $(".remove-btn").on("click", function (e) {
+        e.preventDefault();
+        $('#profile-preview').attr('src', '../../assets/icons/favicon_io/android-chrome-512x512.png');
+        $("#upload-picture-desktop, #upload-picture-mobile").val('');
+    });
 
-    const avatarImg = document.querySelector('.edit-profile-avatar img');
-    if (avatarImg) {
-        avatarImg.src = userData.profilePicture;
+    $(document).on("change", "#offering-category", function () {
+        const selectedCat = $(this).val();
+        const $skillSelect = $('#offering-skills');
+        const $rateInput = $('#offering-rate');
+        const $addButton = $('#add-offering-skill-btn');
+
+        if (selectedCat !== "") {
+            $skillSelect.prop("disabled", false);
+            $skillSelect.find("option").each(function () {
+                if ($(this).data("category") == selectedCat || $(this).val() === "") {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            $skillSelect.prop("disabled", true).val("");
+            $rateInput.prop("disabled", true).val("");
+            $addButton.prop("disabled", true);
+        }
+    });
+
+    $(document).on("change", "#offering-skills", function () {
+        const $rateInput = $('#offering-rate');
+        const $addButton = $('#add-offering-skill-btn');
+        if ($(this).val() !== "") {
+            $rateInput.prop("disabled", false);
+            $addButton.prop("disabled", false);
+        } else {
+            $rateInput.prop("disabled", true);
+            $addButton.prop("disabled", true);
+        }
+    });
+
+    $(document).on("change", "#seeking-category", function () {
+        const selectedCat = $(this).val();
+        const $skillSelect = $('#seeking-skills');
+        const $addButton = $('#add-seeking-skill-btn');
+
+        $skillSelect.val("");
+        $addButton.prop("disabled", true);
+
+        if (selectedCat !== "") {
+            $skillSelect.prop("disabled", false);
+            $skillSelect.find("option").each(function () {
+                if ($(this).data("category") == selectedCat || $(this).val() === "") {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            $skillSelect.prop("disabled", true);
+        }
+    });
+
+    $(document).on("change", "#seeking-skills", function () {
+        $('#add-seeking-skill-btn').prop("disabled", $(this).val() === "");
+    });
+
+    $("#add-offering-skill-btn").on("click", function () {
+        const skillSelect = $("#offering-skills");
+        const skillId = skillSelect.val();
+        const skillName = skillSelect.find("option:selected").text();
+        const proficiency = $(".proficiency-section .proficiency-slider").last().val();
+        const rate = $("#offering-rate").val();
+
+        if (!skillId || !rate) {
+            alert("Please select a skill and enter a rate!");
+            return;
+        }
+
+        const newCardHtml = `
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">${skillName}</h3>
+                    <button type="button" class="delete-skill">×</button>
+                </div>
+                <div class="proficiency-section">
+                    <div class="section-header">
+                        <span class="label">Proficiency Level</span>
+                        <span class="proficiency-value">${proficiency}%</span>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" class="proficiency-slider" name="skill_proficiency[${skillId}]" min="0" max="100" value="${proficiency}" oninput="updateSlider(this)">
+                    </div>
+                </div>
+                <div class="rate-section">
+                    <div class="label"><label>Rate (credits/hour)*</label></div>
+                    <input type="number" name="skill_rate[${skillId}]" class="textbox" value="${rate}" required>
+                </div>
+            </div>`;
+
+        $(".cards-section").append(newCardHtml);
+        updateSlider($(".cards-section .proficiency-slider").last()[0]);
+
+        $("#offering-category").val("");
+        skillSelect.val("").prop("disabled", true);
+        $("#offering-rate").val("").prop("disabled", true);
+        $(this).prop("disabled", true);
+    });
+
+    $("#add-seeking-skill-btn").on("click", function () {
+        const skillId = $("#seeking-skills").val();
+        const skillName = $("#seeking-skills option:selected").text();
+
+        if ($("#seeking-list li").length >= 10) {
+            alert("Max 10 skills allowed!");
+            return;
+        }
+
+        const listItem = `
+            <li>
+                ${skillName}
+                <input type="hidden" name="seeking_skills[]" value="${skillId}">
+                <span class="delete-from-list">&times;</span>
+            </li>`;
+
+        $("#seeking-list").append(listItem);
+        updateSkillCounter();
+
+        $("#seeking-category").val("");
+        $("#seeking-skills").val("").prop("disabled", true);
+        $(this).prop("disabled", true);
+    });
+
+    $(document).on("click", ".delete-skill", function () {
+        if (confirm("Remove this offering skill?")) $(this).closest(".card").remove();
+    });
+
+    $(document).on("click", ".delete-from-list", function () {
+        $(this).parent().remove();
+        updateSkillCounter();
+    });
+
+    $("#update-profile-form").on("submit", function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        const saveBtn = $(".btn-2-save");
+        saveBtn.text("Saving...").prop("disabled", true);
+
+        $.ajax({
+            url: "update_handler.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (response) {
+                if (response.status === "success") {
+                    window.location.reload();
+                } else {
+                    alert("Error: " + response.message);
+                }
+            },
+            error: function () {
+                alert("Could not connect to server.");
+            },
+            complete: function () {
+                saveBtn.text("Save Changes").prop("disabled", false);
+            }
+        });
+    });
+    function updateSkillCounter() {
+        const count = $("#seeking-list li").length;
+        $("#skill-counter").text(count + "/10 Skills selected");
     }
 
-    loadOfferingSkills(userData.offeringSkills);
-    loadSeekingSkills(userData.seekingSkills);
-    loadAvailability(userData.availability);
-}
-
-function loadOfferingSkills(skills) {
-    const container = document.querySelector('.cards-section');
-    container.innerHTML = '';
-
-    skills.forEach(skill => {
-        const card = createSkillCard(skill);
-        container.appendChild(card);
-        makeSliderInteractive(card);
-    });
-}
-
-function createSkillCard(skill) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    const rateId = `rate-${skill.name.toLowerCase().replace(/\s+/g, '-')}`;
-    
-    card.innerHTML = `
-        <div class="card-header">
-            <h3 class="card-title">${skill.name}</h3>
-            <button type="button" class="delete-skill">×</button>
-        </div>
-
-        <div class="proficiency-section">
-            <div class="section-header">
-                <span class="label">Proficiency Level</span>
-                <span class="proficiency-value">${skill.proficiency}%</span>
-            </div>
-            <div class="slider-container">
-                <div class="slider-track">
-                    <div class="slider-fill" style="--val: ${skill.proficiency}"></div>
-                </div>
-                <div class="slider-thumb" style="--val: ${skill.proficiency}"></div>
-            </div>
-        </div>
-
-        <div class="rate-section">
-            <div class="label">
-                <label for="${rateId}">Rate (credits/hour)*</label>
-            </div>
-            <input type="number" id="${rateId}" name="${rateId}" class="textbox"
-                   value="${skill.rate}" min="1" required>
-        </div>
-    `;
-
-    const deleteBtn = card.querySelector('.delete-skill');
-    deleteBtn.addEventListener('click', () => {
-        if (confirm(`Remove "${skill.name}"?`)) {
-            window.profileManager.removeOfferingSkill(skill.name);
-            card.remove();
-        }
-    });
-
-    const rateInput = card.querySelector('input[type="number"]');
-    rateInput.addEventListener('change', () => {
-        window.profileManager.updateOfferingSkill(skill.name, {
-            rate: parseFloat(rateInput.value)
-        });
-    });
-
-    return card;
-}
-
-function loadSeekingSkills(skills) {
-    const list = document.querySelector('.list');
-    list.innerHTML = '';
-
-    skills.forEach(skill => {
-        const li = createSeekingSkillItem(skill);
-        list.appendChild(li);
-    });
-
     updateSkillCounter();
-}
+    document.querySelectorAll('.proficiency-slider').forEach(s => updateSlider(s));
+});
 
-function createSeekingSkillItem(skillName) {
-    const li = document.createElement('li');
-    li.textContent = skillName;
-
-    const deleteBtn = document.createElement('span');
-    deleteBtn.className = 'delete-from-list';
-    deleteBtn.innerHTML = '&times;';
-    deleteBtn.addEventListener('click', () => {
-        window.profileManager.removeSeekingSkill(skillName);
-        li.remove();
-        updateSkillCounter();
-    });
-
-    li.appendChild(deleteBtn);
-    return li;
-}
-
-function setupOfferingDropdowns() {
-    const categorySelect = document.getElementById('offering-category');
-    const skillSelect = document.getElementById('offering-skills');
-
-    categorySelect.addEventListener('change', () => {
-        const selectedCategory = categorySelect.value;
-        skillSelect.disabled = selectedCategory === '';
-
-        Array.from(skillSelect.options).forEach(option => {
-            if (!option.dataset.category || option.dataset.category === selectedCategory) {
-                option.hidden = false;
-            } else {
-                option.hidden = true;
-            }
-        });
-
-        skillSelect.value = '';
-    });
-}
-
-function setupSeekingDropdowns() {
-    const categorySelect = document.getElementById('seeking-category');
-    const skillSelect = document.getElementById('seeking-skills');
-
-    categorySelect.addEventListener('change', () => {
-        const selectedCategory = categorySelect.value;
-        skillSelect.disabled = selectedCategory === '';
-
-        Array.from(skillSelect.options).forEach(option => {
-            if (!option.dataset.category || option.dataset.category === selectedCategory) {
-                option.hidden = false;
-            } else {
-                option.hidden = true;
-            }
-        });
-
-        skillSelect.value = '';
-    });
-}
-
-function setupOfferingSkillsManagement() {
-    const addBtn = document.getElementById('add-offering-skill-btn');
-    const skillSelect = document.getElementById('offering-skills');
-    const categorySelect = document.getElementById('offering-category');
-    const proficiencyInput = document.getElementById('offering-proficiency');
-    const rateInput = document.getElementById('offering-rate');
-    const container = document.querySelector('.cards-section');
-
-    addBtn.addEventListener('click', () => {
-        const skillName = skillSelect.value.trim();
-        const proficiency = parseInt(proficiencyInput.value);
-        const rate = parseFloat(rateInput.value);
-
-        if (!skillName) {
-            alert('Please select a skill.');
-            return;
-        }
-
-        if (isNaN(rate) || rate <= 0) {
-            alert('Please enter a valid rate.');
-            return;
-        }
-
-        const newSkill = {
-            name: skillName,
-            proficiency: proficiency,
-            rate: rate
-        };
-
-        const added = window.profileManager.addOfferingSkill(newSkill);
-        if (!added) {
-            alert('You already added this skill.');
-            return;
-        }
-
-        const card = createSkillCard(newSkill);
-        container.appendChild(card);
-        makeSliderInteractive(card);
-
-        skillSelect.value = '';
-        categorySelect.value = '';
-        skillSelect.disabled = true;
-        rateInput.value = '';
-
-        const newSkillSlider = document.getElementById('new-skill-slider');
-        const thumb = document.getElementById('new-skill-thumb');
-        const fill = document.getElementById('new-skill-fill');
-        const display = document.getElementById('new-skill-proficiency-display');
-        
-        thumb.style.setProperty('--val', 50);
-        fill.style.setProperty('--val', 50);
-        display.textContent = '50%';
-        proficiencyInput.value = 50;
-    });
-}
-
-function setupSeekingSkillsManagement() {
-    const addBtn = document.getElementById('add-skill-btn');
-    const skillSelect = document.getElementById('seeking-skills');
-    const categorySelect = document.getElementById('seeking-category');
-    const list = document.querySelector('.list');
-
-    addBtn.addEventListener('click', () => {
-        const skillName = skillSelect.value.trim();
-
-        if (!skillName) {
-            alert('Please select a skill first.');
-            return;
-        }
-
-        const currentCount = list.querySelectorAll('li').length;
-        if (currentCount >= 10) {
-            alert('You can only add up to 10 skills.');
-            return;
-        }
-
-        const added = window.profileManager.addSeekingSkill(skillName);
-        if (!added) {
-            alert('You already added this skill.');
-            return;
-        }
-
-        const li = createSeekingSkillItem(skillName);
-        list.appendChild(li);
-        updateSkillCounter();
-
-        skillSelect.value = '';
-        categorySelect.value = '';
-        skillSelect.disabled = true;
-    });
+function updateSlider(input) {
+    if (!input) return;
+    const value = input.value;
+    const card = input.closest('.proficiency-section');
+    const display = card.querySelector('.proficiency-value');
+    if (display) display.textContent = value + '%';
+    input.style.background = `linear-gradient(90deg, #ffa36c ${value}%, #47557a ${value}%)`;
 }
 
 function updateSkillCounter() {
-    const counter = document.getElementById('skill-counter');
-    const count = document.querySelectorAll('.list li').length;
-    counter.textContent = `${count}/10 Skills selected`;
-    counter.style.color = count >= 10 ? 'red' : 'white';
+    const count = $("#seeking-list li").length;
+    $("#skill-counter").text(`${count}/10 Skills selected`);
 }
 
-function loadAvailability(availability) {
-    if (!availability) return;
-    
-    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    
-    days.forEach(day => {
-        const checkbox = document.getElementById(`day-${day}`);
-        const startTime = document.getElementById(`time-${day}-start`);
-        const endTime = document.getElementById(`time-${day}-end`);
-        
-        if (checkbox && availability[day]) {
-            checkbox.checked = availability[day].available;
-            startTime.value = availability[day].startTime;
-            endTime.value = availability[day].endTime;
-            
-            startTime.disabled = !availability[day].available;
-            endTime.disabled = !availability[day].available;
-        }
-    });
-}
+let currentName = "";
 
-function setupAvailability() {
-    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-    
-    days.forEach(day => {
-        const checkbox = document.getElementById(`day-${day}`);
-        const startTime = document.getElementById(`time-${day}-start`);
-        const endTime = document.getElementById(`time-${day}-end`);
-        
-        if (checkbox) {
-            checkbox.addEventListener('change', () => {
-                startTime.disabled = !checkbox.checked;
-                endTime.disabled = !checkbox.checked;
-            });
-        }
-    });
-}
+window.onload = function() {
+    currentName = document.getElementById("username").value;
+};
 
-function setupSliders() {
-    document.querySelectorAll('.card').forEach(card => {
-        makeSliderInteractive(card);
-    });
-
-    const newSkillSlider = document.getElementById('new-skill-slider');
-    const newSkillThumb = document.getElementById('new-skill-thumb');
-    const newSkillFill = document.getElementById('new-skill-fill');
-    const newSkillDisplay = document.getElementById('new-skill-proficiency-display');
-    const newSkillHiddenInput = document.getElementById('offering-proficiency');
-
-    if (newSkillSlider) {
-        let isDragging = false;
-
-        function updateNewSkillSlider(e) {
-            const rect = newSkillSlider.getBoundingClientRect();
-            let position = e.clientX - rect.left;
-            position = Math.max(0, Math.min(position, rect.width));
-            const percentage = Math.round((position / rect.width) * 100);
-
-            newSkillThumb.style.setProperty('--val', percentage);
-            newSkillFill.style.setProperty('--val', percentage);
-            newSkillDisplay.textContent = `${percentage}%`;
-            newSkillHiddenInput.value = percentage;
-        }
-
-        newSkillSlider.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            updateNewSkillSlider(e);
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) updateNewSkillSlider(e);
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        newSkillSlider.addEventListener('click', updateNewSkillSlider);
-    }
-}
-
-function makeSliderInteractive(card) {
-    const slider = card.querySelector('.slider-container');
-    const thumb = card.querySelector('.slider-thumb');
-    const fill = card.querySelector('.slider-fill');
-    const valueDisplay = card.querySelector('.proficiency-value');
-    const skillName = card.querySelector('.card-title').textContent;
-
-    if (!slider || !thumb || !fill || !valueDisplay) return;
-
-    let isDragging = false;
-
-    function updateSlider(e) {
-        const rect = slider.getBoundingClientRect();
-        let position = e.clientX - rect.left;
-        position = Math.max(0, Math.min(position, rect.width));
-        const percentage = Math.round((position / rect.width) * 100);
-
-        thumb.style.setProperty('--val', percentage);
-        fill.style.setProperty('--val', percentage);
-        valueDisplay.textContent = `${percentage}%`;
-
-        window.profileManager.updateOfferingSkill(skillName, {
-            proficiency: percentage
-        });
+function checkUser(username) {
+    if (username.length < 3) {
+        document.getElementById("username-status").innerHTML = "";
+        return;
     }
 
-    slider.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        updateSlider(e);
-        e.preventDefault();
-    });
+    const pattern = /^(?![_.])(?!.*[_.]{2})[a-z0-9._]{3,20}(?<![_.])$/;
 
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) updateSlider(e);
-    });
+    if (!pattern.test(username)) {
+        document.getElementById("username-status").innerHTML = "Invalid format";
+        document.getElementById("username-status").style.color = "orange";
+        return; 
+    }
 
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-    });
+    if (username === currentName) {
+        document.getElementById("username-status").innerHTML = "";
+        return; 
+    }
 
-    slider.addEventListener('click', updateSlider);
-}
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
 
-function setupFormSubmission() {
-    const form = document.getElementById('update-profile-form');
-    
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+        if(this.readyState == 4 && this.status ==200) {
+            let msg = this.responseText;
+            let statusSpan = document.getElementById("username-status");
 
-        const formData = {
-            username: document.getElementById('username').value,
-            fullname: document.getElementById('fullname').value,
-            professionalTitle: document.querySelector('input[name="professional_title"]').value,
-            location: document.getElementById('location').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            aboutMe: document.getElementById('about-me').value
-        };
-
-        const offeringSkills = [];
-        document.querySelectorAll('.cards-section .card').forEach(card => {
-            const skillName = card.querySelector('.card-title').textContent;
-            const proficiencyText = card.querySelector('.proficiency-value').textContent;
-            const proficiency = parseInt(proficiencyText.replace('%', '').trim());
-            const rate = parseFloat(card.querySelector('input[type="number"]').value);
-            
-            offeringSkills.push({
-                name: skillName,
-                proficiency: proficiency,
-                rate: rate
-            });
-        });
-
-        const seekingSkills = [];
-        document.querySelectorAll('.list li').forEach(li => {
-            const skillName = li.textContent.trim().replace('×', '').trim();
-            seekingSkills.push(skillName);
-        });
-
-        const availability = {};
-        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        
-        days.forEach(day => {
-            const checkbox = document.getElementById(`day-${day}`);
-            const startTime = document.getElementById(`time-${day}-start`);
-            const endTime = document.getElementById(`time-${day}-end`);
-            
-            availability[day] = {
-                available: checkbox.checked,
-                startTime: startTime.value,
-                endTime: endTime.value
-            };
-        });
-
-        formData.offeringSkills = offeringSkills;
-        formData.seekingSkills = seekingSkills;
-        formData.availability = availability;
-        window.profileManager.saveData(formData);
-
-        console.log('Saved data:', formData);
-
-        alert('Profile updated successfully!');
-        
-        window.location.href = 'profile.html';
-    });
+            statusSpan.innerHTML = msg;
+            statusSpan.style.color = (msg === 'username is available') ? '#00ff00' : 'red';
+        }
+    };
+    xhttp.open("GET", "../../dashboard/profile/check_user.php?username="+username, true);
+    xhttp.send();
 }
