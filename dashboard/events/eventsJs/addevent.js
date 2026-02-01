@@ -1,59 +1,3 @@
-
-// Skills data for each category
-const skillsData = {
-    technology: [
-        "Web Development", "Mobile App Development", "Data Science", "Machine Learning",
-        "Artificial Intelligence", "Cybersecurity", "Cloud Computing", "Database Management",
-        "UI/UX Design", "Software Engineering", "Python Programming", "JavaScript Development",
-        "Java Programming", "C++ Development", "Game Development", "DevOps", "Blockchain",
-        "IoT Development", "API Development", "Quality Assurance"
-    ],
-    design: [
-        "Graphic Design", "Digital Illustration", "Photography", "Video Editing", "3D Modeling",
-        "Animation", "Motion Graphics", "Brand Design", "Typography", "Print Design", "Web Design",
-        "UI Design", "UX Research", "Product Design", "Fashion Design", "Interior Design",
-        "Industrial Design", "Packaging Design", "Art Direction", "Creative Direction"
-    ],
-    business: [
-        "Project Management", "Leadership", "Strategic Planning", "Business Development",
-        "Marketing Strategy", "Sales Techniques", "Financial Analysis", "Entrepreneurship",
-        "Time Management", "Team Building", "Conflict Resolution", "Business Writing",
-        "Data Analysis", "Digital Marketing", "Social Media Management", "Customer Service",
-        "Human Resources", "Risk Management", "Supply Chain Management", "Quality Assurance"
-    ],
-    marketing: [
-        "Digital Marketing", "Social Media Marketing", "SEO", "Content Marketing", 
-        "Email Marketing", "Copywriting", "Brand Strategy", "Analytics", "PPC Advertising",
-        "Influencer Marketing", "Market Research", "Public Relations", "Event Marketing",
-        "Video Marketing", "Affiliate Marketing", "Growth Hacking", "Marketing Automation"
-    ],
-    writing: [
-        "Content Writing", "Copywriting", "Technical Writing", "Creative Writing", 
-        "Editing", "Proofreading", "Blogging", "Journalism", "Scriptwriting",
-        "Business Writing", "Academic Writing", "Grant Writing", "Resume Writing",
-        "Social Media Writing", "Email Writing", "Web Content", "SEO Writing"
-    ],
-    education: [
-        "Tutoring", "Curriculum Development", "Training", "Instructional Design", 
-        "Public Speaking", "Mentoring", "Workshop Facilitation", "E-Learning",
-        "Educational Technology", "Assessment Design", "Classroom Management",
-        "Adult Education", "Online Teaching", "Course Creation", "Educational Consulting"
-    ],
-    health: [
-        "Nutrition Counseling", "Fitness Training", "Yoga Instruction", "Meditation", 
-        "Mental Health Support", "Physical Therapy", "Health Coaching", "Wellness Planning",
-        "Sports Coaching", "Rehabilitation", "Holistic Health", "Stress Management",
-        "Weight Management", "Lifestyle Coaching", "Exercise Programming"
-    ],
-    home: [
-        "Basic Plumbing", "Electrical Repairs", "Carpentry", "Painting & Decorating",
-        "Gardening", "Landscaping", "Home Organization", "Furniture Assembly", 
-        "Appliance Repair", "Home Maintenance", "DIY Projects", "Interior Design", 
-        "Cleaning Techniques", "Pest Control", "Home Security", "Energy Efficiency", 
-        "Renovation Planning", "Tool Usage & Safety", "Wallpaper Installation", "Tile Setting"
-    ]
-};
-
 document.addEventListener('DOMContentLoaded', function() {
     // Form elements
     const form = document.getElementById('createEventForm');
@@ -266,10 +210,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const endDate = new Date(eventEndDate.value);
             const now = new Date();
             
-            // Check if end date is before start date
+            // Check if end date is before or same as start date
             if (endDate <= startDate) {
                 showFieldError(eventEndDate, 'End date must be after start date');
                 isValid = false;
+            } else {
+                // Check if at least 15 minutes apart
+                const minutesDiff = (endDate - startDate) / (1000 * 60);
+                if (minutesDiff < 15) {
+                    showFieldError(eventEndDate, 'Event must be at least 15 minutes long');
+                    isValid = false;
+                }
             }
             
             // Check if event ends more than one year after start
@@ -301,6 +252,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (maxAttendees.value && (maxAttendees.value < 1 || maxAttendees.value > 1000)) {
             showFieldError(maxAttendees, 'Max attendees must be between 1 and 1000');
             isValid = false;
+        }
+        
+        // Credit validation (optional field)
+        const credit = document.getElementById('credit');
+        if (credit.value) {
+            const creditValue = parseInt(credit.value);
+            if (isNaN(creditValue) || creditValue < 0 || creditValue > 100) {
+                showFieldError(credit, 'Credits must be between 0 and 100');
+                isValid = false;
+            }
         }
         
         // Skills validation
@@ -391,6 +352,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Real-time validation for credit field
+    const creditField = document.getElementById('credit');
+    creditField.addEventListener('input', function() {
+        if (this.value) {
+            const creditValue = parseInt(this.value);
+            if (isNaN(creditValue) || creditValue < 0 || creditValue > 100) {
+                if (creditValue < 0 || creditValue > 100) {
+                    showFieldError(this, 'Credits must be between 0 and 100');
+                }
+            } else {
+                this.classList.remove('error');
+                const errorElement = this.closest('.form-group').querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+        }
+    });
+    
     function validateEndDate() {
         if (!eventEndDate.value || !eventStartDate.value) {
             return;
@@ -409,8 +389,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (endDate <= startDate) {
             showFieldError(eventEndDate, 'End date must be after start date');
-        } else if (endDate > oneYearAfterStart) {
-            showFieldError(eventEndDate, 'Event cannot last longer than one year');
+        } else {
+            // Check if at least 15 minutes apart
+            const minutesDiff = (endDate - startDate) / (1000 * 60);
+            if (minutesDiff < 15) {
+                showFieldError(eventEndDate, 'Event must be at least 15 minutes long');
+            } else if (endDate > oneYearAfterStart) {
+                showFieldError(eventEndDate, 'Event cannot last longer than one year');
+            }
         }
     }
     

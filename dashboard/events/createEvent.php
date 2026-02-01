@@ -132,6 +132,20 @@ $categories = getCategories($conn);
                             min="1" max="100"
                         >
                     </div>
+
+                    <div class="form-group">
+                        <label for="credit">Credits Required <span class="optional">(Optional)</span></label>
+                        <input 
+                            type="number" 
+                            id="credit" 
+                            name="credit"
+                            class="form-input" 
+                            placeholder="e.g., 10"
+                            min="0" max="100"
+                            value="0"
+                        >
+                        <span class="error-message">Credits must be between 0 and 100</span>
+                    </div>
                 </div>
 
                 <!-- Second Container: Skills Needed -->
