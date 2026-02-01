@@ -25,14 +25,14 @@ $weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sund
 if (!isset($_GET['Postid'])||!is_numeric($_GET['Postid']))
 {
       
-    header('Location:/posts.php');
+    header('Location: ./posts.php');
     exit;
 }
 
 // 2. Validate Postid format
 $postId = (int)$_GET['Postid'];
 if ($postId <= 0) {
-    header('Location:/posts.php');
+    header('Location: ./postdetails.php');
     exit;
 }
 
@@ -210,18 +210,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
         } elseif (in_array($selectedDate, $bookedDates)) {
             $error = "This date has already been booked.";
         } else {
-            // Insert new exchange
-            $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate) VALUES (?, ?, ?, ?)";
-            $stmtInsert = $conn->prepare($sqlInsert);
-            if (!$stmtInsert) {
+            // Get current user's name for notification
+            $userNameSql = "SELECT FullName FROM Users WHERE UserId = ?";
+            $userNameStmt = $conn->prepare($userNameSql);
+            if (!$userNameStmt) {
                 $error = "Database error: " . $conn->error;
             } else {
-                $stmtInsert->bind_param('iiis', $postId, $postUserId, $userId, $selectedDate);
-                if ($stmtInsert->execute()) {
-                    $success = "Your booking request has been submitted!";
-                    $bookedDates[] = $selectedDate;
+                $userNameStmt->bind_param('i', $userId);
+                $userNameStmt->execute();
+                $userNameResult = $userNameStmt->get_result();
+                $currentUserData = $userNameResult->fetch_assoc();
+                $currentUserName = $currentUserData['FullName'] ?? 'Unknown User';
+                $userNameStmt->close();
+                
+                // Get payment method from POST
+                $paymentMethod = isset($_POST['selectedPaymentMethod']) ? $_POST['selectedPaymentMethod'] : 'credits';
+                
+                // Create notification message based on payment method
+                if ($paymentMethod === 'exchange') {
+                    $notificationMessage = "$currentUserName is requesting to exchange skills for your $postTitle course";
+                    $notificationType = 'booking';
+                    $notificationSection = 'Exchange';
                 } else {
-                    $error = "Error submitting booking: " . $stmtInsert->error;
+                    // Credits payment
+                    $notificationMessage = "$currentUserName is requesting to pay $requiredCredits for your $postTitle course";
+                    $notificationType = 'booking';
+                    $notificationSection = 'Exchange';
+                }
+                
+                // Insert new exchange
+                $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate) VALUES (?, ?, ?, ?)";
+                $stmtInsert = $conn->prepare($sqlInsert);
+                if (!$stmtInsert) {
+                    $error = "Database error: " . $conn->error;
+                } else {
+                    $stmtInsert->bind_param('iiis', $postId, $postUserId, $userId, $selectedDate);
+                    if ($stmtInsert->execute()) {
+                        // Insert notification to post owner
+                        $notificationTitle = $paymentMethod === 'exchange' ? 'Skill Exchange Request' : 'Booking Request';
+                        $sqlNotification = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?)";
+                        $stmtNotification = $conn->prepare($sqlNotification);
+                        
+                        if (!$stmtNotification) {
+                            $error = "Notification error: " . $conn->error;
+                        } else {
+                            $stmtNotification->bind_param('issss', $postUserId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
+                            if ($stmtNotification->execute()) {
+                                $success = "Your booking request has been submitted!";
+                                $bookedDates[] = $selectedDate;
+                            } else {
+                                $error = "Error sending notification: " . $stmtNotification->error;
+                            }
+                            $stmtNotification->close();
+                        }
+                    } else {
+                        $error = "Error submitting booking: " . $stmtInsert->error;
+                    }
+                    $stmtInsert->close();
                 }
             }
         }

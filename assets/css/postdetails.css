@@ -409,16 +409,17 @@ body {
     margin-top: 12px;
     flex-wrap: wrap;
 }
-
 .payment-badge {
     padding: 10px 20px;
     border-radius: 10px;
+    background-color: var(--clr-main); 
     border: 2px solid var(--clr-main);
-    color: var(--clr-secondary-font);
+    color: var(--clr-font);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
 
 .payment-badge.active {
     background-color: var(--clr-btn);
