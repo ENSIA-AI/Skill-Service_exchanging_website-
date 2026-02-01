@@ -179,14 +179,46 @@ function setupEventListeners() {
     const unsendButton = document.querySelector('.unsend-request-button');
 
     if (joinButton && !joinButton.disabled) {
-        joinButton.addEventListener('click', () => {
+        joinButton.addEventListener('click', async () => {
             const eventId = joinButton.getAttribute('data-event-id');
-            // Handle join event logic here
-            joinButton.style.display = 'none';
-            unsendButton.style.display = 'block';
-            joinButton.textContent = 'Requested';
+            
+            // Disable button while processing
             joinButton.disabled = true;
-            // You can add a success message or redirect here
+            joinButton.textContent = 'Sending...';
+            
+            try {
+                // Send join request notification to organizer
+                const response = await fetch('./eventsAPI/sendEventJoinNotification.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ eventId: parseInt(eventId) })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success state
+                    joinButton.style.display = 'none';
+                    unsendButton.style.display = 'block';
+                    joinButton.textContent = 'Requested';
+                } else if (data.redirect) {
+                    // User not logged in - redirect to login
+                    alert('Please log in to join events');
+                    window.location.href = data.redirect;
+                } else {
+                    // Show error
+                    alert(data.error || 'Failed to send join request');
+                    joinButton.disabled = false;
+                    joinButton.textContent = 'Join Event';
+                }
+            } catch (error) {
+                console.error('Error sending join request:', error);
+                alert('Failed to send join request. Please try again.');
+                joinButton.disabled = false;
+                joinButton.textContent = 'Join Event';
+            }
         });
     }
 
