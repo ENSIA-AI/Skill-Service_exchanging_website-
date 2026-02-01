@@ -1,65 +1,10 @@
-// Skills data for each category
-const skillsData = {
-    technology: [
-        "Web Development", "Mobile App Development", "Data Science", "Machine Learning",
-        "Artificial Intelligence", "Cybersecurity", "Cloud Computing", "Database Management",
-        "UI/UX Design", "Software Engineering", "Python Programming", "JavaScript Development",
-        "Java Programming", "C++ Development", "Game Development", "DevOps", "Blockchain",
-        "IoT Development", "API Development", "Quality Assurance"
-    ],
-    design: [
-        "Graphic Design", "Digital Illustration", "Photography", "Video Editing", "3D Modeling",
-        "Animation", "Motion Graphics", "Brand Design", "Typography", "Print Design", "Web Design",
-        "UI Design", "UX Research", "Product Design", "Fashion Design", "Interior Design",
-        "Industrial Design", "Packaging Design", "Art Direction", "Creative Direction"
-    ],
-    business: [
-        "Project Management", "Leadership", "Strategic Planning", "Business Development",
-        "Marketing Strategy", "Sales Techniques", "Financial Analysis", "Entrepreneurship",
-        "Time Management", "Team Building", "Conflict Resolution", "Business Writing",
-        "Data Analysis", "Digital Marketing", "Social Media Management", "Customer Service",
-        "Human Resources", "Risk Management", "Supply Chain Management", "Quality Assurance"
-    ],
-    marketing: [
-        "Digital Marketing", "Social Media Marketing", "SEO", "Content Marketing", 
-        "Email Marketing", "Copywriting", "Brand Strategy", "Analytics", "PPC Advertising",
-        "Influencer Marketing", "Market Research", "Public Relations", "Event Marketing",
-        "Video Marketing", "Affiliate Marketing", "Growth Hacking", "Marketing Automation"
-    ],
-    writing: [
-        "Content Writing", "Copywriting", "Technical Writing", "Creative Writing", 
-        "Editing", "Proofreading", "Blogging", "Journalism", "Scriptwriting",
-        "Business Writing", "Academic Writing", "Grant Writing", "Resume Writing",
-        "Social Media Writing", "Email Writing", "Web Content", "SEO Writing"
-    ],
-    education: [
-        "Tutoring", "Curriculum Development", "Training", "Instructional Design", 
-        "Public Speaking", "Mentoring", "Workshop Facilitation", "E-Learning",
-        "Educational Technology", "Assessment Design", "Classroom Management",
-        "Adult Education", "Online Teaching", "Course Creation", "Educational Consulting"
-    ],
-    health: [
-        "Nutrition Counseling", "Fitness Training", "Yoga Instruction", "Meditation", 
-        "Mental Health Support", "Physical Therapy", "Health Coaching", "Wellness Planning",
-        "Sports Coaching", "Rehabilitation", "Holistic Health", "Stress Management",
-        "Weight Management", "Lifestyle Coaching", "Exercise Programming"
-    ],
-    home: [
-        "Basic Plumbing", "Electrical Repairs", "Carpentry", "Painting & Decorating",
-        "Gardening", "Landscaping", "Home Organization", "Furniture Assembly", 
-        "Appliance Repair", "Home Maintenance", "DIY Projects", "Interior Design", 
-        "Cleaning Techniques", "Pest Control", "Home Security", "Energy Efficiency", 
-        "Renovation Planning", "Tool Usage & Safety", "Wallpaper Installation", "Tile Setting"
-    ]
-};
-
 document.addEventListener('DOMContentLoaded', function() {
     // Form elements
     const form = document.getElementById('createEventForm');
     const categorySelect = document.getElementById('category');
     const skillSelect = document.getElementById('skill');
     const addSkillBtn = document.getElementById('addSkillBtn');
-    const selectedSkillsContainer = document.getElementById('selectedSkills');
+    const selectedSkillsContainer = document.getElementById('selectedSkillsDisplay');
     const skillsCountSpan = document.querySelector('.skills-count');
     
     // Selected skills array
@@ -69,33 +14,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update skill options when category changes
     categorySelect.addEventListener('change', function() {
         const selectedCategory = this.value;
-        skillSelect.innerHTML = '<option value="">Select skill</option>';
-        
-        if (selectedCategory && skillsData[selectedCategory]) {
-            skillsData[selectedCategory].forEach(skill => {
-                const option = document.createElement('option');
-                option.value = skill;
-                option.textContent = skill;
-                skillSelect.appendChild(option);
-            });
-            skillSelect.disabled = false;
-        } else {
-            skillSelect.disabled = true;
-            skillSelect.innerHTML = '<option value="">Select category first</option>';
+        skillSelect.disabled = true;
+
+        if(!selectedCategory){
+            skillSelect.innerHTML = '<option value="">Select a category first</option>';
+            return;
         }
+        
+        fetch(`/Skill-Service_exchanging_website-/dashboard/events/eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error status: ${response.status}`);
+                }
+                return response.json();
+            }
+                )
+                    .then(skills => { 
+                        
+                        skillSelect.innerHTML = '<option value="">Select skill(s)</option>';
+
+                        skills.forEach(skill => {
+                            const option = document.createElement('option');
+                            option.value = skill.skillid; 
+                            option.textContent = skill.skillname;
+                            skillSelect.appendChild(option);
+                        })
+                        skillSelect.disabled = false;
+                        }
+                    )
+                    .catch(() => {
+                        skillSelect.innerHTML = '<option value="">Error loading skills</option>';
+                    });
     });
     
     // Add skill functionality
     addSkillBtn.addEventListener('click', function() {
-        const category = categorySelect.value;
-        const skill = skillSelect.value;
-        
-        if (!category) {
+        const categoryId = categorySelect.value;
+        const skillId = skillSelect.value;
+        const skillName = skillSelect.options[skillSelect.selectedIndex].text;
+
+        if (!categoryId) {
             showError('Please select a category first');
             return;
         }
         
-        if (!skill) {
+        if (!skillId) {
             showError('Please select a skill');
             return;
         }
@@ -106,14 +69,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Check if skill already added
-        const skillExists = selectedSkills.some(s => s.skill === skill);
+        const skillExists = selectedSkills.some(s => s.skillid === skillId);
         if (skillExists) {
             showError('This skill is already added');
             return;
         }
         
         // Add skill to array
-        selectedSkills.push({ category, skill });
+        selectedSkills.push({ skillid:  skillId , skillname : skillName , categoryid : categoryId});
         
         // Update UI
         updateSkillsDisplay();
@@ -134,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const skillTag = document.createElement('div');
             skillTag.className = 'skill-tag';
             skillTag.innerHTML = `
-                <span>${skillObj.skill}</span>
+                <span>${skillObj.skillname}</span>
                 <button type="button" class="remove-skill" data-index="${index}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -247,10 +210,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const endDate = new Date(eventEndDate.value);
             const now = new Date();
             
-            // Check if end date is before start date
+            // Check if end date is before or same as start date
             if (endDate <= startDate) {
                 showFieldError(eventEndDate, 'End date must be after start date');
                 isValid = false;
+            } else {
+                // Check if at least 15 minutes apart
+                const minutesDiff = (endDate - startDate) / (1000 * 60);
+                if (minutesDiff < 15) {
+                    showFieldError(eventEndDate, 'Event must be at least 15 minutes long');
+                    isValid = false;
+                }
             }
             
             // Check if event ends more than one year after start
@@ -282,6 +252,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (maxAttendees.value && (maxAttendees.value < 1 || maxAttendees.value > 1000)) {
             showFieldError(maxAttendees, 'Max attendees must be between 1 and 1000');
             isValid = false;
+        }
+        
+        // Credit validation (optional field)
+        const credit = document.getElementById('credit');
+        if (credit.value) {
+            const creditValue = parseInt(credit.value);
+            if (isNaN(creditValue) || creditValue < 0 || creditValue > 100) {
+                showFieldError(credit, 'Credits must be between 0 and 100');
+                isValid = false;
+            }
         }
         
         // Skills validation
@@ -372,6 +352,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Real-time validation for credit field
+    const creditField = document.getElementById('credit');
+    creditField.addEventListener('input', function() {
+        if (this.value) {
+            const creditValue = parseInt(this.value);
+            if (isNaN(creditValue) || creditValue < 0 || creditValue > 100) {
+                if (creditValue < 0 || creditValue > 100) {
+                    showFieldError(this, 'Credits must be between 0 and 100');
+                }
+            } else {
+                this.classList.remove('error');
+                const errorElement = this.closest('.form-group').querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+        }
+    });
+    
     function validateEndDate() {
         if (!eventEndDate.value || !eventStartDate.value) {
             return;
@@ -390,8 +389,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (endDate <= startDate) {
             showFieldError(eventEndDate, 'End date must be after start date');
-        } else if (endDate > oneYearAfterStart) {
-            showFieldError(eventEndDate, 'Event cannot last longer than one year');
+        } else {
+            // Check if at least 15 minutes apart
+            const minutesDiff = (endDate - startDate) / (1000 * 60);
+            if (minutesDiff < 15) {
+                showFieldError(eventEndDate, 'Event must be at least 15 minutes long');
+            } else if (endDate > oneYearAfterStart) {
+                showFieldError(eventEndDate, 'Event cannot last longer than one year');
+            }
         }
     }
     
@@ -406,35 +411,50 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return;
         }
+
+        const formData = new FormData(form);
         
-        // Gather form data
-        const formData = {
-            title: document.getElementById('eventTitle').value.trim(),
-            startDate: document.getElementById('eventStartDate').value,
-            endDate: document.getElementById('eventEndDate').value,
-            eventType: document.getElementById('eventType').value,
-            location: document.getElementById('location').value.trim(),
-            description: document.getElementById('description').value.trim(),
-            maxAttendees: document.getElementById('maxAttendees').value,
-            skills: selectedSkills
-        };
+        selectedSkills.forEach(skill => {
+            formData.append('skills[]', skill.skillid);
+        });
         
-        console.log('Event Created:', formData);
+        formData.append('category', categorySelect.value);
         
-        // Show success message
-        showSuccess('Event created successfully!');
+        formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
         
-        // Reset form after 2 seconds
-        setTimeout(() => {
-            form.reset();
-            selectedSkills = [];
-            updateSkillsDisplay();
-            updateSkillsCount();
-            skillSelect.disabled = true;
-            skillSelect.innerHTML = '<option value="">Select category first</option>';
-        }, 2000);
+        fetch('/Skill-Service_exchanging_website-/dashboard/events/addevent.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess('Event created successfully!');
+                
+                setTimeout(() => {
+                    form.reset();
+                    selectedSkills = [];
+                    updateSkillsDisplay();
+                    updateSkillsCount();
+                    skillSelect.disabled = true;
+                    skillSelect.innerHTML = '<option value="">Select category first</option>';
+                }, 2000);
+            } else {
+                showError(data.message || 'Error creating event');
+                
+                if (data.errors) {
+                    data.errors.forEach(error => {
+                        showError(error);
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError('Network error occurred');
+        });
     });
-    
+        
     function showSuccess(message) {
         let successContainer = document.getElementById('global-success');
         if (!successContainer) {

@@ -678,3 +678,167 @@ body {
     margin-left: 0 !important;
     padding: 0 !important;
 }
+
+/* ======== SCROLLABLE EVENTS CONTAINER & SEE MORE BUTTON ======== */
+
+.events-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+/* Scrollable events list */
+.events-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-height: 900px;
+    overflow-y: auto;
+    padding-right: 10px;
+    
+    /* Smooth scrolling that feels natural */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Smooth momentum scrolling on iOS */
+    /* Scroll passes through to page when events list reaches end */
+}
+
+/* Custom scrollbar styling - Neutral & Elegant */
+.events-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.events-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+    margin: 4px 0;
+}
+
+.events-list::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.3);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.events-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.5);
+}
+
+.events-list::-webkit-scrollbar-thumb:active {
+    background: rgba(128, 128, 128, 0.6);
+}
+
+/* Firefox scrollbar - Neutral colors */
+.events-list {
+    scrollbar-color: rgba(128, 128, 128, 0.3) transparent;
+    scrollbar-width: thin;
+}
+
+/* See More button container */
+.see-more-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.see-more-button {
+    background: var(--clr-btn, #f9b17a);
+    color: var(--clr-bars, #2d3250);
+    border: none;
+    padding: 0.875rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(249, 177, 122, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.see-more-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(249, 177, 122, 0.5);
+    background: var(--clr-org, #ff6f00);
+    color: white;
+}
+
+.see-more-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(249, 177, 122, 0.3);
+}
+
+.see-more-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--clr-lighter, #5e6591);
+    color: var(--clr-secondary-font, #e0e0e0);
+}
+
+/* Error message styling */
+.error-message {
+    text-align: center;
+    color: #ef4444;
+    font-size: 1rem;
+    padding: 2rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    width: 100%;
+}
+
+/* Responsive adjustments for events list container */
+@media (max-width: 1200px) {
+    .events-list {
+        grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+        max-height: 800px;
+    }
+}
+
+@media (max-width: 899px) {
+    .events-list-container {
+        gap: 1.5rem;
+    }
+    
+    .events-list {
+        grid-template-columns: repeat(2, 1fr);
+        max-height: 700px;
+    }
+    
+    .see-more-button {
+        padding: 0.75rem 2rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .events-list {
+        grid-template-columns: 1fr;
+        max-height: 600px;
+        gap: 1rem;
+    }
+    
+    .see-more-button {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9rem;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .events-list {
+        grid-template-columns: 1fr;
+        max-height: 500px;
+        gap: 0.875rem;
+        padding-right: 8px;
+    }
+    
+    .see-more-button {
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+        width: 100%;
+        min-height: 44px;
+    }
+}

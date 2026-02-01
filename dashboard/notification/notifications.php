@@ -1,4 +1,4 @@
-<?php require_once '../../DataBaseManagement/config.php'; ?>
+<?php ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
