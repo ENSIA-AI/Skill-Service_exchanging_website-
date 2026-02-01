@@ -4,10 +4,12 @@
 -- ============================================
 
 -- Drop tables if they exist (in reverse order of dependencies)
+DROP TABLE IF EXISTS Contacts;
 DROP TABLE IF EXISTS CreditTransactions;
 DROP TABLE IF EXISTS Reports;
 DROP TABLE IF EXISTS Rating;
 DROP TABLE IF EXISTS Exchanges;
+DROP TABLE IF EXISTS PostAvailableDates;
 DROP TABLE IF EXISTS PostSkills;
 DROP TABLE IF EXISTS EventSkills;
 DROP TABLE IF EXISTS UserSkills;
@@ -107,6 +109,7 @@ CREATE TABLE Posts (
   INDEX idx_posts_user (UserId),
   INDEX idx_posts_category (CategoryId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- ============================================
 -- Events Table
@@ -1041,3 +1044,31 @@ INSERT INTO EventSkills (EventId, SkillId, IsRequired) VALUES
 (9, 94, 'no'),
 (10, 110, 'yes'),
 (10, 111, 'no');
+
+-- ============================================
+-- Contacts Table
+-- ============================================
+CREATE TABLE Contacts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  
+  INDEX idx_contacts_email (email),
+  INDEX idx_contacts_date (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- PostAvailableDates Table
+-- ============================================
+CREATE TABLE PostAvailableDates (
+  PostAvailableDateId INT AUTO_INCREMENT PRIMARY KEY,
+  PostId INT NOT NULL,
+  AvailableDate DATETIME NOT NULL,
+  
+  FOREIGN KEY (PostId) REFERENCES Posts(PostId) ON DELETE CASCADE,
+  
+  INDEX idx_post_available_dates (PostId, AvailableDate)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

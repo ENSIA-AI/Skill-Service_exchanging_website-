@@ -49,47 +49,47 @@
     </section>
    <section id="contact" class="contact-section">
   <div class="contact-container">
-    <p class="contact-title">Send us a Message<p>
+    <p class="contact-title">Send us a Message</p>
     
-    <form  method="post" class="contact-form">
-    <p id="success-message">
-    Your message has been sent successfully!</p>
+    <div id="success-message" class="success-message" style="display: none;">
+        Your message has been sent successfully! We'll get back to you soon.
+    </div>
 
+    <div id="error-message" class="error-message" style="display: none;"></div>
+    
+    <form id="contact-form" method="post" class="contact-form">
       <div class="form-row">
         <div class="form-group">
-          <label for="first-name">First Name</label>
-          <input type="text" id="first-name" name="first-name" placeholder="Your first name" required>
-          <span id="first-name-error" class="error-message">Please enter your first name</span>
+          <label for="first_name">First Name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="Your first name" required>
+          <span id="first_name-error" class="error-text"></span>
         </div>
 
         <div class="form-group">
-          <label for="last-name">Last Name</label>
-          <input type="text" id="last-name" name="last-name" placeholder="Your last name" required>
-          <span id="last-name-error" class="error-message">Please enter your last name</span>
+          <label for="last_name">Last Name</label>
+          <input type="text" id="last_name" name="last_name" placeholder="Your last name" required>
+          <span id="last_name-error" class="error-text"></span>
         </div>
-      
+      </div>
 
       <div class="form-group">
         <label for="email">Email Address</label>
         <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
-         <span id="email-error" class="error-message">Please enter a valid email address</span>
+        <span id="email-error" class="error-text"></span>
       </div>
 
       <div class="form-group">
         <label for="message">Message</label>
         <textarea id="message" name="message" rows="5" placeholder="Tell us more about your inquiry..." required></textarea>
-         <span id="message-error" class="error-message">Please enter your message</span>
+        <span id="message-error" class="error-text"></span>
       </div>
 
-      <div class="form-group"><button type="submit" class="send-btn">Send</button></div>
-       </div>
-  
-
-        </form>
-        
+      <div class="form-group">
+        <button type="submit" class="send-btn" id="submit-btn">Send</button>
       </div>
-
-    </section>
+    </form>
+  </div>
+</section>
 
   
 
@@ -104,85 +104,81 @@
  <script src="assets/js/home.js"></script>
   
  <script>
- 
- // Function to validate email format
-    function validateEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    }
-
-
-document.querySelector(".contact-form").addEventListener("submit", function(event) {
-    event.preventDefault();  
-    
-    // Reset previous error messages
-    document.querySelectorAll('.error-message').forEach(error => {
-        error.style.display = 'none';
+    // Contact form AJAX submission
+    document.getElementById('contact-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Hide previous messages
+        document.getElementById('success-message').style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+        
+        // Clear error messages
+        document.querySelectorAll('.error-text').forEach(el => el.textContent = '');
+        
+        // Disable submit button
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        
+        // Get form data
+        const formData = new FormData(this);
+        
+        // Send via AJAX using fetch
+        fetch('contact_process.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Show success message
+                document.getElementById('success-message').textContent = data.message;
+                document.getElementById('success-message').style.display = 'block';
+                
+                // Reset form
+                document.getElementById('contact-form').reset();
+                
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send';
+            } else {
+                // Show error message
+                document.getElementById('error-message').textContent = 'Error: ' + data.message;
+                document.getElementById('error-message').style.display = 'block';
+                
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('error-message').textContent = 'An error occurred while submitting the form. Please try again.';
+            document.getElementById('error-message').style.display = 'block';
+            
+            // Re-enable button
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send';
+        });
     });
-    
-    let isValid = true;
-    
-    // Validate first name
-    const firstName = document.getElementById("first-name").value.trim();
-    if (firstName === "") {
-        document.getElementById("first-name-error").style.display = 'block';
-        isValid = false;
-    }
-    
-    // Validate last name
-    const lastName = document.getElementById("last-name").value.trim();
-    if (lastName === "") {
-        document.getElementById("last-name-error").style.display = 'block';
-        isValid = false;
-    }
 
-     
-    // Validate email
-      const email = document.getElementById("email").value.trim();
-      if (email === "") {
-        document.getElementById("email-error").textContent = "Please enter your email address";
-        document.getElementById("email-error").style.display = 'block';
-        isValid = false;
-      } else if (!validateEmail(email)) {
-        document.getElementById("email-error").textContent = "Please enter a valid email address (e.g., name@example.com)";
-        document.getElementById("email-error").style.display = 'block';
-        isValid = false;
-      }
-    
-    // Validate message
-    const message = document.getElementById("message").value.trim();
-    if (message === "") {
-        document.getElementById("message-error").style.display = 'block';
-        isValid = false;
-    }
-    
-    // If all validations pass, show success message and reset form
-    if (isValid) {
-        const successMessage = document.getElementById("success-message");
-        successMessage.style.display = "block";
-        this.reset();
-    }
-});
+    // Real-time validation feedback
+    document.getElementById('first_name').addEventListener('input', function() {
+        document.getElementById('first_name-error').textContent = '';
+    });
 
-// Optional: Add real-time validation as user types
-document.getElementById("first-name").addEventListener("input", function() {
-    if (this.value.trim() !== "") {
-        document.getElementById("first-name-error").style.display = 'none';
-    }
-});
+    document.getElementById('last_name').addEventListener('input', function() {
+        document.getElementById('last_name-error').textContent = '';
+    });
 
-document.getElementById("last-name").addEventListener("input", function() {
-    if (this.value.trim() !== "") {
-        document.getElementById("last-name-error").style.display = 'none';
-    }
-});
+    document.getElementById('email').addEventListener('input', function() {
+        document.getElementById('email-error').textContent = '';
+    });
 
-document.getElementById("message").addEventListener("input", function() {
-    if (this.value.trim() !== "") {
-        document.getElementById("message-error").style.display = 'none';
-    }
-});
-</script>
+    document.getElementById('message').addEventListener('input', function() {
+        document.getElementById('message-error').textContent = '';
+    });
+ </script>
 
 </body>
 </html>
