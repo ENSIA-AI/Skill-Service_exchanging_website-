@@ -63,6 +63,7 @@ CREATE TABLE Category (
 CREATE TABLE UserNotifications (
   NotificationId INT AUTO_INCREMENT PRIMARY KEY,
   UserId INT NOT NULL,
+  SenderId INT, -- Person who triggered the notification
   NotificationType ENUM(
     'like','comment','rating',
     'booking','accepted','completing','being_refused',
@@ -76,6 +77,7 @@ CREATE TABLE UserNotifications (
   NotificationSection ENUM('Reviews','Exchange','events','credits') NOT NULL,
   
   FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+  FOREIGN KEY (SenderId) REFERENCES Users(UserId) ON DELETE SET NULL,
   
   INDEX idx_notifications_user_read (UserId, IsRead),
   INDEX idx_notifications_section (NotificationSection)
