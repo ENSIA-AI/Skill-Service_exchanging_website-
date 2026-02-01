@@ -2,4 +2,5 @@
 .env.local
 .env
 .env.local.user
-php.Documentation.md
+php.Documentation.mdvendor/
+utils/

@@ -35,18 +35,23 @@ body {
     z-index: 999;
 }
 
-/* PHP Content Override */
-.php-content {
-    margin-left: 0 !important;
-    padding: 0 !important;
+/* PHP Content Override for Event Details */
+.php-content.event-details-main-content {
+    margin-left: 230px !important;
+    padding-top: 6rem !important;
+    padding-right: clamp(1rem, 3vw, 2rem) !important;
+    padding-bottom: 2rem !important;
+    padding-left: clamp(1rem, 2vw, 1.5rem) !important;
     background: var(--clr-main);
+    min-height: 100vh;
+    width: calc(100% - 230px);
 }
 
 /* Main Content */
 .event-details-main-content {
     margin-left: 230px;
     padding: 6rem clamp(1rem, 3vw, 2rem) 2rem clamp(1rem, 2vw, 1.5rem);
-    min-height: calc(100vh - 5rem);
+    min-height: 100vh;
     width: calc(100% - 230px);
 }
 
@@ -392,9 +397,11 @@ body {
 
 /* Responsive Design */
 @media (max-width: 1199px) {
-    .event-details-main-content {
-        margin-left: 230px;
-        padding: 6rem 1.5rem 2rem 1rem;
+    .event-details-main-content,
+    .php-content.event-details-main-content {
+        margin-left: 230px !important;
+        padding: 6rem 1.5rem 2rem 1rem !important;
+        width: calc(100% - 230px);
     }
 
     .event-info-grid {
@@ -411,9 +418,11 @@ body {
         transform: translateX(-100%);
     }
 
-    .event-details-main-content {
-        margin-left: 0;
-        padding: 6rem 1.5rem 2rem 1rem;
+    .event-details-main-content,
+    .php-content.event-details-main-content {
+        margin-left: 0 !important;
+        padding: 6rem 1.5rem 2rem 1rem !important;
+        width: 100% !important;
     }
 
     .event-info-grid {
@@ -426,9 +435,11 @@ body {
 }
 
 @media (max-width: 767px) {
-    .event-details-main-content {
-        margin-left: 0;
-        padding: 6rem 1rem 2rem 1rem;
+    .event-details-main-content,
+    .php-content.event-details-main-content {
+        margin-left: 0 !important;
+        padding: 6rem 1rem 2rem 1rem !important;
+        width: 100% !important;
     }
 
     .event-detail-card {
@@ -465,8 +476,9 @@ body {
 }
 
 @media (max-width: 599px) {
-    .event-details-main-content {
-        padding: 5.5rem 0.75rem 1.5rem 0.75rem;
+    .event-details-main-content,
+    .php-content.event-details-main-content {
+        padding: 5.5rem 0.75rem 1.5rem 0.75rem !important;
     }
 
     .event-detail-card {

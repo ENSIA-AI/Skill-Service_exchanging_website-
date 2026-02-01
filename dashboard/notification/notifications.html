@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notifications</title>
     <link rel="stylesheet" href="../../assets/css/notifications.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    
+
     <style>
         /* Additional styles to match your image exactly */
         :root {
-            
+
             --clr-blue: #268cff;
             --clr-text: #e6e6e6;
         }
@@ -26,7 +27,7 @@
         .notif-container {
             padding: 30px;
             width: 100%;
-            margin-top:30px ;
+            margin-top: 30px;
         }
 
         .header-section {
@@ -211,6 +212,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="notif-container">
@@ -238,524 +240,511 @@
 
     </div>
 
-<script>
-/* NOTIFICATION DATA - Examples of all 11 notification types
- * All CreatedAt fields are in "dd/mm/yy HH:MM" format (as stored in database)
- * The formatNotificationTime() function will convert them to "X ago" or date format
- */
-const notifications = [
-    // ========== EXCHANGE SECTION ==========
-    {
-        NotificationId: 1,
-        NotificationType: "booking",
-        Title: "New exchange request",
-        Message: "User Sarah requested an exchange for your JavaScript course.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 14:25", // dd/mm/yy HH:MM format (5 minutes ago from 14:30)
-        NotificationSection: "Exchange",
-        PostId: 1,
-        ExchangeId: 10,
-        image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    {
-        NotificationId: 2,
-        NotificationType: "accepted",
-        Title: "Exchange request accepted",
-        Message: "Your exchange request for Graphic Design lessons has been accepted by Fatima.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 12:30", // 2 hours ago
-        NotificationSection: "Exchange",
-        ExchangeId: 11,
-        image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    {
-        NotificationId: 3,
-        NotificationType: "completing",
-        Title: "Exchange session completed",
-        Message: "You successfully completed the exchange session with Ahmed. Rate your experience!",
-        IsRead: "yes",
-        CreatedAt: "14/12/25 14:30", // 1 day ago
-        NotificationSection: "Exchange",
-        ExchangeId: 12,
-        image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    {
-        NotificationId: 4,
-        NotificationType: "being_refused",
-        Title: "Exchange request declined",
-        Message: "Your exchange request for Photography lessons was declined by Ahmed.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 11:30", // 3 hours ago
-        NotificationSection: "Exchange",
-        PostId: 5,
-        image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    // ========== REVIEWS SECTION ==========
-    {
-        NotificationId: 5,
-        NotificationType: "like",
-        Title: "Your post was liked",
-        Message: "Sarah liked your 'Web Development Course' post.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 14:00", // 30 minutes ago
-        NotificationSection: "Reviews",
-        PostId: 3,
-        image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    {
-        NotificationId: 6,
-        NotificationType: "comment",
-        Title: "New comment on your post",
-        Message: "Ahmed commented on your 'Graphic Design Service' post: 'This looks great!'",
-        IsRead: "no",
-        CreatedAt: "15/12/25 13:30", // 1 hour ago
-        NotificationSection: "Reviews",
-        PostId: 4,
-        image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    {
-        NotificationId: 7,
-        NotificationType: "rating",
-        Title: "New rating received",
-        Message: "Fatima gave you a 5-star rating after your exchange session.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 10:30", // 4 hours ago
-        NotificationSection: "Reviews",
-        ReviewId: 8,
-        UserId: 2,
-        image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    // ========== EVENTS SECTION ==========
-    {
-        NotificationId: 8,
-        NotificationType: "acceptedInEvent",
-        Title: "Event registration confirmed",
-        Message: "You've been accepted to attend 'Web Development Workshop' event.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 08:30", // 6 hours ago
-        NotificationSection: "events",
-        EventId: 1,
-        image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    {
-        NotificationId: 9,
-        NotificationType: "RejectedFromEvent",
-        Title: "Event registration declined",
-        Message: "Your registration for 'UI/UX Design Masterclass' was declined. The event is full.",
-        IsRead: "yes",
-        CreatedAt: "13/12/25 14:30", // 2 days ago
-        NotificationSection: "events",
-        EventId: 2,
-        image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    // ========== CREDITS SECTION ==========
-    {
-        NotificationId: 10,
-        NotificationType: "earned",
-        Title: "Credits Earned!",
-        Message: "You earned 50 credits for completing a session with Michael.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 11:30", // 3 hours ago
-        NotificationSection: "credits",
-        image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    {
-        NotificationId: 11,
-        NotificationType: "spent",
-        Title: "Credits Spent",
-        Message: "You spent 30 credits to book a Photography session.",
-        IsRead: "no",
-        CreatedAt: "15/12/25 09:30", // 5 hours ago
-        NotificationSection: "credits",
-        image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    },
-    // Example: More than 1 week old - will show date in dd/mm/yy format
-    {
-        NotificationId: 12,
-        NotificationType: "rating",
-        Title: "Old rating received",
-        Message: "This is an example of a notification older than 1 week.",
-        IsRead: "yes",
-        CreatedAt: "01/12/25 14:30", // dd/mm/yy format from database (more than 1 week old)
-        NotificationSection: "Reviews",
-        ReviewId: 9,
-        UserId: 3,
-        image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-    }
-];
+    <script>
+        /* NOTIFICATION DATA - Examples of all 11 notification types
+         * All CreatedAt fields are in "dd/mm/yy HH:MM" format (as stored in database)
+         * The formatNotificationTime() function will convert them to "X ago" or date format
+         */
+        const notifications = [
+            // ========== EXCHANGE SECTION ==========
+            {
+                NotificationId: 1,
+                NotificationType: "booking",
+                Title: "New exchange request",
+                Message: "User Sarah requested an exchange for your JavaScript course.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 14:25", // dd/mm/yy HH:MM format (5 minutes ago from 14:30)
+                NotificationSection: "Exchange",
+                PostId: 1,
+                ExchangeId: 10,
+                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            {
+                NotificationId: 2,
+                NotificationType: "accepted",
+                Title: "Exchange request accepted",
+                Message: "Your exchange request for Graphic Design lessons has been accepted by Fatima.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 12:30", // 2 hours ago
+                NotificationSection: "Exchange",
+                ExchangeId: 11,
+                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            {
+                NotificationId: 3,
+                NotificationType: "completing",
+                Title: "Exchange session completed",
+                Message: "You successfully completed the exchange session with Ahmed. Rate your experience!",
+                IsRead: "yes",
+                CreatedAt: "14/12/25 14:30", // 1 day ago
+                NotificationSection: "Exchange",
+                ExchangeId: 12,
+                image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            {
+                NotificationId: 4,
+                NotificationType: "being_refused",
+                Title: "Exchange request declined",
+                Message: "Your exchange request for Photography lessons was declined by Ahmed.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 11:30", // 3 hours ago
+                NotificationSection: "Exchange",
+                PostId: 5,
+                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            // ========== REVIEWS SECTION ==========
+            {
+                NotificationId: 5,
+                NotificationType: "like",
+                Title: "Your post was liked",
+                Message: "Sarah liked your 'Web Development Course' post.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 14:00", // 30 minutes ago
+                NotificationSection: "Reviews",
+                PostId: 3,
+                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            {
+                NotificationId: 6,
+                NotificationType: "comment",
+                Title: "New comment on your post",
+                Message: "Ahmed commented on your 'Graphic Design Service' post: 'This looks great!'",
+                IsRead: "no",
+                CreatedAt: "15/12/25 13:30", // 1 hour ago
+                NotificationSection: "Reviews",
+                PostId: 4,
+                image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            {
+                NotificationId: 7,
+                NotificationType: "rating",
+                Title: "New rating received",
+                Message: "Fatima gave you a 5-star rating after your exchange session.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 10:30", // 4 hours ago
+                NotificationSection: "Reviews",
+                ReviewId: 8,
+                UserId: 2,
+                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            // ========== EVENTS SECTION ==========
+            {
+                NotificationId: 8,
+                NotificationType: "acceptedInEvent",
+                Title: "Event registration confirmed",
+                Message: "You've been accepted to attend 'Web Development Workshop' event.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 08:30", // 6 hours ago
+                NotificationSection: "events",
+                EventId: 1,
+                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            {
+                NotificationId: 9,
+                NotificationType: "RejectedFromEvent",
+                Title: "Event registration declined",
+                Message: "Your registration for 'UI/UX Design Masterclass' was declined. The event is full.",
+                IsRead: "yes",
+                CreatedAt: "13/12/25 14:30", // 2 days ago
+                NotificationSection: "events",
+                EventId: 2,
+                image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            // ========== CREDITS SECTION ==========
+            {
+                NotificationId: 10,
+                NotificationType: "earned",
+                Title: "Credits Earned!",
+                Message: "You earned 50 credits for completing a session with Michael.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 11:30", // 3 hours ago
+                NotificationSection: "credits",
+                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            {
+                NotificationId: 11,
+                NotificationType: "spent",
+                Title: "Credits Spent",
+                Message: "You spent 30 credits to book a Photography session.",
+                IsRead: "no",
+                CreatedAt: "15/12/25 09:30", // 5 hours ago
+                NotificationSection: "credits",
+                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            },
+            // Example: More than 1 week old - will show date in dd/mm/yy format
+            {
+                NotificationId: 12,
+                NotificationType: "rating",
+                Title: "Old rating received",
+                Message: "This is an example of a notification older than 1 week.",
+                IsRead: "yes",
+                CreatedAt: "01/12/25 14:30", // dd/mm/yy format from database (more than 1 week old)
+                NotificationSection: "Reviews",
+                ReviewId: 9,
+                UserId: 3,
+                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
+            }
+        ];
+        /**
+         * Parse MySQL/ISO or dd/mm/yy format string to Date object
+         */
+        function parseDateTime(dateTimeStr) {
+            if (!dateTimeStr || typeof dateTimeStr !== 'string') return null;
 
-/**
- * Parse dd/mm/yy format string to Date object
- * @param {string} dateTimeStr - Date string in "dd/mm/yy" or "dd/mm/yy HH:MM" format
- * @returns {Date|null} Parsed Date object or null if invalid
- */
-function parseDdMmYyDate(dateTimeStr) {
-    if (!dateTimeStr || typeof dateTimeStr !== 'string') {
-        return null;
-    }
+            // Try MySQL format first (YYYY-MM-DD HH:MM:SS)
+            if (dateTimeStr.includes('-')) {
+                // Replace space with T to make it ISO compatible
+                const isoStr = dateTimeStr.replace(' ', 'T');
+                const date = new Date(isoStr);
+                if (!isNaN(date.getTime())) return date;
+            }
 
-    // Check if it's in dd/mm/yy format (from database)
-    const ddMmYyPattern = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/;
-    const match = dateTimeStr.match(ddMmYyPattern);
-    
-    if (match) {
-        // Parse dd/mm/yy format
-        const day = parseInt(match[1], 10);
-        const month = parseInt(match[2], 10) - 1; // JavaScript months are 0-indexed
-        let year = parseInt(match[3], 10);
-        
-        // Handle 2-digit year (assume 2000-2099)
-        if (year < 100) {
-            year = year < 50 ? 2000 + year : 1900 + year;
+            // Fallback to dd/mm/yy format
+            const ddMmYyPattern = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/;
+            const match = dateTimeStr.match(ddMmYyPattern);
+            if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10) - 1;
+                let year = parseInt(match[3], 10);
+                if (year < 100) year += 2000;
+                const hour = match[4] ? parseInt(match[4], 10) : 0;
+                const minute = match[5] ? parseInt(match[5], 10) : 0;
+                const second = match[6] ? parseInt(match[6], 10) : 0;
+                return new Date(year, month, day, hour, minute, second);
+            }
+            return new Date(dateTimeStr);
         }
-        
-        // Parse time if available
-        const hour = match[4] ? parseInt(match[4], 10) : 0;
-        const minute = match[5] ? parseInt(match[5], 10) : 0;
-        const second = match[6] ? parseInt(match[6], 10) : 0;
-        
-        const date = new Date(year, month, day, hour, minute, second);
-        return isNaN(date.getTime()) ? null : date;
-    }
-    
-    return null;
-}
 
-/**
- * Calculate time difference between notification date and now
- * @param {string|Date} dateTime - The notification creation date/time (from DB: "dd/mm/yy" or "dd/mm/yy HH:MM")
- * @returns {Object} Object with time differences: {seconds, minutes, hours, days, weeks, date}
- */
-function calculateTimeDifference(dateTime) {
-    let date;
-    
-    // Parse the date
-    if (dateTime instanceof Date) {
-        date = dateTime;
-    } else if (typeof dateTime === 'string') {
-        // Try parsing dd/mm/yy format first
-        date = parseDdMmYyDate(dateTime);
-        
-        // If dd/mm/yy parsing failed, try standard Date parsing
-        if (!date) {
-            date = new Date(dateTime);
-            if (isNaN(date.getTime())) {
+        /**
+         * Calculate time difference between notification date and now
+         * @param {string|Date} dateTime - The notification creation date/time (from DB: "dd/mm/yy" or "dd/mm/yy HH:MM")
+         * @returns {Object} Object with time differences: {seconds, minutes, hours, days, weeks, date}
+         */
+        function calculateTimeDifference(dateTime) {
+            let date;
+
+            // Parse the date
+            if (dateTime instanceof Date) {
+                date = dateTime;
+            } else if (typeof dateTime === 'string') {
+                date = parseDateTime(dateTime);
+                if (!date || isNaN(date.getTime())) return null;
+            } else {
                 return null;
             }
+
+            const now = new Date();
+            const diffMs = now - date;
+
+            return {
+                seconds: Math.floor(diffMs / 1000),
+                minutes: Math.floor(diffMs / (1000 * 60)),
+                hours: Math.floor(diffMs / (1000 * 60 * 60)),
+                days: Math.floor(diffMs / (1000 * 60 * 60 * 24)),
+                weeks: Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7)),
+                date: date
+            };
         }
-    } else {
-        return null;
-    }
 
-    const now = new Date();
-    const diffMs = now - date;
-    
-    return {
-        seconds: Math.floor(diffMs / 1000),
-        minutes: Math.floor(diffMs / (1000 * 60)),
-        hours: Math.floor(diffMs / (1000 * 60 * 60)),
-        days: Math.floor(diffMs / (1000 * 60 * 60 * 24)),
-        weeks: Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7)),
-        date: date
-    };
-}
+        /**
+         * Format notification time to relative format (e.g., "3h ago") or date if > 1 week
+         * @param {string|Date} dateTime - The notification creation date/time (from DB: "dd/mm/yy" or "dd/mm/yy HH:MM")
+         * @returns {string} Formatted time string
+         */
+        function formatNotificationTime(dateTime) {
+            // If already a formatted string (for demo data), return as is
+            if (typeof dateTime === 'string' && (dateTime.includes('ago') || dateTime.includes('minutes') || dateTime.includes('hours') || dateTime.includes('days'))) {
+                return dateTime;
+            }
 
-/**
- * Format notification time to relative format (e.g., "3h ago") or date if > 1 week
- * @param {string|Date} dateTime - The notification creation date/time (from DB: "dd/mm/yy" or "dd/mm/yy HH:MM")
- * @returns {string} Formatted time string
- */
-function formatNotificationTime(dateTime) {
-    // If already a formatted string (for demo data), return as is
-    if (typeof dateTime === 'string' && (dateTime.includes('ago') || dateTime.includes('minutes') || dateTime.includes('hours') || dateTime.includes('days'))) {
-        return dateTime;
-    }
+            // Calculate time difference
+            const diff = calculateTimeDifference(dateTime);
 
-    // Calculate time difference
-    const diff = calculateTimeDifference(dateTime);
-    
-    if (!diff) {
-        return dateTime || 'Just now';
-    }
+            if (!diff) {
+                return dateTime || 'Just now';
+            }
 
-    // Less than 1 minute
-    if (diff.seconds < 60) {
-        return 'Just now';
-    }
-    // Less than 1 hour - show minutes
-    else if (diff.minutes < 60) {
-        return `${diff.minutes}m ago`;
-    }
-    // Less than 24 hours - show hours
-    else if (diff.hours < 24) {
-        return `${diff.hours}h ago`;
-    }
-    // Less than 1 week - show days
-    else if (diff.days < 7) {
-        return `${diff.days}d ago`;
-    }
-    // More than 1 week - show formatted date in dd/mm/yy format
-    else {
-        const day = String(diff.date.getDate()).padStart(2, '0');
-        const month = String(diff.date.getMonth() + 1).padStart(2, '0');
-        const year = diff.date.getFullYear().toString().slice(-2);
-        return `${day}/${month}/${year}`;
-    }
-}
+            // Handle future dates (rare but possible with clock drift)
+            if (diff.seconds < 0) {
+                return 'Just now';
+            }
+            // Less than 1 minute
+            if (diff.seconds < 60) {
+                return 'Just now';
+            }
+            // Less than 1 hour - show minutes
+            else if (diff.minutes < 60) {
+                return `${diff.minutes}m ago`;
+            }
+            // Less than 24 hours - show hours
+            else if (diff.hours < 24) {
+                return `${diff.hours}h ago`;
+            }
+            // Less than 1 week - show days
+            else if (diff.days < 7) {
+                return `${diff.days}d ago`;
+            }
+            // More than 1 week - show formatted date in dd/mm/yy format
+            else {
+                const day = String(diff.date.getDate()).padStart(2, '0');
+                const month = String(diff.date.getMonth() + 1).padStart(2, '0');
+                const year = diff.date.getFullYear().toString().slice(-2);
+                return `${day}/${month}/${year}`;
+            }
+        }
 
-/* TEMPLATE RENDERING
- * This now accepts either:
- *  - a front-end object (id, title, message, time, image, category, isNew, action)
- *  - a raw row from UserNotifications table (NotificationId, Title, Message, IsRead, CreatedAt, NotificationSection, NotificationType)
- * 
- * Optional fields for URLs (if available in DB):
- *  - ExchangeId, PostId, EventId, UserId (for profile), ReviewId
- */
-function renderNotification(n) {
-    // Normalize fields from DB-style object or front-end style object
-    const id = n.NotificationId ?? n.notificationId ?? n.id;
-    const title = n.Title ?? n.title ?? '';
-    const message = n.Message ?? n.message ?? '';
-    const isRead = (n.IsRead ?? n.is_read ?? (n.isNew === false ? 'yes' : 'no')).toString().toLowerCase();
-    const createdAt = n.CreatedAt ?? n.created_at ?? n.time ?? '';
-    const section = (n.NotificationSection ?? n.notification_section ?? n.category ?? '').toString();
-    const type = (n.NotificationType ?? n.notification_type ?? '').toString();
+        /* TEMPLATE RENDERING
+         * This now accepts either:
+         *  - a front-end object (id, title, message, time, image, category, isNew, action)
+         *  - a raw row from UserNotifications table (NotificationId, Title, Message, IsRead, CreatedAt, NotificationSection, NotificationType)
+         * 
+         * Optional fields for URLs (if available in DB):
+         *  - ExchangeId, PostId, EventId, UserId (for profile), ReviewId
+         */
+        function renderNotification(n) {
+            // Normalize fields from DB-style object or front-end style object
+            const id = n.NotificationId ?? n.notificationId ?? n.id;
+            const title = n.Title ?? n.title ?? '';
+            const message = n.Message ?? n.message ?? '';
+            const isRead = (n.IsRead ?? n.is_read ?? (n.isNew === false ? 'yes' : 'no')).toString().toLowerCase();
+            const createdAt = n.CreatedAt ?? n.created_at ?? n.time ?? '';
+            const section = (n.NotificationSection ?? n.notification_section ?? n.category ?? '').toString();
+            const type = (n.NotificationType ?? n.notification_type ?? '').toString();
 
-    // Extract related IDs for URL construction
-    const exchangeId = n.ExchangeId ?? n.exchangeId ?? n.exchange_id;
-    const postId = n.PostId ?? n.postId ?? n.post_id;
-    const eventId = n.EventId ?? n.eventId ?? n.event_id;
-    const userId = n.UserId ?? n.userId ?? n.user_id;
-    const reviewId = n.ReviewId ?? n.reviewId ?? n.review_id;
+            // Extract related IDs for URL construction
+            const exchangeId = n.ExchangeId ?? n.exchangeId ?? n.exchange_id;
+            const postId = n.PostId ?? n.postId ?? n.post_id;
+            const eventId = n.EventId ?? n.eventId ?? n.event_id;
+            const userId = n.UserId ?? n.userId ?? n.user_id;
+            const reviewId = n.ReviewId ?? n.reviewId ?? n.review_id;
 
-    // Compute "new" state
-    const isNew = isRead === 'no';
+            // Compute "new" state
+            const isNew = isRead === 'no';
 
-    // Category (used in data-category + tab filtering)
-    let category = section.toLowerCase();
-    if (!category) {
-        const t = type.toLowerCase();
-        if (t.includes('earned') || t.includes('spent') || t.includes('credit')) category = 'credits';
-        else if (t.includes('event')) category = 'events';
-        else if (t.includes('rating') || t.includes('review') || t.includes('like') || t.includes('comment')) category = 'reviews';
-        else category = (n.category || 'general').toString().toLowerCase();
-    }
+            // Category (used in data-category + tab filtering)
+            let category = section.toLowerCase();
+            if (!category) {
+                const t = type.toLowerCase();
+                if (t.includes('earned') || t.includes('spent') || t.includes('credit')) category = 'credits';
+                else if (t.includes('event')) category = 'events';
+                else if (t.includes('rating') || t.includes('review') || t.includes('like') || t.includes('comment')) category = 'reviews';
+                else category = (n.category || 'general').toString().toLowerCase();
+            }
 
-    const lowerType = type.toLowerCase();
-    
-    // ============================================
-    // AVATAR (PFP) + TYPE ICON SELECTION
-    // ============================================
-    // Main avatar: always a person/profile image (from DB or default)
-    let image = n.image || '../../assets/images/Default_pfp.svg';
+            const lowerType = type.toLowerCase();
 
-    // Small type icon shown next to the title, depends on notification type.
-    // Can be either:
-    //  - a URL to an image (string not starting with "<")
-    //  - an inline SVG string (string starting with "<")
-    let typeIcon = '';
-    
-    if (category === 'exchange') {
-        // Exchange History Section – inline SVG icons colored via --clr-btn
-        const exchangeBookingIcon = `
+            // ============================================
+            // AVATAR (PFP) + TYPE ICON SELECTION
+            // ============================================
+            // Main avatar: always a person/profile image (from DB or default)
+            let image = n.image || '../../assets/images/Default_pfp.svg';
+
+            // Small type icon shown next to the title, depends on notification type.
+            // Can be either:
+            //  - a URL to an image (string not starting with "<")
+            //  - an inline SVG string (string starting with "<")
+            let typeIcon = '';
+
+            if (category === 'exchange') {
+                // Exchange History Section – inline SVG icons colored via --clr-btn
+                const exchangeBookingIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
                 <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>`;
-        const exchangeAcceptedIcon = `
+                const exchangeAcceptedIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
                 <path d="M5 20c1.5-3 3.5-4.5 7-4.5s5.5 1.5 7 4.5" fill="none" stroke="currentColor" stroke-width="2"/>
             </svg>`;
-        const exchangeCompletedIcon = `
+                const exchangeCompletedIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
                 <path d="M8 12l3 3 5-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`;
-        const exchangeRefusedIcon = `
+                const exchangeRefusedIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
                 <path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>`;
 
-        if (lowerType === 'booking') {
-            typeIcon = exchangeBookingIcon;
-        } else if (lowerType === 'accepted') {
-            typeIcon = exchangeAcceptedIcon;
-        } else if (lowerType === 'completing') {
-            typeIcon = exchangeCompletedIcon;
-        } else if (lowerType === 'being_refused') {
-            typeIcon = exchangeRefusedIcon;
-        } else {
-            typeIcon = exchangeAcceptedIcon;
-        }
-    } else if (category === 'reviews') {
-        // Use inline SVG icons so we can color them with --clr-btn
-        const reviewStarIcon = `
+                if (lowerType === 'booking') {
+                    typeIcon = exchangeBookingIcon;
+                } else if (lowerType === 'accepted') {
+                    typeIcon = exchangeAcceptedIcon;
+                } else if (lowerType === 'completing') {
+                    typeIcon = exchangeCompletedIcon;
+                } else if (lowerType === 'being_refused') {
+                    typeIcon = exchangeRefusedIcon;
+                } else {
+                    typeIcon = exchangeAcceptedIcon;
+                }
+            } else if (category === 'reviews') {
+                // Use inline SVG icons so we can color them with --clr-btn
+                const reviewStarIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path fill="currentColor" d="M12 2 14.9 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 9.1 8.26 12 2z"/>
             </svg>`;
-        const reviewCommentIcon = `
+                const reviewCommentIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path fill="currentColor" d="M4 4h16v11a2 2 0 0 1-2 2H8l-4 3V4z"/>
             </svg>`;
 
-        if (lowerType === 'like') {
-            // Post/comment liked
-            typeIcon = reviewStarIcon;
-        } else if (lowerType === 'comment') {
-            // New comment on post
-            typeIcon = reviewCommentIcon;
-        } else if (lowerType === 'rating') {
-            // New rating/review
-            typeIcon = reviewStarIcon;
-        } else {
-            typeIcon = reviewStarIcon;
-        }
-    } else if (category === 'events') {
-        // Events – inline calendar / cross icons with --clr-btn
-        const eventAcceptedIcon = `
+                if (lowerType === 'like') {
+                    // Post/comment liked
+                    typeIcon = reviewStarIcon;
+                } else if (lowerType === 'comment') {
+                    // New comment on post
+                    typeIcon = reviewCommentIcon;
+                } else if (lowerType === 'rating') {
+                    // New rating/review
+                    typeIcon = reviewStarIcon;
+                } else {
+                    typeIcon = reviewStarIcon;
+                }
+            } else if (category === 'events') {
+                // Events – inline calendar / cross icons with --clr-btn
+                const eventAcceptedIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
                 <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 <path d="M9 15l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`;
-        const eventRejectedIcon = `
+                const eventRejectedIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="4" width="18" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
                 <path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 <path d="M10 14l4 4M14 14l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>`;
 
-        if (lowerType === 'acceptedinevent') {
-            typeIcon = eventAcceptedIcon;
-        } else if (lowerType === 'rejectedfromevent') {
-            typeIcon = eventRejectedIcon;
-        } else {
-            typeIcon = eventAcceptedIcon;
-        }
-    } else if (category === 'credits') {
-        // Inline SVG coin icon, colored using --clr-btn
-        const creditsCoinIcon = `
+                if (lowerType === 'acceptedinevent') {
+                    typeIcon = eventAcceptedIcon;
+                } else if (lowerType === 'rejectedfromevent') {
+                    typeIcon = eventRejectedIcon;
+                } else {
+                    typeIcon = eventAcceptedIcon;
+                }
+            } else if (category === 'credits') {
+                // Inline SVG coin icon, colored using --clr-btn
+                const creditsCoinIcon = `
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
                 <path d="M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>`;
 
-        if (lowerType === 'earned' || lowerType === 'spent') {
-            typeIcon = creditsCoinIcon;
-        } else {
-            typeIcon = creditsCoinIcon;
-        }
-    }
+                if (lowerType === 'earned' || lowerType === 'spent') {
+                    typeIcon = creditsCoinIcon;
+                } else {
+                    typeIcon = creditsCoinIcon;
+                }
+            }
 
-    // Time label – format relative time or date
-    let timeLabel = formatNotificationTime(createdAt);
+            // Time label – format relative time or date
+            let timeLabel = formatNotificationTime(createdAt);
 
-    // ============================================
-    // ACTION BUTTON & URL CONSTRUCTION
-    // ============================================
-    let action = '';
-    let actionUrl = '#';
-    let needsUrl = true;
+            // ============================================
+            // ACTION BUTTON & URL CONSTRUCTION
+            // ============================================
+            let action = '';
+            let actionUrl = '#';
+            let needsUrl = true;
 
-    if (category === 'exchange') {
-        if (lowerType === 'booking') {
-            action = 'Respond';
-            // Link to exchange details or post details
-            actionUrl = exchangeId 
-                ? `../post/postdetails.php?exchangeId=${exchangeId}` 
-                : (postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php');
-        } else if (lowerType === 'accepted') {
-            action = 'View Exchange';
-            actionUrl = exchangeId 
-                ? `../post/postdetails.php?exchangeId=${exchangeId}` 
-                : '../post/posts.php';
-        } else if (lowerType === 'completing') {
-            action = 'Rate & Review';
-            // Link to review/rating page or exchange details
-            actionUrl = exchangeId 
-                ? `../post/postdetails.php?exchangeId=${exchangeId}&action=review` 
-                : '../post/posts.php';
-        } else if (lowerType === 'being_refused') {
-            action = 'View Details';
-            actionUrl = postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php';
-        } else {
-            action = 'View Exchange';
-            actionUrl = '../post/posts.php';
-        }
-    } else if (category === 'reviews') {
-        if (lowerType === 'like') {
-            action = 'View Post';
-            actionUrl = postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php';
-        } else if (lowerType === 'comment') {
-            action = 'View Comments';
-            actionUrl = postId ? `../post/postdetails.php?postId=${postId}#comments` : '../post/posts.php';
-        } else if (lowerType === 'rating') {
-            action = 'View Review';
-            actionUrl = reviewId 
-                ? `../profile/profile.php?reviewId=${reviewId}` 
-                : (userId ? `../profile/profile.php?userId=${userId}` : '../profile/profile.php');
-        } else {
-            action = 'View';
-            actionUrl = '../post/posts.php';
-        }
-    } else if (category === 'events') {
-        if (lowerType === 'acceptedinevent') {
-            action = 'View Event';
-            actionUrl = eventId ? `../events/eventdetails.php?eventId=${eventId}` : '../events/events.php';
-        } else if (lowerType === 'rejectedfromevent') {
-            action = 'Browse Events';
-            actionUrl = '../events/events.php';
-        } else {
-            action = 'View Event';
-            actionUrl = eventId ? `../events/eventdetails.php?eventId=${eventId}` : '../events/events.php';
-        }
-    } else if (category === 'credits') {
-        if (lowerType === 'earned' || lowerType === 'spent') {
-            action = 'View Wallet';
-            // Link to profile or credits section
-            actionUrl = '../profile/profile.php#credits';
-            needsUrl = true;
-        } else {
-            action = 'View Wallet';
-            actionUrl = '../profile/profile.php#credits';
-        }
-    } else {
-        needsUrl = false;
-    }
+            if (category === 'exchange') {
+                if (lowerType === 'booking') {
+                    action = 'Respond';
+                    // Link to exchange details or post details
+                    actionUrl = exchangeId
+                        ? `../post/postdetails.php?exchangeId=${exchangeId}`
+                        : (postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php');
+                } else if (lowerType === 'accepted') {
+                    action = 'View Exchange';
+                    actionUrl = exchangeId
+                        ? `../post/postdetails.php?exchangeId=${exchangeId}`
+                        : '../post/posts.php';
+                } else if (lowerType === 'completing') {
+                    action = 'Rate & Review';
+                    // Link to review/rating page or exchange details
+                    actionUrl = exchangeId
+                        ? `../post/postdetails.php?exchangeId=${exchangeId}&action=review`
+                        : '../post/posts.php';
+                } else if (lowerType === 'being_refused') {
+                    action = 'View Details';
+                    actionUrl = postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php';
+                } else {
+                    action = 'View Exchange';
+                    actionUrl = '../post/posts.php';
+                }
+            } else if (category === 'reviews') {
+                if (lowerType === 'like') {
+                    action = 'View Post';
+                    actionUrl = postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php';
+                } else if (lowerType === 'comment') {
+                    action = 'View Comments';
+                    actionUrl = postId ? `../post/postdetails.php?postId=${postId}#comments` : '../post/posts.php';
+                } else if (lowerType === 'rating') {
+                    action = 'View Review';
+                    actionUrl = reviewId
+                        ? `../profile/profile.php?reviewId=${reviewId}`
+                        : (userId ? `../profile/profile.php?userId=${userId}` : '../profile/profile.php');
+                } else {
+                    action = 'View';
+                    actionUrl = '../post/posts.php';
+                }
+            } else if (category === 'events') {
+                if (lowerType === 'acceptedinevent') {
+                    action = 'View Event';
+                    actionUrl = eventId ? `../events/eventdetails.php?eventId=${eventId}` : '../events/events.php';
+                } else if (lowerType === 'rejectedfromevent') {
+                    action = 'Browse Events';
+                    actionUrl = '../events/events.php';
+                } else {
+                    action = 'View Event';
+                    actionUrl = eventId ? `../events/eventdetails.php?eventId=${eventId}` : '../events/events.php';
+                }
+            } else if (category === 'credits') {
+                if (lowerType === 'earned' || lowerType === 'spent') {
+                    action = 'View Wallet';
+                    // Link to profile or credits section
+                    actionUrl = '../profile/profile.php#credits';
+                    needsUrl = true;
+                } else {
+                    action = 'View Wallet';
+                    actionUrl = '../profile/profile.php#credits';
+                }
+            } else {
+                needsUrl = false;
+            }
 
-    // Build action button HTML
-    let actionButton = '';
-    if (action && needsUrl) {
-        actionButton = `<a href="${actionUrl}" class="btn-primary" style="text-decoration: none; display: inline-block;">${action}</a>`;
-    } else if (action) {
-        actionButton = `<button class="btn-primary">${action}</button>`;
-    }
+            // Build action button HTML
+            let actionButton = '';
+            if (action && needsUrl) {
+                actionButton = `<a href="${actionUrl}" class="btn-primary" style="text-decoration: none; display: inline-block;">${action}</a>`;
+            } else if (action) {
+                actionButton = `<button class="btn-primary">${action}</button>`;
+            }
 
-    return `
-    <div class="notification-card ${isNew ? 'new' : ''}" data-id="${id}" data-category="${category}">
+            const senderPFP = n.SenderPFP ?? n.sender_pfp ?? '../../assets/images/Default_pfp.svg';
+            const senderName = n.SenderName ?? n.sender_name ?? 'System';
+
+            return `
+    <div class="notification-card ${isNew ? 'new' : ''}" data-id="${id}" data-category="${category}" data-created="${createdAt}">
         
-        <div class="notification-icons">
-            <img src="${image}" alt="Notification icon">
-        </div>
-
         <div class="notification-body">
             <div class="notification-header">
                 <span class="notification-title">
-                    ${
-                        typeIcon
-                            ? (
-                                typeof typeIcon === 'string' && typeIcon.trim().startsWith('<')
-                                    ? `<span class="notification-type-icon">${typeIcon}</span>`
-                                    : `<span class="notification-type-icon"><img src="${typeIcon}" alt="type icon"></span>`
-                              )
-                            : ''
-                    }
+                    <img src="${senderPFP}" class="sender-pfp" alt="${senderName}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--clr-btn);">
+                    ${typeIcon
+                    ? (
+                        typeof typeIcon === 'string' && typeIcon.trim().startsWith('<')
+                            ? `<span class="notification-type-icon">${typeIcon}</span>`
+                            : `<span class="notification-type-icon"><img src="${typeIcon}" alt="type icon"></span>`
+                    )
+                    : ''
+                }
                     ${title}
                 </span>
                 ${isNew ? '<span class="notification-badge">New</span>' : ''}
-                <span class="notification-time">${timeLabel}</span>
+                <span class="notification-time" data-timestamp="${createdAt}">${timeLabel}</span>
             </div>
 
             <p class="notification-text">${message}</p>
@@ -771,106 +760,192 @@ function renderNotification(n) {
         </button>
 
     </div>`;
-}
-
-/* --------------------
-   INITIAL RENDER
----------------------*/
-const container = document.getElementById("notifications-container");
-container.innerHTML = notifications.map(renderNotification).join("");
-
-/*MARK AS READ*/
-document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("mark-read-btn")) {
-        const card = e.target.closest(".notification-card");
-        card.classList.remove("new");
-
-        // remove badge
-        const badge = card.querySelector(".notification-badge");
-        if (badge) badge.remove();
-
-        // update unread counter
-        const unread = document.querySelectorAll(".notification-card.new").length;
-        document.getElementById("unread-count").textContent = unread;
-    }
-});
-
-/*DELETE NOTIFICATION*/
-document.addEventListener("click", (e) => {
-    if (e.target.closest(".notification-delete")) {
-        const card = e.target.closest(".notification-card");
-        card.remove();
-
-        const unread = document.querySelectorAll(".notification-card.new").length;
-        document.getElementById("unread-count").textContent = unread;
-    }
-});
-
-/* 
-   MARK ALL AS READ
-*/
-document.querySelector(".markall").addEventListener("click", () => {
-    document.querySelectorAll(".notification-card.new").forEach(card => {
-        card.classList.remove("new");
-        const badge = card.querySelector(".notification-badge");
-        if (badge) badge.remove();
-    });
-    
-    const unread = document.querySelectorAll(".notification-card.new").length;
-    document.getElementById("unread-count").textContent = unread;
-});
-
-/* 
-   TAB FUNCTIONALITY
-   Tabs:
-   - All (...)
-   - Unread (...)
-   - Exchange History
-   - Events
-   - Credits
-   - Reviews
-*/
-document.querySelectorAll(".tab").forEach(tab => {
-    tab.addEventListener("click", function() {
-        // Remove active class from all tabs
-        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-        // Add active class to clicked tab
-        this.classList.add("active");
-        
-        const label = this.textContent.toLowerCase();
-        const cards = document.querySelectorAll(".notification-card");
-
-        // Show all by default
-        cards.forEach(card => (card.style.display = "flex"));
-
-        // All tab: nothing else to do
-        if (label.includes("all")) return;
-
-        // Unread tab: only show cards with "new" class
-        if (label.includes("unread")) {
-            cards.forEach(card => {
-                card.style.display = card.classList.contains("new") ? "flex" : "none";
-            });
-            return;
         }
 
-        // Other tabs filter by data-category set in renderNotification()
-        let targetCategory = "";
-        if (label.includes("exchange")) targetCategory = "exchange";
-        else if (label.includes("events")) targetCategory = "events";
-        else if (label.includes("credits")) targetCategory = "credits";
-        else if (label.includes("reviews")) targetCategory = "reviews";
+        /* --------------------
+           API INTEGRATION
+        ---------------------*/
+        async function fetchNotifications() {
+            try {
+                console.log('Fetching notifications...');
+                const response = await fetch('../../api/notifications/fetch.php');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Notification data received:', data);
 
-        if (targetCategory) {
-            cards.forEach(card => {
-                const cat = (card.getAttribute("data-category") || "").toLowerCase();
-                card.style.display = cat === targetCategory ? "flex" : "none";
-            });
+                if (data.success && data.notifications.length > 0) {
+                    renderAll(data.notifications);
+                } else if (data.success && data.notifications.length === 0) {
+                    document.getElementById("notifications-container").innerHTML = '<div class="notification-card"><p>No notifications found.</p></div>';
+                    document.getElementById("unread-count").textContent = 0;
+                } else {
+                    console.error('Failed to fetch notifications:', data.message);
+                    // Fallback to demo data for visualization if API fails in this environment
+                    renderAll(notifications);
+                }
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+                // Fallback to demo data only if we are in a dev environment
+                if (typeof notifications !== 'undefined') {
+                    renderAll(notifications);
+                }
+            }
         }
-    });
-});
-</script>
+
+        function renderAll(items) {
+            const container = document.getElementById("notifications-container");
+            container.innerHTML = items.map(renderNotification).join("");
+
+            // Update unread count
+            const unread = items.filter(n => (n.IsRead ?? n.is_read) === 'no').length;
+            document.getElementById("unread-count").textContent = unread;
+        }
+
+        async function markAsRead(notifId, card) {
+            try {
+                const response = await fetch('../../api/notifications/mark_read.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notificationId: notifId })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    card.classList.remove("new");
+                    const badge = card.querySelector(".notification-badge");
+                    if (badge) badge.remove();
+
+                    // update unread counter
+                    const unread = document.querySelectorAll(".notification-card.new").length;
+                    document.getElementById("unread-count").textContent = unread;
+                }
+            } catch (error) {
+                console.error('Error marking as read:', error);
+            }
+        }
+
+        async function deleteNotification(notifId, card) {
+            try {
+                const response = await fetch('../../api/notifications/delete.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notificationId: notifId })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    card.remove();
+                    // update unread counter
+                    const unread = document.querySelectorAll(".notification-card.new").length;
+                    document.getElementById("unread-count").textContent = unread;
+                }
+            } catch (error) {
+                console.error('Error deleting notification:', error);
+            }
+        }
+
+        function startTimer() {
+            // Update relative times every 60 seconds
+            setInterval(() => {
+                const timeElements = document.querySelectorAll('.notification-time[data-timestamp]');
+                timeElements.forEach(el => {
+                    const timestamp = el.getAttribute('data-timestamp');
+                    if (timestamp) {
+                        el.textContent = formatNotificationTime(timestamp);
+                    }
+                });
+            }, 60000);
+        }
+
+        /* INITIALIZE */
+        fetchNotifications();
+        startTimer();
+
+        /* ACTIONS */
+        document.addEventListener("click", async (e) => {
+            const card = e.target.closest(".notification-card");
+            if (!card) return;
+
+            const notifId = card.dataset.id;
+
+            if (e.target.classList.contains("mark-read-btn")) {
+                await markAsRead(notifId, card);
+            }
+
+            if (e.target.closest(".notification-delete")) {
+                if (confirm('Are you sure you want to delete this notification?')) {
+                    await deleteNotification(notifId, card);
+                }
+            }
+        });
+
+        /* 
+           MARK ALL AS READ
+        */
+        document.querySelector(".markall").addEventListener("click", () => {
+            document.querySelectorAll(".notification-card.new").forEach(card => {
+                card.classList.remove("new");
+                const badge = card.querySelector(".notification-badge");
+                if (badge) badge.remove();
+            });
+
+            const unread = document.querySelectorAll(".notification-card.new").length;
+            document.getElementById("unread-count").textContent = unread;
+        });
+
+        /* 
+           TAB FUNCTIONALITY
+           Tabs:
+           - All (...)
+           - Unread (...)
+           - Exchange History
+           - Events
+           - Credits
+           - Reviews
+        */
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.addEventListener("click", function () {
+                // Remove active class from all tabs
+                document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+                // Add active class to clicked tab
+                this.classList.add("active");
+
+                const label = this.textContent.toLowerCase();
+                const cards = document.querySelectorAll(".notification-card");
+
+                // Show all by default
+                cards.forEach(card => (card.style.display = "flex"));
+
+                // All tab: nothing else to do
+                if (label.includes("all")) return;
+
+                // Unread tab: only show cards with "new" class
+                if (label.includes("unread")) {
+                    cards.forEach(card => {
+                        card.style.display = card.classList.contains("new") ? "flex" : "none";
+                    });
+                    return;
+                }
+
+                // Other tabs filter by data-category set in renderNotification()
+                let targetCategory = "";
+                if (label.includes("exchange")) targetCategory = "exchange";
+                else if (label.includes("events")) targetCategory = "events";
+                else if (label.includes("credits")) targetCategory = "credits";
+                else if (label.includes("reviews")) targetCategory = "reviews";
+
+                if (targetCategory) {
+                    cards.forEach(card => {
+                        const cat = (card.getAttribute("data-category") || "").toLowerCase();
+                        card.style.display = cat === targetCategory ? "flex" : "none";
+                    });
+                }
+            });
+        });
+    </script>
 
 </body>
-</html>
 
+</html>
