@@ -37,7 +37,7 @@ function time_ago($timestamp)
 try {
     $sql = "SELECT r.*, u.FullName, u.UserName, u.ProfilePicture 
             FROM profile_reviews r 
-            JOIN users u ON r.ReviewerID = u.UserId 
+            JOIN Users u ON r.ReviewerID = u.UserId 
             WHERE r.userID = :targetId 
             ORDER BY r.ReviewDate DESC 
             LIMIT :limit";
