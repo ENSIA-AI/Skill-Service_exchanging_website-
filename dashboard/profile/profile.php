@@ -319,7 +319,7 @@ try {
                     </div>
                     <?php if ($isOwner): ?>
                         <div class="profile-short-posts-head-create-post-button">
-                            <a href="/Skill-Service_exchanging_website-/dashboard/post/addpost.php">Create Post</a>
+                            <a href="../post/addpost.php">Create Post</a>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -370,7 +370,7 @@ try {
                                             <p><span class="muted"><?= htmlspecialchars($row['RequiredCredits']); ?> credits/hours</span></p>
                                         </div>
                                         <div class="post-details">
-                                            <a href="details.php?id=<?= $row['PostId']; ?>">See Details</a>
+                                            <a href="../post/postdetails.php?Postid=<?= $row['PostId']; ?>">See Details</a>
                                         </div>
                                     </div>
                                 </div>

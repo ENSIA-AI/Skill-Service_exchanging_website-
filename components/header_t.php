@@ -26,7 +26,7 @@ try {
 <head>
 
     <link rel="stylesheet" href="../../assets/css/header.css">
-    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <style>
         .header-avatar {
             grid-area: avatar;
@@ -64,7 +64,7 @@ try {
                     <path d="M4 19h16"></path>
                 </svg>
             </div>
-            <a href="/Skill-Service_exchanging_website-/dashboard/post/posts.php" class="header-logo">
+            <a href="../post/posts.php" class="header-logo">
                 <img src="../../assets/images/homeinp/Swaplogo.png">
             </a>
             <!--<a href="/dashboard/home.html"class="Swap">Swap</a>-->
@@ -76,7 +76,7 @@ try {
                 Credits:
                 <span class="credit-span">50</span>
             </div>
-            <a href="/Skill-Service_exchanging_website-/dashboard/notification/notifications.php"
+            <a href="../notification/notifications.php"
                 class="header-notification">
 
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -89,7 +89,7 @@ try {
                 </svg>
 
             </a>
-            <a href="/Skill-Service_exchanging_website-/dashboard/profile/profile.php"
+            <a href="../profile/profile.php"
                 class="header-profile header-avatar">
                 <img src="<?= $currentPhoto; ?>" alt="Profile Picture">
             </a>

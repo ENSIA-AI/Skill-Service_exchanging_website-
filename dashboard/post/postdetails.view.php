@@ -78,7 +78,41 @@
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <button class="btn-primary">Book This Service</button>
+            <?php 
+                // Determine button state based on user's exchange status
+                $buttonText = 'Book This Service';
+                $buttonClass = 'btn-primary';
+                $buttonDisabled = false;
+                $isLoggedIn = isset($_SESSION['user_id']);
+                $isPostOwner = ($isLoggedIn && $_SESSION['user_id'] == $postUserId);
+                
+                if (!$isLoggedIn) {
+                    // Not logged in - show book button but might need login
+                    $buttonText = 'Book This Service';
+                    $buttonClass = 'btn-primary';
+                } elseif ($isPostOwner) {
+                    // User is the post owner
+                    $buttonText = 'This is Your Service';
+                    $buttonClass = 'btn-disabled';
+                    $buttonDisabled = true;
+                } elseif (!empty($currentUserExchange)) {
+                    // User has an existing exchange
+                    $status = $currentUserExchange['Status'];
+                    $buttonState = getButtonState($status);
+                    if ($buttonState) {
+                        $buttonText = $buttonState['text'];
+                        $buttonClass = 'btn-primary ' . $buttonState['class'];
+                        $buttonDisabled = $buttonState['disabled'];
+                    }
+                }
+            ?>
+            <button 
+                class="<?php echo $buttonClass; ?>" 
+                onclick="<?php echo $buttonDisabled ? 'return false;' : 'bookService();'; ?>"
+                <?php echo $buttonDisabled ? 'disabled' : ''; ?>
+            >
+                <?php echo $buttonText; ?>
+            </button>
         </div>
 
         <!-- Service Description -->
@@ -111,8 +145,8 @@
             <div class="payment-options">
                 <h3>Payment Options</h3>
                 <div class="payment-badges">
-                    <span class="payment-badge active"><?php echo $requiredCredits ?? 0; ?> Credits</span>
-                    <span class="payment-badge"><?php echo ucfirst($paymentMethod ?? ''); ?></span>
+                    <button type="button" class="payment-badge active" data-payment-method="credits" id="creditBtn" onclick="selectPaymentMethod('credits', this)"><?php echo $requiredCredits ?? 0; ?> Credits</button>
+                    <button type="button" class="payment-badge" data-payment-method="exchange" id="exchangeBtn" onclick="selectPaymentMethod('exchange', this)">Skill Exchange</button>
                 </div>
             </div>
 
@@ -130,12 +164,6 @@
                 </div>
             </div>
             </div>
-
-            <!-- What You'll Need -->
-        <div class="requirements-section">
-            <h2>What You'll Need</h2>
-            <p><?php echo nl2br(htmlspecialchars($requirements ?? 'No specific requirements.')); ?></p>
-        </div>
     </div>
 
             <!-- Right Section: Availability Schedule -->
@@ -164,6 +192,9 @@
                     <?php endif; ?>
 
                     <form method="POST" action="" class="availability-form">
+                        <!-- Payment Method Selection -->
+                        <input type="hidden" id="selectedPaymentMethod" name="selectedPaymentMethod" value="credits">
+                        
                         <!-- Days Schedule -->
                         <div class="schedule-container">
                             <?php if (!empty($weekDays) && is_array($weekDays)): ?>
@@ -264,4 +295,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+</script>
+<script>
+    let selectedPaymentMethod = 'credits';
+    
+    function selectPaymentMethod(method, button) {
+        selectedPaymentMethod = method;
+        document.getElementById('selectedPaymentMethod').value = method;
+        
+        // Update button styling
+        document.querySelectorAll('.payment-badge').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+    }
 </script>

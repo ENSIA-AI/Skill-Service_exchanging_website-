@@ -514,7 +514,7 @@ try {
                 </button>
                 <div class="">
                     <button class="btn cancel-btn">
-                        <a name="Cancelbutton" href="profile.html">Cancel</a>
+                        <a name="Cancelbutton" href="profile.php">Cancel</a>
                     </button>
                 </div>
             </div>

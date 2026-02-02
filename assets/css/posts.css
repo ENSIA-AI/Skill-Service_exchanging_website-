@@ -10,6 +10,8 @@
   background-color: var(--clr-main);
   color: var(--clr-font);
   margin-left: 0;
+
+  margin: 0%;
   padding: 1.25rem;
   padding-top: clamp(6rem, 10vh, 8rem);
   /* space for header */
@@ -354,7 +356,10 @@ a.show-all-btn {
   min-width: 1ch;
 }
 
-
+.like-btn.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
 
 /* Profile picture */
 .profile-pic {

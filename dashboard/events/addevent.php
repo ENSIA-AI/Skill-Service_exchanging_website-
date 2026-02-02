@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
     echo json_encode([
         'success' => false,
         'message' => 'You must be logged in to create an event',
-        'redirect' => '/Skill-Service_exchanging_website-/auth/login.php'
+        'redirect' => '../../auth/login.php'
     ]);
     exit;
 }

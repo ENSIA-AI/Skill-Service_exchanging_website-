@@ -3,7 +3,7 @@
 <head>
     
     <link rel="stylesheet" href="../../assets/css/sidebar.css">
-    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
 </head>
 <body>
     <aside class="container">
@@ -13,7 +13,7 @@
                     <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 </svg>
-                <a href ="/Skill-Service_exchanging_website-/dashboard/post/posts.php"class="name">Home</a>
+                <a href="../post/posts.php" class="name">Home</a>
             </div>
 
             <div class="notification-section">
@@ -21,7 +21,7 @@
                     <path d="M10.268 21a2 2 0 0 0 3.464 0"></path>
                     <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path>
                 </svg>
-                <a href="/Skill-Service_exchanging_website-/dashboard/notification/notifications.php" class="name">Notifications</a>
+                <a href="../notification/notifications.php" class="name">Notifications</a>
             </div>
 
             <div class="events-section">
@@ -31,7 +31,7 @@
                     <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                     <path d="M3 10h18"></path>
                 </svg>
-                <a href="/Skill-Service_exchanging_website-/dashboard/events/events.php" class="name">Events</a>
+                <a href="../events/events.php" class="name">Events</a>
             </div>
 
             <div class="profile-section">
@@ -39,7 +39,7 @@
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <a href="/Skill-Service_exchanging_website-/dashboard/profile/profile.php" class="name">Profile</a>
+                <a href="../profile/profile.php" class="name">Profile</a>
             </div>
 
             <div class="logout-section">
@@ -91,7 +91,7 @@
                         e.preventDefault();
                         if (confirm('Are you sure you want to logout?')) {
                             console.log('User logged out');
-                            window.location.href = '/Skill-Service_exchanging_website-/index.html';
+                            window.location.href = '../../index.html';
                         }
                     });
                 }
@@ -112,7 +112,7 @@
                         if (link && link.href) {
                             if (this.classList.contains('logout-section')) {
                                 if (confirm('Are you sure you want to logout?')) {
-                                    window.location.href = '/login.html';
+                                    window.location.href = '../../auth/login.php';
                                 }
                             } else {
                                 window.location.href = link.href;
