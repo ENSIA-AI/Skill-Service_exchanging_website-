@@ -88,7 +88,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
             echo '<div class="post-card" data-post-id="' . htmlspecialchars($post['PostId']) . '" data-category="' . htmlspecialchars($post['CategoryName']) . '">';
             echo '<div class="post-header">';
-            echo '<img src="/Skill-Service_exchanging_website-/assets/images/Default_pfp.svg" alt="Profile Picture" class="profile-pic">';
+            echo '<img src="../../assets/images/Default_pfp.svg" alt="Profile Picture" class="profile-pic">';
             echo '<div class="profile-info">';
             echo '<h3>' . htmlspecialchars($post['UserName']) . '</h3>';
             echo '<div class="stars">';
@@ -102,7 +102,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             echo '<span>' . htmlspecialchars($post['CategoryName']) . '</span>';
             echo '</div>';
             echo '<div class="post-actions">';
-            echo '<a href="/Skill-Service_exchanging_website-/dashboard/post/postdetails.php?Postid=' . htmlspecialchars($post['PostId']) . '" class="see-details-btn">See Details</a>';
+            echo '<a href="postdetails.php?Postid=' . htmlspecialchars($post['PostId']) . '" class="see-details-btn">See Details</a>';
             echo '<button class="like-btn ' . $isLiked . '" data-likes="' . $likeCount . '">';
             echo '<svg viewBox="0 0 24 24">';
             echo '<path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>';
@@ -130,7 +130,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Posts</title>
-    <link rel="stylesheet" href="/Skill-Service_exchanging_website-/assets/css/posts.css">
+    <link rel="stylesheet" href="../../assets/css/posts.css">
     <style>
         .category-card.hidden {
             display: none;
@@ -229,13 +229,13 @@ $conn->close();
         <div class="search-container">
             <input type="text" id="search-bar" placeholder="Search for skills or services..." class="search-input">
             <button class="search-btn">
-                <img src="/Skill-Service_exchanging_website-/assets/icons/search.svg" alt="">
+                <img src="../../assets/icons/search.svg" alt="">
             </button>
         </div>
 
         <button class="create-post-btn"
-            onclick="window.location.href='/Skill-Service_exchanging_website-/dashboard/post/addpost.php'">
-            <img src="/Skill-Service_exchanging_website-/assets/icons/plus.svg" alt="" class="plus-icon">
+            onclick="window.location.href='addpost.php'">
+            <img src="../../assets/icons/plus.svg" alt="" class="plus-icon">
             <span>create new post</span>
         </button>
 
@@ -246,7 +246,7 @@ $conn->close();
 
                 <?php $cat = 'Technology & Programming'; ?>
                 <a class="category-card<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/laptop-open-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/laptop-open-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -254,7 +254,7 @@ $conn->close();
 
                 <?php $cat = 'Design & Creative'; ?>
                 <a class="category-card<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/color-wheel-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/color-wheel-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -262,7 +262,7 @@ $conn->close();
 
                 <?php $cat = 'Photography & Video'; ?>
                 <a class="category-card<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/camera-white-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/camera-white-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -270,7 +270,7 @@ $conn->close();
 
                 <?php $cat = 'Writing & Content'; ?>
                 <a class="category-card<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/author-writer-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/author-writer-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -278,7 +278,7 @@ $conn->close();
 
                 <?php $cat = 'Music & Performance'; ?>
                 <a class="category-card<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/guitar-color-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/guitar-color-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -286,7 +286,7 @@ $conn->close();
 
                 <?php $cat = 'Cooking & Culinary'; ?>
                 <a class="category-card<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/hot_cooking_icon_134855.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/hot_cooking_icon_134855.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -296,7 +296,7 @@ $conn->close();
 
                 <?php $cat = 'Health & Fitness'; ?>
                 <a class="category-card hidden more-categories<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/yoga-meditation-girl-clipart.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/yoga-meditation-girl-clipart.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -304,7 +304,7 @@ $conn->close();
 
                 <?php $cat = 'Languages'; ?>
                 <a class="category-card hidden more-categories<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/online-community-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/online-community-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -312,7 +312,7 @@ $conn->close();
 
                 <?php $cat = 'Automotive & Mechanics'; ?>
                 <a class="category-card hidden more-categories<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/car-service-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/car-service-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -320,7 +320,7 @@ $conn->close();
 
                 <?php $cat = 'Gardening & Nature'; ?>
                 <a class="category-card hidden more-categories<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/pine-trees-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/pine-trees-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -328,7 +328,7 @@ $conn->close();
 
                 <?php $cat = 'Business & Finance'; ?>
                 <a class="category-card hidden more-categories<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/briefcase-emoji-clipart-original.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/briefcase-emoji-clipart-original.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -336,7 +336,7 @@ $conn->close();
 
                 <?php $cat = 'Arts & Crafts'; ?>
                 <a class="category-card hidden more-categories<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/paint-palette-clipart.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/paint-palette-clipart.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -347,7 +347,7 @@ $conn->close();
 
                 <?php $cat = 'Home Improvement'; ?>
                 <a class="category-card hidden more-categories-2<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/service-provider-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/service-provider-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -355,7 +355,7 @@ $conn->close();
 
                 <?php $cat = 'Cleaning & Organization'; ?>
                 <a class="category-card hidden more-categories-2<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/cleaning.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/cleaning.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -363,7 +363,7 @@ $conn->close();
 
                 <?php $cat = 'Science & Education'; ?>
                 <a class="category-card hidden more-categories-2<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/interesting-facts-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/interesting-facts-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -371,7 +371,7 @@ $conn->close();
 
                 <?php $cat = 'Fashion & Beauty'; ?>
                 <a class="category-card hidden more-categories-2<?php echo ($category_filter === $cat) ? ' active' : ''; ?>" href="posts.php?category=<?php echo urlencode($cat); ?>" data-category="<?php echo htmlspecialchars($cat); ?>">
-                    <img src="/Skill-Service_exchanging_website-/assets/icons/woman-dress-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
+                    <img src="../../assets/icons/woman-dress-icon.svg" alt="<?php echo htmlspecialchars($cat); ?>">
                     <div class="category-info">
                         <h3><?php echo htmlspecialchars($cat); ?></h3>
                     </div>
@@ -402,7 +402,7 @@ $conn->close();
                         <div class="post-card" data-post-id="<?php echo htmlspecialchars($post['PostId']); ?>"
                             data-category="<?php echo htmlspecialchars($post['CategoryName']); ?>">
                             <div class="post-header">
-                                <img src="/Skill-Service_exchanging_website-/assets/images/Default_pfp.svg"
+                                <img src="../../assets/images/Default_pfp.svg"
                                     alt="Profile Picture" class="profile-pic">
                                 <div class="profile-info">
                                     <h3><?php echo htmlspecialchars($post['UserName']); ?></h3>
@@ -423,7 +423,7 @@ $conn->close();
                                 <span><?php echo htmlspecialchars($post['CategoryName']); ?></span>
                             </div>
                             <div class="post-actions">
-                                <a href="/Skill-Service_exchanging_website-/dashboard/post/postdetails.php?Postid=<?php echo htmlspecialchars($post['PostId']); ?>" class="see-details-btn">See Details</a>
+                                <a href="postdetails.php?Postid=<?php echo htmlspecialchars($post['PostId']); ?>" class="see-details-btn">See Details</a>
                                 <button class="like-btn <?php echo $isLiked; ?>" data-likes="<?php echo $likeCount; ?>">
                                     <svg viewBox="0 0 24 24">
                                         <path
@@ -451,7 +451,7 @@ $conn->close();
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="/Skill-Service_exchanging_website-/assets/js/posts.js"></script>
+    <script src="../../assets/js/posts.js"></script>
 
     <script>
         var currentOffset = 12;

@@ -60,7 +60,7 @@ function acceptExchange(exchangeId) {
     const formData = new FormData();
     formData.append('exchangeId', exchangeId);
     
-    fetch('/Skill-Service_exchanging_website-/dashboard/post/acceptExchange.php', {
+    fetch('../post/acceptExchange.php', {
         method: 'POST',
         body: formData
     })
@@ -88,7 +88,7 @@ function rejectExchange(exchangeId) {
     const formData = new FormData();
     formData.append('exchangeId', exchangeId);
     
-    fetch('/Skill-Service_exchanging_website-/dashboard/post/rejectExchange.php', {
+    fetch('../post/rejectExchange.php', {
         method: 'POST',
         body: formData
     })

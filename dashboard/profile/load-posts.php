@@ -42,7 +42,7 @@ if ($stmt->rowCount() > 0) {
                         <p><span class="muted"><?= htmlspecialchars($row['RequiredCredits']); ?> credits/hours</span></p>
                     </div>
                     <div class="post-details">
-                        <a href="details.php?id=<?= $row['PostId']; ?>">See Details</a>
+                        <a href="../post/postdetails.php?Postid=<?= $row['PostId']; ?>">See Details</a>
                     </div>
                 </div>
             </div>
