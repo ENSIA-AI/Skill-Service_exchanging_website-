@@ -86,6 +86,19 @@
                     this.style.opacity = '1';
                 });
             });
+
+            // Fetch current credit balance and update UI
+            fetch('../../dashboard/notification/getCredits.php')
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.success && typeof data.balance !== 'undefined') {
+                        const bigSpan = document.querySelector('.credit-span');
+                        const smallSpan = document.querySelector('.credit-span-small');
+                        if (bigSpan) bigSpan.textContent = String(data.balance);
+                        if (smallSpan) smallSpan.textContent = String(data.balance);
+                    }
+                })
+                .catch(() => {});
         });
     </script>
 </body>

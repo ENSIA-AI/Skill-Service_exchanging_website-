@@ -210,12 +210,15 @@ try {
     $notificationId = $conn->insert_id;
     $notifStmt->close();
     
-    // Return success response
+    // Return success response with updated balances (if credits were transferred)
     http_response_code(200);
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'message' => 'Exchange accepted successfully',
-        'notificationId' => $notificationId
+        'notificationId' => $notificationId,
+        'ownerBalance' => isset($ownBal) ? $ownBal : null,
+        'requesterBalance' => isset($reqBal) ? $reqBal : null,
+        'creditsCost' => isset($creditsCost) ? (int)$creditsCost : 0
     ]);
     
 } catch (Exception $e) {
