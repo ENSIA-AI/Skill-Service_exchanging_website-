@@ -102,7 +102,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             echo '<span>' . htmlspecialchars($post['CategoryName']) . '</span>';
             echo '</div>';
             echo '<div class="post-actions">';
-            echo '<button class="see-details-btn" onclick="window.location.href=\'postdetails.php?id=' . htmlspecialchars($post['PostId']) . '\'">See Details</button>';
+            echo '<a href="/Skill-Service_exchanging_website-/dashboard/post/postdetails.php?Postid=' . htmlspecialchars($post['PostId']) . '" class="see-details-btn">See Details</a>';
             echo '<button class="like-btn ' . $isLiked . '" data-likes="' . $likeCount . '">';
             echo '<svg viewBox="0 0 24 24">';
             echo '<path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>';
@@ -423,9 +423,7 @@ $conn->close();
                                 <span><?php echo htmlspecialchars($post['CategoryName']); ?></span>
                             </div>
                             <div class="post-actions">
-                                <button class="see-details-btn"
-                                    onclick="window.location.href='postdetails.php?id=<?php echo htmlspecialchars($post['PostId']); ?>'">See
-                                    Details</button>
+                                <a href="/Skill-Service_exchanging_website-/dashboard/post/postdetails.php?Postid=<?php echo htmlspecialchars($post['PostId']); ?>" class="see-details-btn">See Details</a>
                                 <button class="like-btn <?php echo $isLiked; ?>" data-likes="<?php echo $likeCount; ?>">
                                     <svg viewBox="0 0 24 24">
                                         <path
