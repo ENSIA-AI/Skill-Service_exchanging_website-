@@ -26,7 +26,7 @@ try {
 <head>
 
     <link rel="stylesheet" href="../../assets/css/header.css">
-    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <style>
         .header-avatar {
             grid-area: avatar;
