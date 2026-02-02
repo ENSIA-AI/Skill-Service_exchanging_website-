@@ -49,8 +49,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-document.querySelectorAll('.like-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('liked');
-  });
-});
+// Like button functionality is handled by jQuery in posts.php
+// Using $(document).on() for proper event delegation with dynamically loaded posts
