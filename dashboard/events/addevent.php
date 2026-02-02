@@ -5,14 +5,20 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if user is logged in, otherwise use test user 
-if (!isset($_SESSION['userId']) || empty($_SESSION['userId'])) {
-    // Development/Testing: Use default test user ID (1)
-    // TODO: Remove this later after implementing it
-    $organizerId = 1; // Default test user
-} else {
-    $organizerId = $_SESSION['userId'];
+// Check if user is logged in (session variable is 'user_id' from login.php)
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+    // User not logged in - redirect to login page
+    header('Content-Type: application/json');
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'message' => 'You must be logged in to create an event',
+        'redirect' => '/Skill-Service_exchanging_website-/auth/login.php'
+    ]);
+    exit;
 }
+
+$organizerId = $_SESSION['user_id'];
 
  require_once __DIR__  . "/../../DataBaseManagement/config.php";
 

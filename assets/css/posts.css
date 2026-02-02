@@ -1,4 +1,4 @@
-@import url(/assets/css/style.css);
+@import url(/Skill-Service_exchanging_website-/assets/css/style.css);
 
 * {
   box-sizing: border-box;
@@ -11,7 +11,7 @@
   color: var(--clr-font);
   margin-left: 0;
   padding: 1.25rem;
-  padding-top: clamp(5rem, 6vh, 6.5rem);
+  padding-top: clamp(6rem, 10vh, 8rem);
   /* space for header */
   min-height: calc(100vh - clamp(5.5rem, 8.5vh, 8rem));
   transition: margin-left 0.3s ease;
@@ -28,9 +28,12 @@
   /* 10px */
   padding: 0.5rem 0.75rem;
   width: 100%;
+  margin-top: 4rem;
   margin-bottom: 1.25rem;
   /* 20px */
   box-sizing: border-box;
+  z-index: 1001;
+  
 }
 
 .search-input {
@@ -169,6 +172,18 @@ h3 {
   /* 4px 15px */
 }
 
+/* Category card as link (filtering via posts.php) */
+a.category-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.category-card.active {
+  border-color: var(--clr-btn, #d4a574);
+  border-width: 2px;
+}
+
 /* Category image inside card */
 .category-card img {
   width: 6.25rem;
@@ -224,9 +239,11 @@ h3 {
 }
 
 
-.show-all-btn {
+.show-all-btn,
+a.show-all-btn {
   margin-top: auto;
-  background-color: var(--clr-btn, #d4a574); /* Added fallback color */
+  background-color: var(--clr-btn, #d4a574);
+  /* Added fallback color */
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -235,23 +252,29 @@ h3 {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-bottom:0.95rem ;
+  margin-bottom: 0.95rem;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
 }
 
 .show-all-btn:hover {
-  background-color: #ba8e3a; /* Changed to hex color */
+  background-color: #ba8e3a;
+  /* Changed to hex color */
   transform: translateY(-0.125rem);
 }
 
 .show-all-btn:active {
   transform: scale(0.98);
-  background-color: #ba8e3a; /* Changed to hex color */
+  background-color: #ba8e3a;
+  /* Changed to hex color */
 }
 
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  grid-auto-rows: 1fr; /* This makes all rows equal height */
+  grid-auto-rows: 1fr;
+  /* This makes all rows equal height */
   gap: 20px;
 }
 
@@ -278,6 +301,7 @@ h3 {
   gap: 10px;
   margin-bottom: 10px;
 }
+
 .post-actions {
   display: flex;
   justify-content: space-between;
@@ -287,10 +311,13 @@ h3 {
   padding-top: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
-/* Like button */
+
+/* Like button - fixed size so all post cards have identical button size */
 .like-btn {
   flex-shrink: 0;
-  width: 44px;
+  min-width: 72px;
+  max-width: 72px;
+  width: 72px;
   height: 44px;
   border-radius: 8px;
   border: none;
@@ -298,11 +325,14 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   cursor: pointer;
-  padding: 0;
+  padding: 0 6px;
   transition: 0.2s ease;
 }
+
 .like-btn svg {
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
   stroke: rgb(243, 102, 8);
@@ -310,8 +340,18 @@ h3 {
   stroke-width: 1.5;
   transition: 0.2s ease;
 }
+
 .like-btn.liked svg {
   fill: rgb(243, 102, 8);
+}
+
+.like-btn .like-count {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: rgb(243, 102, 8);
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 1ch;
 }
 
 
