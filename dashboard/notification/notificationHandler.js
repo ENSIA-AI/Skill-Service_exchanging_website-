@@ -60,7 +60,7 @@ function acceptExchange(exchangeId) {
     const formData = new FormData();
     formData.append('exchangeId', exchangeId);
     
-    fetch('/Skill-Service_exchanging_website-/dashboard/post/acceptExchange.php', {
+    fetch('../post/acceptExchange.php', {
         method: 'POST',
         body: formData
     })
@@ -68,8 +68,14 @@ function acceptExchange(exchangeId) {
     .then(data => {
         if (data.success) {
             alert('Exchange accepted successfully!');
-            // Reload the page to see updated notifications
-            location.reload();
+            // Update header credit display if present
+            if (typeof data.ownerBalance !== 'undefined' && data.ownerBalance !== null) {
+                const bigSpan = document.querySelector('.credit-span');
+                const smallSpan = document.querySelector('.credit-span-small');
+                if (bigSpan) bigSpan.textContent = String(data.ownerBalance);
+                if (smallSpan) smallSpan.textContent = String(data.ownerBalance);
+            }
+            // Optionally refresh notifications list without full reload
         } else {
             alert('Error: ' + (data.error || 'Failed to accept exchange'));
         }
@@ -88,7 +94,7 @@ function rejectExchange(exchangeId) {
     const formData = new FormData();
     formData.append('exchangeId', exchangeId);
     
-    fetch('/Skill-Service_exchanging_website-/dashboard/post/rejectExchange.php', {
+    fetch('../post/rejectExchange.php', {
         method: 'POST',
         body: formData
     })

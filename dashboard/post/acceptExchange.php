@@ -36,13 +36,15 @@ try {
     }
     
     $exchangeId = (int)$_POST['exchangeId'];
-    $userId = $_SESSION['userId'];
+    $userId = $_SESSION['user_id'];  // Fixed: was userId, app uses user_id
     
-    // Get exchange details with post and user info
-    $sql = "SELECT e.*, p.Title, u.FullName 
+    // Get exchange details with post and user info (owner + requester names for notifications)
+    $sql = "SELECT e.*, p.Title, 
+            owner.FullName AS OwnerName, requester.FullName AS RequesterName
             FROM Exchanges e
             JOIN Posts p ON e.PostId = p.PostId
-            JOIN Users u ON e.OfferedByUserId = u.UserId
+            JOIN Users owner ON e.OfferedByUserId = owner.UserId
+            JOIN Users requester ON e.RequestedByUserId = requester.UserId
             WHERE e.ExchangeId = ?";
     
     $stmt = $conn->prepare($sql);
@@ -94,8 +96,100 @@ try {
     
     $updateStmt->close();
     
+    // Transfer credits if CreditsCost > 0 (per swapdb triggers: CreditTransactions + UserNotifications earned/spent)
+    $creditsCost = (int)($exchange['CreditsCost'] ?? 0);
+    if ($creditsCost > 0) {
+        $requesterId = (int)$exchange['RequestedByUserId'];
+        $ownerId = (int)$exchange['OfferedByUserId'];
+        $postTitle = $exchange['Title'];
+        $ownerName = $exchange['OwnerName'] ?? 'Service provider';
+        $requesterName = $exchange['RequesterName'] ?? 'User';
+
+        // Verify requester still has sufficient balance (may have changed since booking)
+        $chkSql = "SELECT CreditBalance FROM Users WHERE UserId = ?";
+        $chkStmt = $conn->prepare($chkSql);
+        $chkStmt->bind_param('i', $requesterId);
+        $chkStmt->execute();
+        $chkRow = $chkStmt->get_result()->fetch_assoc();
+        $chkStmt->close();
+        if (!$chkRow || (int)$chkRow['CreditBalance'] < $creditsCost) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Requester has insufficient credits. Please ask them to top up.']);
+            exit;
+        }
+
+        $conn->begin_transaction();
+        try {
+            // Deduct from requester (booker)
+            $conn->query("UPDATE Users SET CreditBalance = CreditBalance - $creditsCost WHERE UserId = $requesterId");
+            if ($conn->affected_rows !== 1) {
+                throw new Exception('Failed to deduct credits from requester');
+            }
+            $reqBalSql = "SELECT CreditBalance FROM Users WHERE UserId = ?";
+            $reqBalStmt = $conn->prepare($reqBalSql);
+            $reqBalStmt->bind_param('i', $requesterId);
+            $reqBalStmt->execute();
+            $reqBal = (int)$reqBalStmt->get_result()->fetch_assoc()['CreditBalance'];
+            $reqBalStmt->close();
+
+            // Add to owner (service provider)
+            $conn->query("UPDATE Users SET CreditBalance = CreditBalance + $creditsCost WHERE UserId = $ownerId");
+            if ($conn->affected_rows !== 1) {
+                throw new Exception('Failed to add credits to owner');
+            }
+            $ownBalSql = "SELECT CreditBalance FROM Users WHERE UserId = ?";
+            $ownBalStmt = $conn->prepare($ownBalSql);
+            $ownBalStmt->bind_param('i', $ownerId);
+            $ownBalStmt->execute();
+            $ownBal = (int)$ownBalStmt->get_result()->fetch_assoc()['CreditBalance'];
+            $ownBalStmt->close();
+
+            // Insert CreditTransaction for requester (spent)
+            $ctSpent = "INSERT INTO CreditTransactions (UserId, TransactionType, Amount, BalanceAfter, RelatedEntityType, RelatedEntityId, Description) 
+                        VALUES (?, 'spent', ?, ?, 'exchange', ?, ?)";
+            $ctSpentStmt = $conn->prepare($ctSpent);
+            $spentDesc = "$postTitle with $ownerName";
+            $ctSpentStmt->bind_param('iiiis', $requesterId, $creditsCost, $reqBal, $exchangeId, $spentDesc);
+            $ctSpentStmt->execute();
+            $ctSpentStmt->close();
+
+            // Insert CreditTransaction for owner (earned)
+            $ctEarned = "INSERT INTO CreditTransactions (UserId, TransactionType, Amount, BalanceAfter, RelatedEntityType, RelatedEntityId, Description) 
+                         VALUES (?, 'earned', ?, ?, 'exchange', ?, ?)";
+            $ctEarnedStmt = $conn->prepare($ctEarned);
+            $earnedDesc = "$postTitle from $requesterName";
+            $ctEarnedStmt->bind_param('iiiis', $ownerId, $creditsCost, $ownBal, $exchangeId, $earnedDesc);
+            $ctEarnedStmt->execute();
+            $ctEarnedStmt->close();
+
+            // UserNotifications: 'spent' and 'earned' require NotificationSection = 'credits' (per trg_validate_notification_section)
+            $notifSpent = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection) 
+                          VALUES (?, 'spent', ?, ?, 'no', NOW(), 'credits')";
+            $nsStmt = $conn->prepare($notifSpent);
+            $nsTitle = "Credits Spent";
+            $nsMsg = "You spent $creditsCost credits for $postTitle with $ownerName.";
+            $nsStmt->bind_param('iss', $requesterId, $nsTitle, $nsMsg);
+            $nsStmt->execute();
+            $nsStmt->close();
+
+            $notifEarned = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection) 
+                           VALUES (?, 'earned', ?, ?, 'no', NOW(), 'credits')";
+            $neStmt = $conn->prepare($notifEarned);
+            $neTitle = "Credits Earned";
+            $neMsg = "You earned $creditsCost credits for $postTitle from $requesterName.";
+            $neStmt->bind_param('iss', $ownerId, $neTitle, $neMsg);
+            $neStmt->execute();
+            $neStmt->close();
+
+            $conn->commit();
+        } catch (Exception $ex) {
+            $conn->rollback();
+            throw $ex;
+        }
+    }
+    
     // Create and insert acceptance notification (inline - like eventdetails)
-    $message = $exchange['FullName'] . " has accepted your booking request for " . $exchange['Title'];
+    $message = $exchange['OwnerName'] . " has accepted your booking request for " . $exchange['Title'];
     $title = "Booking Accepted";
     
     $notificationSQL = "INSERT INTO UserNotifications 
@@ -116,12 +210,15 @@ try {
     $notificationId = $conn->insert_id;
     $notifStmt->close();
     
-    // Return success response
+    // Return success response with updated balances (if credits were transferred)
     http_response_code(200);
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'message' => 'Exchange accepted successfully',
-        'notificationId' => $notificationId
+        'notificationId' => $notificationId,
+        'ownerBalance' => isset($ownBal) ? $ownBal : null,
+        'requesterBalance' => isset($reqBal) ? $reqBal : null,
+        'creditsCost' => isset($creditsCost) ? (int)$creditsCost : 0
     ]);
     
 } catch (Exception $e) {

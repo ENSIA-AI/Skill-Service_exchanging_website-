@@ -240,6 +240,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
         } elseif (in_array($selectedDate, $bookedDates)) {
             $error = "This date has already been booked.";
         } else {
+            // Get payment method (form uses 'credits' or 'exchange')
+            $paymentMethod = isset($_POST['selectedPaymentMethod']) ? $_POST['selectedPaymentMethod'] : 'credits';
+            $isCreditPayment = ($paymentMethod === 'credits' || $paymentMethod === 'credit');
+            $creditsCost = $isCreditPayment ? (int)$requiredCredits : 0;
+
+            // If credit payment: validate requester has sufficient balance
+            if ($creditsCost > 0) {
+                $balSql = "SELECT CreditBalance FROM Users WHERE UserId = ?";
+                $balStmt = $conn->prepare($balSql);
+                $balStmt->bind_param('i', $userId);
+                $balStmt->execute();
+                $balResult = $balStmt->get_result()->fetch_assoc();
+                $balStmt->close();
+                if (!$balResult || (int)($balResult['CreditBalance'] ?? 0) < $creditsCost) {
+                    $error = "Insufficient credits. You need $creditsCost credits to book this service.";
+                }
+            }
+
+            if (empty($error)) {
             // Get requester's name
             $userNameSql = "SELECT FullName FROM Users WHERE UserId = ?";
             $userNameStmt = $conn->prepare($userNameSql);
@@ -249,13 +268,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
             $requesterName = $currentUserData['FullName'] ?? 'Unknown User';
             $userNameStmt->close();
             
-            // Get payment method
-            $paymentMethod = isset($_POST['selectedPaymentMethod']) ? $_POST['selectedPaymentMethod'] : 'credit';
-            
-            // Insert new exchange
-            $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate) VALUES (?, ?, ?, ?)";
+            // Insert new exchange (store CreditsCost for credit transfers when accepted)
+            $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate, CreditsCost) VALUES (?, ?, ?, ?, ?)";
             $stmtInsert = $conn->prepare($sqlInsert);
-            $stmtInsert->bind_param('iiis', $postId, $postUserId, $userId, $selectedDate);
+            $stmtInsert->bind_param('iiisi', $postId, $postUserId, $userId, $selectedDate, $creditsCost);
             
             if ($stmtInsert->execute()) {
                 try {
@@ -302,6 +318,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                 $error = "Error submitting booking: " . $stmtInsert->error;
             }
             $stmtInsert->close();
+            } // end if (empty($error))
         }
     }
 }

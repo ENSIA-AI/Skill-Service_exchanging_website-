@@ -2,8 +2,12 @@
 session_start();
 require_once '../../DataBaseManagement/config.php';
 
-// Get the current user ID (using fixed ID for now)
-$currentUserId = 1;
+// Get the current user ID
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['success' => false, 'message' => 'User not logged in']);
+    exit();
+}
+$currentUserId = $_SESSION['user_id'];
 
 // Get post ID from request
 $postId = isset($_POST['postId']) ? (int) $_POST['postId'] : 0;
@@ -18,8 +22,8 @@ try {
   $checkStmt = $conn->prepare('SELECT LikeId FROM PostLikes WHERE PostId = ? AND UserId = ?');
   $checkStmt->bind_param('ii', $postId, $currentUserId);
   $checkStmt->execute();
-  $result = $checkStmt->get_result();
-  $isCurrentlyLiked = $result->num_rows > 0;
+  $checkStmt->store_result();
+  $isCurrentlyLiked = $checkStmt->num_rows > 0;
   $checkStmt->close();
 
   $success = false;
@@ -63,13 +67,13 @@ try {
   }
   $countStmt->bind_param('i', $postId);
   $countStmt->execute();
-  $countResult = $countStmt->get_result();
-  $post = $countResult->fetch_assoc();
+  $countStmt->bind_result($updatedLikeCount);
+  $countStmt->fetch();
   $countStmt->close();
 
   echo json_encode([
     'success' => $success,
-    'likeCount' => (int) ($post['LikeCount'] ?? 0),
+    'likeCount' => (int) $updatedLikeCount,
     'action' => $action
   ]);
 

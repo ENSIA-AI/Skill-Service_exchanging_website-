@@ -10,16 +10,28 @@ function getSkills(mysqli $conn ,$categoryid){
     }
 
     $skills = [];
-    $stmt = $conn->prepare("SELECT skillid,skillname FROM skills WHERE categoryid = ? ORDER BY skillname");
+    $stmt = $conn->prepare("SELECT SkillId, SkillName FROM Skills WHERE CategoryId = ? ORDER BY SkillName");
+    
+    if (!$stmt) {
+        // Log error if needed, but return empty array to prevent JS crash
+        // For debugging, we can return the error
+        header("Content-Type: application/json");
+        echo json_encode(["status" => "error", "message" => $conn->error]);
+        exit;
+    }
+
     $stmt->bind_param("i" , $categoryid);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->bind_result($skillId, $skillName);
 
-    if($result){
-        while($row = $result->fetch_assoc()){
-            $skills[] = $row;
-        }
+    while ($stmt->fetch()) {
+        $skills[] = [
+            'skillid' => $skillId,
+            'skillname' => $skillName
+        ];
     }
+    
+    $stmt->close();
     
     header("Content-Type: application/json");
     echo json_encode($skills);

@@ -32,22 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $destination = $uploadDir . $newFileName;
 
             if (move_uploaded_file($file['tmp_name'], $destination)) {
-                $sql = "UPDATE users SET ProfilePicture = :img WHERE userid = :id";
+                $sql = "UPDATE Users SET ProfilePicture = :img WHERE UserId = :id";
                 $stmt = $connection->prepare($sql);
                 $stmt->execute([':img' => $destination, ':id' => $userId]);
             }
         }
 
         //update
-        $stmt = $connection->prepare("UPDATE users SET username = ?, fullname = ?, email = ?, professionaltitle = ?, location = ?, description = ?, phonenumber = ? WHERE userid = ?");
+        $stmt = $connection->prepare("UPDATE Users SET UserName = ?, FullName = ?, Email = ?, ProfessionalTitle = ?, Location = ?, Description = ?, PhoneNumber = ? WHERE UserId = ?");
         $stmt->execute([$_POST['username'], $_POST['fullname'], $_POST['email'], $_POST['professional_title'], $_POST['location'], $_POST['about_me'], $_POST['phone'], $userId]);
 
-        //delete
-        $delOff = $connection->prepare("DELETE FROM userskills WHERE UserId = ?");
+        //delete teaching skills
+        $delOff = $connection->prepare("DELETE FROM UserSkills WHERE UserId = ? AND SkillType = 'teach'");
         $delOff->execute([$userId]);
 
         if (isset($_POST['skill_proficiency'])) {
-            $insOff = $connection->prepare("INSERT INTO userskills (UserId, SkillId, proficiencylevel) VALUES (?, ?, ?)");
+            $insOff = $connection->prepare("INSERT INTO UserSkills (UserId, SkillId, ProficiencyLevel, SkillType) VALUES (?, ?, ?, 'teach')");
             foreach ($_POST['skill_proficiency'] as $skillId => $proficiency) {
                 $insOff->execute([$userId, $skillId, $proficiency]);
             }

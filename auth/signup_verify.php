@@ -95,12 +95,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $checkUsername = $conn->prepare("SELECT UserId FROM Users WHERE UserName = ?");
             $checkUsername->bind_param('s', $userName);
             $checkUsername->execute();
-            $attemptCount = 0;
+            $checkUsername->store_result();
             
-            while ($checkUsername->get_result()->num_rows > 0 && $attemptCount < 10) {
+            while ($checkUsername->num_rows > 0 && $attemptCount < 10) {
                 $userName = $baseUsername . rand(10000, 99999);
                 $checkUsername->bind_param('s', $userName);
                 $checkUsername->execute();
+                $checkUsername->store_result();
                 $attemptCount++;
             }
             $checkUsername->close();

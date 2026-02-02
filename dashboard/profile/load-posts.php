@@ -5,11 +5,11 @@ session_start();
 $limit = isset($_POST['newPostLimit']) ? (int)$_POST['newPostLimit'] : 3;
 $targetUserId = isset($_POST['targetUserId']) ? (int)$_POST['targetUserId'] : 0; 
 
-$sql = "SELECT posts.*, users.FullName, users.ProfilePicture, users.username
-        FROM posts 
-        JOIN users ON posts.UserId = users.UserId
-        WHERE posts.UserId = :targetId
-        ORDER BY posts.PostId DESC 
+$sql = "SELECT Posts.*, Users.FullName, Users.ProfilePicture, Users.UserName
+        FROM Posts 
+        JOIN Users ON Posts.UserId = Users.UserId
+        WHERE Posts.UserId = :targetId
+        ORDER BY Posts.PostId DESC 
         LIMIT :limit";
 
 $stmt = $connection->prepare($sql);
@@ -32,7 +32,7 @@ if ($stmt->rowCount() > 0) {
                         <span><?= htmlspecialchars($row['FullName']); ?></span>
                     </div>
                     <div class="short-post-username">
-                        <span><?= htmlspecialchars($row['username']); ?></span>
+                        <span><?= htmlspecialchars($row['UserName']); ?></span>
                     </div>
                 </div>
                 <div class="post-content">
@@ -42,7 +42,7 @@ if ($stmt->rowCount() > 0) {
                         <p><span class="muted"><?= htmlspecialchars($row['RequiredCredits']); ?> credits/hours</span></p>
                     </div>
                     <div class="post-details">
-                        <a href="details.php?id=<?= $row['PostId']; ?>">See Details</a>
+                        <a href="../post/postdetails.php?Postid=<?= $row['PostId']; ?>">See Details</a>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@ if ($stmt->rowCount() > 0) {
           </div>';
 }
 
-$countSql = "SELECT COUNT(*) FROM posts WHERE UserId = :targetId";
+$countSql = "SELECT COUNT(*) FROM Posts WHERE UserId = :targetId";
 $countStmt = $connection->prepare($countSql);
 $countStmt->execute([':targetId' => $targetUserId]);
 $totalPosts = $countStmt->fetchColumn();
