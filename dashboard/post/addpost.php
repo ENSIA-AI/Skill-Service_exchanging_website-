@@ -1,4 +1,20 @@
-<?php require_once '../../DataBaseManagement/config.php'; ?>
+<?php 
+require_once '../../DataBaseManagement/config.php';
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../auth/login.php");
+    exit();
+}
+
+$categories = [];
+$categoryResult = $conn->query("SELECT CategoryId, CategoryName FROM Category ORDER BY CategoryName");
+if ($categoryResult) {
+    while ($row = $categoryResult->fetch_assoc()) {
+        $categories[] = $row;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

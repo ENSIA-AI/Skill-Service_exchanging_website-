@@ -136,3 +136,48 @@ input[type="checkbox"]:checked {
 
 
 
+
+#skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.skill-tag {
+    background: var(--clr-org);
+    color: var(--clr-bars);
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.remove-skill {
+    background: transparent;
+    border: none;
+    color: var(--clr-bars);
+    font-size: 1.2em;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+}
+
+.remove-skill:hover {
+    color: #fff;
+}
+
+.error-message {
+    color: #ff6b6b;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+.form-inline {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}

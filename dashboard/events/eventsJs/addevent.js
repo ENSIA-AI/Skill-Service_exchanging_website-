@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        fetch(`/Skill-Service_exchanging_website-/dashboard/events/eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
+        fetch(`eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error status: ${response.status}`);
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
         
-        fetch('/Skill-Service_exchanging_website-/dashboard/events/addevent.php', {
+        fetch('addevent.php', {
             method: 'POST',
             body: formData
         })

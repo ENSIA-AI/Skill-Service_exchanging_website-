@@ -219,7 +219,7 @@
 
         <div class="header-section">
             <h1>Notifications</h1>
-            <p>You have <span id="unread-count">5</span> unread notifications</p>
+            <p>You have <span id="unread-count">0</span> unread notifications</p>
             <button class="markall">Mark All as Read</button>
         </div>
 
@@ -241,150 +241,7 @@
     </div>
 
     <script>
-        /* NOTIFICATION DATA - Examples of all 11 notification types
-         * All CreatedAt fields are in "dd/mm/yy HH:MM" format (as stored in database)
-         * The formatNotificationTime() function will convert them to "X ago" or date format
-         */
-        const notifications = [
-            // ========== EXCHANGE SECTION ==========
-            {
-                NotificationId: 1,
-                NotificationType: "booking",
-                Title: "New exchange request",
-                Message: "User Sarah requested an exchange for your JavaScript course.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 14:25", // dd/mm/yy HH:MM format (5 minutes ago from 14:30)
-                NotificationSection: "Exchange",
-                PostId: 1,
-                ExchangeId: 10,
-                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            {
-                NotificationId: 2,
-                NotificationType: "accepted",
-                Title: "Exchange request accepted",
-                Message: "Your exchange request for Graphic Design lessons has been accepted by Fatima.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 12:30", // 2 hours ago
-                NotificationSection: "Exchange",
-                ExchangeId: 11,
-                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            {
-                NotificationId: 3,
-                NotificationType: "completing",
-                Title: "Exchange session completed",
-                Message: "You successfully completed the exchange session with Ahmed. Rate your experience!",
-                IsRead: "yes",
-                CreatedAt: "14/12/25 14:30", // 1 day ago
-                NotificationSection: "Exchange",
-                ExchangeId: 12,
-                image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            {
-                NotificationId: 4,
-                NotificationType: "being_refused",
-                Title: "Exchange request declined",
-                Message: "Your exchange request for Photography lessons was declined by Ahmed.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 11:30", // 3 hours ago
-                NotificationSection: "Exchange",
-                PostId: 5,
-                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            // ========== REVIEWS SECTION ==========
-            {
-                NotificationId: 5,
-                NotificationType: "like",
-                Title: "Your post was liked",
-                Message: "Sarah liked your 'Web Development Course' post.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 14:00", // 30 minutes ago
-                NotificationSection: "Reviews",
-                PostId: 3,
-                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            {
-                NotificationId: 6,
-                NotificationType: "comment",
-                Title: "New comment on your post",
-                Message: "Ahmed commented on your 'Graphic Design Service' post: 'This looks great!'",
-                IsRead: "no",
-                CreatedAt: "15/12/25 13:30", // 1 hour ago
-                NotificationSection: "Reviews",
-                PostId: 4,
-                image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            {
-                NotificationId: 7,
-                NotificationType: "rating",
-                Title: "New rating received",
-                Message: "Fatima gave you a 5-star rating after your exchange session.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 10:30", // 4 hours ago
-                NotificationSection: "Reviews",
-                ReviewId: 8,
-                UserId: 2,
-                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            // ========== EVENTS SECTION ==========
-            {
-                NotificationId: 8,
-                NotificationType: "acceptedInEvent",
-                Title: "Event registration confirmed",
-                Message: "You've been accepted to attend 'Web Development Workshop' event.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 08:30", // 6 hours ago
-                NotificationSection: "events",
-                EventId: 1,
-                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            {
-                NotificationId: 9,
-                NotificationType: "RejectedFromEvent",
-                Title: "Event registration declined",
-                Message: "Your registration for 'UI/UX Design Masterclass' was declined. The event is full.",
-                IsRead: "yes",
-                CreatedAt: "13/12/25 14:30", // 2 days ago
-                NotificationSection: "events",
-                EventId: 2,
-                image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            // ========== CREDITS SECTION ==========
-            {
-                NotificationId: 10,
-                NotificationType: "earned",
-                Title: "Credits Earned!",
-                Message: "You earned 50 credits for completing a session with Michael.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 11:30", // 3 hours ago
-                NotificationSection: "credits",
-                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            {
-                NotificationId: 11,
-                NotificationType: "spent",
-                Title: "Credits Spent",
-                Message: "You spent 30 credits to book a Photography session.",
-                IsRead: "no",
-                CreatedAt: "15/12/25 09:30", // 5 hours ago
-                NotificationSection: "credits",
-                image: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            },
-            // Example: More than 1 week old - will show date in dd/mm/yy format
-            {
-                NotificationId: 12,
-                NotificationType: "rating",
-                Title: "Old rating received",
-                Message: "This is an example of a notification older than 1 week.",
-                IsRead: "yes",
-                CreatedAt: "01/12/25 14:30", // dd/mm/yy format from database (more than 1 week old)
-                NotificationSection: "Reviews",
-                ReviewId: 9,
-                UserId: 3,
-                image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=120&h=120&dpr=2"
-            }
-        ];
+
         /**
          * Parse MySQL/ISO or dd/mm/yy format string to Date object
          */
@@ -782,15 +639,11 @@
                     document.getElementById("unread-count").textContent = 0;
                 } else {
                     console.error('Failed to fetch notifications:', data.message);
-                    // Fallback to demo data for visualization if API fails in this environment
-                    renderAll(notifications);
+                    document.getElementById("notifications-container").innerHTML = '<div class="notification-card"><p>Failed to load notifications.</p></div>';
                 }
             } catch (error) {
                 console.error('Error fetching notifications:', error);
-                // Fallback to demo data only if we are in a dev environment
-                if (typeof notifications !== 'undefined') {
-                    renderAll(notifications);
-                }
+                document.getElementById("notifications-container").innerHTML = '<div class="notification-card"><p>Error connecting to the notification service.</p></div>';
             }
         }
 

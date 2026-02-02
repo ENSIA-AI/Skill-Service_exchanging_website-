@@ -1,6 +1,7 @@
 <?php
-
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include_once '../DataBaseManagement/config.php';
 
 // Check if user is coming from signup1
@@ -11,12 +12,30 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
+// Verify the user actually exists in the database (prevents FK errors if DB was reset)
+$checkUser = $conn->prepare("SELECT UserId FROM Users WHERE UserId = ?");
+$checkUser->bind_param("i", $userId);
+$checkUser->execute();
+$checkUser->store_result();
+if ($checkUser->num_rows === 0) {
+    $checkUser->close();
+    // User no longer exists (maybe DB was reset), clear session and restart
+    unset($_SESSION['user_id']);
+    unset($_SESSION['user_email']);
+    header("Location: signup1.php?error=session_expired");
+    exit();
+}
+$checkUser->close();
+
 // Fetch categories from database
 $categories = [];
 $categoryResult = $conn->query("SELECT CategoryId, CategoryName FROM Category ORDER BY CategoryName");
 if ($categoryResult) {
     while ($row = $categoryResult->fetch_assoc()) {
-        $categories[] = $row;
+        $categories[] = [
+            'categoryid' => $row['CategoryId'],
+            'categoryname' => $row['CategoryName']
+        ];
     }
 }
 
@@ -125,8 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                         <select id="teachCategory" name="teachCategory" class="form-input form-select">
                             <option value="">-- Select a category first --</option>
                             <?php foreach ($categories as $category): ?>
-                                <option value="<?= htmlspecialchars($category['CategoryId']) ?>">
-                                    <?= htmlspecialchars($category['CategoryName']) ?>
+                                <option value="<?= htmlspecialchars($category['categoryid']) ?>">
+                                    <?= htmlspecialchars($category['categoryname']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -160,8 +179,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                         <select id="learnCategory" name="learnCategory" class="form-input form-select">
                             <option value="">-- Select a category first --</option>
                             <?php foreach ($categories as $category): ?>
-                                <option value="<?= htmlspecialchars($category['CategoryId']) ?>">
-                                    <?= htmlspecialchars($category['CategoryName']) ?>
+                                <option value="<?= htmlspecialchars($category['categoryid']) ?>">
+                                    <?= htmlspecialchars($category['categoryname']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -214,6 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 return;
             }
             
+            console.log("Fetching skills for category ID:", selectedCategory);
             // Fetch skills from the API endpoint
             fetch(`../dashboard/events/eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
                 .then(response => {
@@ -223,6 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     return response.json();
                 })
                 .then(skills => { 
+                    console.log("Skills received for Teach section:", skills);
                     teachSkillSelect.innerHTML = '<option value="">Select skill(s)</option>';
 
                     skills.forEach(skill => {
@@ -249,6 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 return;
             }
             
+            console.log("Fetching skills for category ID:", selectedCategory);
             // Fetch skills from the API endpoint
             fetch(`../dashboard/events/eventsAPI/getSkills.php?categoryid=${selectedCategory}`)
                 .then(response => {
@@ -258,6 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     return response.json();
                 })
                 .then(skills => { 
+                    console.log("Skills received for Learn section:", skills);
                     learnSkillSelect.innerHTML = '<option value="">Select skill(s)</option>';
 
                     skills.forEach(skill => {
