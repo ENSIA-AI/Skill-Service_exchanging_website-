@@ -526,7 +526,7 @@ BEGIN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Credit payment method requires RequiredCredits > 0';
   END IF;
-  IF NEW.AvailableDate IS NOT NULL AND NEW.AvailableDate < NOW() THEN
+  IF NEW.AvailableDate <> OLD.AvailableDate AND NEW.AvailableDate IS NOT NULL AND NEW.AvailableDate < NOW() THEN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'Available date cannot be in the past (format: YYYY-MM-DD HH:MM:SS)';
   END IF;
@@ -592,17 +592,17 @@ DELIMITER ;
 -- Use FormatDateAlgerian() function when displaying dates to users
 
 -- Insert Users (10 users with Algerian phone/location formats)
-INSERT INTO Users (UserName, FullName, Email, Password, Description, ProfessionalTitle, Location, PhoneNumber, BirthDate, Gender, CreditBalance) VALUES
-('youssef_dev', 'Youssef Benhadj', 'youssef@outlook.dz', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Experienced web developer passionate about teaching and mentoring', 'Senior Developer', 'Algiers, Hydra', '+213 05 12 345 678', '1990-05-15', 'M', 250),
-('fatima_design', 'Fatima Debbache', 'fatima@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Creative art director with 8 years of experience in digital design', 'UI/UX Designer', 'Oran, Downtown', '+213 06 23 456 789', '1988-08-22', 'F', 300),
-('ahmed_photo', 'Ahmed Medjahed', 'ahmed.photo@outlook.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Professional photographer and certified trainer in visual media', 'Photographer', 'Constantine, Belkaid', '+213 07 34 567 890', '1985-03-10', 'M', 180),
-('leila_writer', 'Leila Saidane', 'leila.writer@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Content writer and expert in copywriting and SEO optimization', 'Content Writer', 'Annaba, Sidi Salem', '+213 05 45 678 901', '1992-11-30', 'F', 220),
-('karim_music', 'Karim Bouchikhi', 'karim.music@outlook.dz', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Music teacher specialized in guitar instruction for all levels', 'Music Instructor', 'Tlemcen', '+213 06 56 789 012', '1987-07-18', 'M', 190),
-('amina_chef', 'Amina Hadj-Aissa', 'amina.chef@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Professional chef trained in culinary arts and traditional cooking', 'Chef', 'Blida, Downtown', '+213 07 67 890 123', '1991-04-25', 'F', 280),
-('ali_fitness', 'Ali Bouchta', 'ali.fitness@outlook.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Certified personal trainer and nutritionist with 12 years experience', 'Fitness Trainer', 'Setif, Haouchias', '+213 05 78 901 234', '1989-09-12', 'M', 210),
-('samira_language', 'Samira Kebaili', 'samira.lang@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Polyglot fluent in 6 languages with international teaching credentials', 'Language Teacher', 'Medea', '+213 06 89 012 345', '1993-06-08', 'F', 260),
-('moussa_mechanic', 'Moussa Aidel', 'moussa.mechanic@outlook.dz', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Auto mechanic with 15 years experience in vehicle diagnostics', 'Mechanic', 'Tipaza, Chenoua', '+213 07 90 123 456', '1982-11-20', 'M', 230),
-('zainab_garden', 'Zainab Benkhalifa', 'zainab.garden@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Master horticulturist and expert in sustainable landscaping design', 'Horticulturist', 'Boumerdes, Baya', '+213 05 01 234 567', '1986-02-14', 'F', 270);
+INSERT INTO Users (UserName, FullName, Email, Password, Description, ProfessionalTitle, Location, PhoneNumber, BirthDate, Gender, Rating, RatingCount, CreditBalance) VALUES
+('youssef_dev', 'Youssef Benhadj', 'youssef@outlook.dz', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Experienced web developer passionate about teaching and mentoring', 'Senior Developer', 'Algiers, Hydra', '+213 05 12 345 678', '1990-05-15', 'M', 5.00, 8, 250),
+('fatima_design', 'Fatima Debbache', 'fatima@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Creative art director with 8 years of experience in digital design', 'UI/UX Designer', 'Oran, Downtown', '+213 06 23 456 789', '1988-08-22', 'F', 5.00, 6, 300),
+('ahmed_photo', 'Ahmed Medjahed', 'ahmed.photo@outlook.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Professional photographer and certified trainer in visual media', 'Photographer', 'Constantine, Belkaid', '+213 07 34 567 890', '1985-03-10', 'M', 4.50, 5, 180),
+('leila_writer', 'Leila Saidane', 'leila.writer@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Content writer and expert in copywriting and SEO optimization', 'Content Writer', 'Annaba, Sidi Salem', '+213 05 45 678 901', '1992-11-30', 'F', 5.00, 7, 220),
+('karim_music', 'Karim Bouchikhi', 'karim.music@outlook.dz', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Music teacher specialized in guitar instruction for all levels', 'Music Instructor', 'Tlemcen', '+213 06 56 789 012', '1987-07-18', 'M', 5.00, 9, 190),
+('amina_chef', 'Amina Hadj-Aissa', 'amina.chef@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Professional chef trained in culinary arts and traditional cooking', 'Chef', 'Blida, Downtown', '+213 07 67 890 123', '1991-04-25', 'F', 4.75, 4, 280),
+('ali_fitness', 'Ali Bouchta', 'ali.fitness@outlook.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Certified personal trainer and nutritionist with 12 years experience', 'Fitness Trainer', 'Setif, Haouchias', '+213 05 78 901 234', '1989-09-12', 'M', 4.00, 3, 210),
+('samira_language', 'Samira Kebaili', 'samira.lang@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Polyglot fluent in 6 languages with international teaching credentials', 'Language Teacher', 'Medea', '+213 06 89 012 345', '1993-06-08', 'F', 4.25, 5, 260),
+('moussa_mechanic', 'Moussa Aidel', 'moussa.mechanic@outlook.dz', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Auto mechanic with 15 years experience in vehicle diagnostics', 'Mechanic', 'Tipaza, Chenoua', '+213 07 90 123 456', '1982-11-20', 'M', 5.00, 10, 230),
+('zainab_garden', 'Zainab Benkhalifa', 'zainab.garden@gmail.com', '$2y$10$abcdefghijklmnopqrstuvwxyz123456', 'Master horticulturist and expert in sustainable landscaping design', 'Horticulturist', 'Boumerdes, Baya', '+213 05 01 234 567', '1986-02-14', 'F', 4.50, 6, 270);
 
 -- Insert 16 Categories
 INSERT INTO Category (CategoryName, CategoryDescription) VALUES
@@ -884,16 +884,16 @@ INSERT INTO Events (OrganizerId, EventTitle, EventDescription, EventLocation, Ev
 -- Insert Posts (10 service posts)
 -- ============================================
 INSERT INTO Posts (UserId, CategoryId, Title, Description, PostType, MeetLocation, AvailableDate, Duration, PaymentMethod, RequiredCredits, PostStatus, LikeCount) VALUES
-(1, 1, 'Private JavaScript Lessons', 'Private lessons in JavaScript for beginners to intermediate. Fast learning guaranteed.', 'in-person', 'Algiers, Hydra - Cultural Center', '2025-12-20 10:00:00', 120, 'credit', 50, 'active', 8),
-(2, 2, 'Custom Graphic Design', 'Creation of custom designs for your brand. Logos, brochures, and marketing materials.', 'online', NULL, '2025-12-18 14:30:00', 180, 'exchange', 0, 'active', 12),
-(3, 3, 'Professional Photo Session', 'Professional photography for portraits, products, and events. Retouching included.', 'in-person', 'Constantine, Belkaid - Photo Studio', '2025-12-25 09:00:00', 90, 'credit', 60, 'active', 15),
-(4, 4, 'Blog Content Writing', 'Writing SEO-optimized articles for your blog. Engaging and relevant content.', 'online', NULL, '2025-12-22 11:00:00', 240, 'exchange', 0, 'active', 6),
-(5, 5, 'Guitar Lessons All Levels', 'Teaching acoustic and electric guitar. Structured and progressive method.', 'in-person', 'Tlemcen - Music Studio', '2026-01-01 15:00:00', 60, 'credit', 45, 'active', 10),
-(6, 6, 'Algerian Cooking Coaching', 'Traditional Algerian cuisine training. Learning authentic recipes.', 'in-person', 'Blida, Downtown - Kitchen', '2026-01-05 18:00:00', 150, 'credit', 55, 'active', 9),
-(7, 7, 'Personal Fitness Coaching', 'Personal training adapted to your goals. With nutrition and regular follow-up.', 'in-person', 'Setif, Haouchias - ProFit Gym', '2025-12-30 06:00:00', 120, 'exchange', 0, 'active', 14),
-(8, 8, 'Intensive English Tutoring', 'Intensive English conversation and grammar course. Rapid improvement guaranteed.', 'online', NULL, '2025-12-27 13:00:00', 90, 'credit', 40, 'active', 7),
-(9, 9, 'Auto Mechanics Diagnostics', 'Complete vehicle diagnostics with detailed report. Repair quote included.', 'in-person', 'Tipaza, Chenoua - Garage', '2026-01-08 08:30:00', 60, 'exchange', 0, 'active', 5),
-(10, 10, 'Organic Gardening Consultation', 'Personalized advice for ecological garden. Design and landscape arrangement.', 'in-person', 'Boumerdes, Baya - Green Center', '2026-01-12 10:00:00', 180, 'credit', 50, 'active', 11);
+(1, 1, 'Private JavaScript Lessons', 'Private lessons in JavaScript for beginners to intermediate. Fast learning guaranteed.', 'in-person', 'Algiers, Hydra - Cultural Center', '2026-03-03 10:00:00', 120, 'credit', 50, 'active', 8),
+(2, 2, 'Custom Graphic Design', 'Creation of custom designs for your brand. Logos, brochures, and marketing materials.', 'online', NULL, '2026-03-01 14:30:00', 180, 'exchange', 0, 'active', 12),
+(3, 3, 'Professional Photo Session', 'Professional photography for portraits, products, and events. Retouching included.', 'in-person', 'Constantine, Belkaid - Photo Studio', '2026-03-06 09:00:00', 90, 'credit', 60, 'active', 15),
+(4, 4, 'Blog Content Writing', 'Writing SEO-optimized articles for your blog. Engaging and relevant content.', 'online', NULL, '2026-03-04 11:00:00', 240, 'exchange', 0, 'active', 6),
+(5, 5, 'Guitar Lessons All Levels', 'Teaching acoustic and electric guitar. Structured and progressive method.', 'in-person', 'Tlemcen - Music Studio', '2026-03-12 15:00:00', 60, 'credit', 45, 'active', 10),
+(6, 6, 'Algerian Cooking Coaching', 'Traditional Algerian cuisine training. Learning authentic recipes.', 'in-person', 'Blida, Downtown - Kitchen', '2026-03-07 18:00:00', 150, 'credit', 55, 'active', 9),
+(7, 7, 'Personal Fitness Coaching', 'Personal training adapted to your goals. With nutrition and regular follow-up.', 'in-person', 'Setif, Haouchias - ProFit Gym', '2026-03-02 06:00:00', 120, 'exchange', 0, 'active', 14),
+(8, 8, 'Intensive English Tutoring', 'Intensive English conversation and grammar course. Rapid improvement guaranteed.', 'online', NULL, '2026-02-28 13:00:00', 90, 'credit', 40, 'active', 7),
+(9, 9, 'Auto Mechanics Diagnostics', 'Complete vehicle diagnostics with detailed report. Repair quote included.', 'in-person', 'Tipaza, Chenoua - Garage', '2026-03-09 08:30:00', 60, 'exchange', 0, 'active', 5),
+(10, 10, 'Organic Gardening Consultation', 'Personalized advice for ecological garden. Design and landscape arrangement.', 'in-person', 'Boumerdes, Baya - Green Center', '2026-03-05 10:00:00', 180, 'credit', 50, 'active', 11);
 
 -- ============================================
 -- Insert EventsAttendees (Event attendance)
