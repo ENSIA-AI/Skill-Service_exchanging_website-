@@ -22,15 +22,19 @@ $bookedDates = [];
 $weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
 
 // Postid validity
-// Postid validity (check both cases for robustness)
-$rawPostId = $_GET['postid'] ?? $_GET['Postid'] ?? null;
-if (!$rawPostId || !is_numeric($rawPostId))
+if (!isset($_GET['Postid'])||!is_numeric($_GET['Postid']))
 {
-    header('Location: posts.php');
+      
+    header('Location: ./posts.php');
     exit;
 }
 
-$postId = (int)$rawPostId;
+// 2. Validate Postid format
+$postId = (int)$_GET['Postid'];
+if ($postId <= 0) {
+    header('Location: ./postdetails.php');
+    exit;
+}
 
 
 //Now we can  Connect to database
@@ -75,22 +79,16 @@ if (!$stmt) {  die('Database error: ' . $conn->error);}
 
 $stmt->bind_param('i',$postId);
 $stmt->execute();
-$stmt->bind_result($pi, $ui, $ti, $de, $pt, $ps, $ci, $du, $ml, $ad, $pm, $rc, $pr, $re, $lc, $ca);
-if (!$stmt->fetch()) {
-    $stmt->close();
-    header('Location: posts.php');
+$result=$stmt->get_result();
+
+if($result->num_rows===0)
+{
+    header('Location:/posts.php');
     exit;
 }
 
-// Map fetched data to $post array for compatibility with existing code
-$post = [
-    'PostId' => $pi, 'UserId' => $ui, 'Title' => $ti, 'Description' => $de,
-    'PostType' => $pt, 'PostStatus' => $ps, 'CategoryId' => $ci, 'Duration' => $du,
-    'MeetLocation' => $ml, 'AvailableDate' => $ad, 'PaymentMethod' => $pm,
-    'RequiredCredits' => $rc, 'Prerequisites' => $pr, 'Requirements' => $re,
-    'LikeCount' => $lc, 'CreatedAt' => $ca
-];
-$stmt->close();
+//fetch post data 
+$post=mysqli_fetch_assoc($result);
 
 // Fetch user data for the post owner
 $userSql = "SELECT FullName, ProfilePicture, Rating, RatingCount FROM Users WHERE UserId = ?";
@@ -100,15 +98,23 @@ if (!$userStmt) {
 }
 $userStmt->bind_param('i', $post['UserId']);
 $userStmt->execute();
-$userStmt->bind_result($fn, $pp, $ra, $rc);
+$userResult = $userStmt->get_result();
 
-if ($userStmt->fetch()) {
-    $user['FullName'] = $fn;
-    $user['ProfilePicture'] = $pp;
-    $user['Rating'] = $ra;
-    $user['RatingCount'] = $rc;
+// Initialize $user with default values FIRST
+$user = [
+    'FullName' => 'Unknown', 
+    'ProfilePicture' => '../../assets/images/Default_pfp.svg', 
+    'Rating' => 0, 
+    'RatingCount' => 0
+];
+
+// Then try to fetch from database
+if ($userResult && $userResult->num_rows > 0) {
+    $fetchedUser = mysqli_fetch_assoc($userResult);
+    if ($fetchedUser) {
+        $user = array_merge($user, $fetchedUser); // Merge with defaults
+    }
 }
-$userStmt->close();
 
 $postTitle        = $post['Title'];
 $postDescription  = $post['Description'];
@@ -130,12 +136,11 @@ $skillsStmt = $conn->prepare($skillsSql);
 if (!$skillsStmt) { die('Database error: ' . $conn->error); }
 $skillsStmt->bind_param('i', $postId);
 $skillsStmt->execute();
-$skillsStmt->bind_result($sn, $sid);
+$skillsResult = $skillsStmt->get_result();
 $postSkills = [];
-while ($skillsStmt->fetch()) {
-    $postSkills[] = $sn;
+while ($skill = $skillsResult->fetch_assoc()) {
+    $postSkills[] = $skill['SkillName'];
 }
-$skillsStmt->close();
 
 // Fetch skills being sought (from user preferences or post data)
 $seekingSkillsSql = "SELECT s.SkillName, s.SkillId FROM UserSkills us 
@@ -145,12 +150,11 @@ $seekingStmt = $conn->prepare($seekingSkillsSql);
 if (!$seekingStmt) { die('Database error: ' . $conn->error); }
 $seekingStmt->bind_param('i', $postUserId);
 $seekingStmt->execute();
-$seekingStmt->bind_result($ssn, $ssid);
+$seekingResult = $seekingStmt->get_result();
 $seekingSkills = [];
-while ($seekingStmt->fetch()) {
-    $seekingSkills[] = $ssn;
+while ($skill = $seekingResult->fetch_assoc()) {
+    $seekingSkills[] = $skill['SkillName'];
 }
-$seekingStmt->close();
 
 
 //array to store the available dates of the post owner
@@ -162,11 +166,11 @@ $stmtDates = $conn->prepare($Datesquery);
 if (!$stmtDates) {  die('Database error: ' . $conn->error); }
 $stmtDates->bind_param('i', $postId);
 $stmtDates->execute();
-$stmtDates->bind_result($adate);
-while ($stmtDates->fetch()) {
-    $dates[] = $adate;
+$resultDates = $stmtDates->get_result();
+
+while ($row = $resultDates->fetch_assoc()) {
+    $dates[] = $row['AvailableDate'];
 }
-$stmtDates->close();
 
 // NEW: Process dates into time ranges per day (like first image)
 $timeSlotsByDay = [];
@@ -214,22 +218,21 @@ $stmtEx = $conn->prepare($sqlExchanges);
 if (!$stmtEx) {  die('Database error: ' . $conn->error); }
 $stmtEx->bind_param('i', $postId);
 $stmtEx->execute();
-$stmtEx->bind_result($pdate, $estatus);
-while ($stmtEx->fetch()) {
-    if ($estatus === 'accepted' || $estatus === 'completed') {
-        $bookedDates[] = $pdate;
+$resultEx = $stmtEx->get_result();
+while ($ex = $resultEx->fetch_assoc()) {
+    if ($ex['Status'] === 'accepted' || $ex['Status'] === 'completed') {
+        $bookedDates[] = $ex['ProposedDate'];
     }
 }
-$stmtEx->close();
 
 // Handle POST when user selects a date 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
     // Check if user is logged in
-    if (!isset($_SESSION['user_id'])) {
+    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
         $error = "Please log in to book this service.";
     } else {
         $selectedDate = $_POST['SelectedDate'];
-        $userId = $_SESSION['user_id']; // current logged-in user
+        $userId = $_SESSION['user_id'];  // Use user_id, not userId
 
         // Validate user cannot book their own post
         if ($userId == $postUserId) {
