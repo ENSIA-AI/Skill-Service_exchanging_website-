@@ -118,7 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $checkEmail = $conn->prepare("SELECT UserId FROM Users WHERE Email = ?");
         $checkEmail->bind_param('s', $email);
         $checkEmail->execute();
-        if ($checkEmail->get_result()->num_rows > 0) {
+        $checkEmail->store_result();
+        if ($checkEmail->num_rows > 0) {
             $errors['email'] = 'Email already registered';
         } else {
             $errors['email'] = '';
@@ -254,6 +255,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Right Side - Signup Form -->
         <div class="signup-right">
             <h2>Personal Information</h2>
+            
+            <?php if (isset($_GET['error']) && $_GET['error'] === 'session_expired'): ?>
+                <div style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    Your session has expired or the database was reset. Please start the signup process again.
+                </div>
+            <?php endif; ?>
             
             <form action="signup1.php" method="post" class="signup-form" id="signupForm">
                 <div class="form-group">

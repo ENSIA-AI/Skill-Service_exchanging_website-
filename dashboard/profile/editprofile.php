@@ -7,7 +7,7 @@ $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] :
             (isset($_GET['id']) ? (int)$_GET['id'] : 0);
 
 try {
-    $stmt = $connection->prepare("SELECT * FROM users WHERE UserId = :id");
+    $stmt = $connection->prepare("SELECT * FROM Users WHERE UserId = :id");
     $stmt->execute([':id' => $userId]);
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -47,9 +47,9 @@ try {
               FROM user_seeking_skills uss
               JOIN skills s ON uss.SkillId = s.SkillId
               WHERE uss.UserId = :id";
-    $stmt = $connection->prepare($query);
-    $stmt->execute(['id' => $userId]);
-    $seekingSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     $stmt = $connection->prepare($query);
+     $stmt->execute(['id' => $userId]);
+     $seekingSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -339,9 +339,9 @@ try {
                 <div class="cards-section">
                     <?php
                     $stmt = $connection->prepare("SELECT us.*, s.SkillName 
-                                  FROM userskills us 
-                                  JOIN skills s ON us.SkillId = s.SkillId 
-                                  WHERE us.UserId = :userId");
+                                  FROM UserSkills us 
+                                  JOIN Skills s ON us.SkillId = s.SkillId 
+                                  WHERE us.UserId = :userId AND us.SkillType = 'teach'");
                     $stmt->execute(['userId' => $userId]);
                     $userSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -385,7 +385,7 @@ try {
                         <select class="select dropdown" id="offering-category">
                             <option value="">Choose a Category</option>
                             <?php
-                            $stmt = $connection->prepare("SELECT * FROM category");
+                            $stmt = $connection->prepare("SELECT * FROM Category");
                             $stmt->execute();
                             $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             $CategoryIDv = $categories['CategoryId'];
@@ -401,7 +401,7 @@ try {
                         <select class="select dropdown" id="offering-skills" disabled>
                             <option value="">Choose a Skill</option>
                             <?php
-                            $stmt = $connection->prepare("SELECT SkillId, SkillName, CategoryId FROM skills");
+                            $stmt = $connection->prepare("SELECT SkillId, SkillName, CategoryId FROM Skills");
                             $stmt->execute();
                             $allSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -476,7 +476,7 @@ try {
                         <select class="select dropdown" id="seeking-category">
                             <option value="">Choose a Category</option>
                             <?php
-                            $stmt = $connection->prepare("SELECT * FROM category");
+                            $stmt = $connection->prepare("SELECT * FROM Category");
                             $stmt->execute();
                             $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             $CategoryIDv = $categories['CategoryId'];

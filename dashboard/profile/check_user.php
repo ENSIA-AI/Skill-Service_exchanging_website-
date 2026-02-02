@@ -5,7 +5,7 @@ $username = $_GET['username'];
 
 
 if (!empty($username)) {
-    $stmt = $connection->prepare("SELECT COUNT(*) FROM users WHERE UserName = ?");
+    $stmt = $connection->prepare("SELECT COUNT(*) FROM Users WHERE UserName = ?");
     $stmt->execute([$username]);
     $count = $stmt->fetchColumn();
 

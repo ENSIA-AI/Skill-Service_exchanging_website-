@@ -1,16 +1,16 @@
 <?php
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require_once '../../DataBaseManagement/config.php';
 
 // Check if user is logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location: ../../auth/login.php");
     exit();
 }
 
-// For testing purposes, using a fixed user ID
-// Replace this with actual session user ID when authentication is implemented
-$currentUserId = 1; // $_SESSION['user_id'];
+$currentUserId = $_SESSION['user_id'];
 
 $posts = [];
 $search_query = '';
@@ -42,8 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
         $stmt->bind_param('isss', $currentUserId, $search_param, $search_param, $search_param);
     }
     $stmt->execute();
-    $result = $stmt->get_result();
-    $posts = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $userLiked);
+    while ($stmt->fetch()) {
+        $posts[] = [
+            'PostId' => $postId, 'Title' => $title, 'Description' => $description, 
+            'LikeCount' => $likeCount, 'CategoryName' => $categoryName, 
+            'UserName' => $userName, 'Rating' => $rating, 'UserLiked' => $userLiked
+        ];
+    }
     $stmt->close();
 } elseif ($category_filter !== '') {
     // Filter by category only (server-side)
@@ -56,8 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
         ORDER BY p.CreatedAt DESC');
     $stmt->bind_param('is', $currentUserId, $category_filter);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $posts = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $userLiked);
+    while ($stmt->fetch()) {
+        $posts[] = [
+            'PostId' => $postId, 'Title' => $title, 'Description' => $description, 
+            'LikeCount' => $likeCount, 'CategoryName' => $categoryName, 
+            'UserName' => $userName, 'Rating' => $rating, 'UserLiked' => $userLiked
+        ];
+    }
     $stmt->close();
 } else {
     $stmt = $conn->prepare('SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating,
@@ -69,8 +81,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
         ORDER BY p.CreatedAt DESC LIMIT ? OFFSET ?');
     $stmt->bind_param('iii', $currentUserId, $limit, $offset);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $posts = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $userLiked);
+    while ($stmt->fetch()) {
+        $posts[] = [
+            'PostId' => $postId, 'Title' => $title, 'Description' => $description, 
+            'LikeCount' => $likeCount, 'CategoryName' => $categoryName, 
+            'UserName' => $userName, 'Rating' => $rating, 'UserLiked' => $userLiked
+        ];
+    }
     $stmt->close();
 }
 
