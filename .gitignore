@@ -6,4 +6,3 @@ php.Documentation.md
 
 # Keep .env.example (template for teammates)
 !.env.examplevendor/
-utils/
