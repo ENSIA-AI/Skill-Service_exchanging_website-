@@ -78,7 +78,41 @@
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <button class="btn-primary">Book This Service</button>
+            <?php 
+                // Determine button state based on user's exchange status
+                $buttonText = 'Book This Service';
+                $buttonClass = 'btn-primary';
+                $buttonDisabled = false;
+                $isLoggedIn = isset($_SESSION['user_id']);
+                $isPostOwner = ($isLoggedIn && $_SESSION['user_id'] == $postUserId);
+                
+                if (!$isLoggedIn) {
+                    // Not logged in - show book button but might need login
+                    $buttonText = 'Book This Service';
+                    $buttonClass = 'btn-primary';
+                } elseif ($isPostOwner) {
+                    // User is the post owner
+                    $buttonText = 'This is Your Service';
+                    $buttonClass = 'btn-disabled';
+                    $buttonDisabled = true;
+                } elseif (!empty($currentUserExchange)) {
+                    // User has an existing exchange
+                    $status = $currentUserExchange['Status'];
+                    $buttonState = getButtonState($status);
+                    if ($buttonState) {
+                        $buttonText = $buttonState['text'];
+                        $buttonClass = 'btn-primary ' . $buttonState['class'];
+                        $buttonDisabled = $buttonState['disabled'];
+                    }
+                }
+            ?>
+            <button 
+                class="<?php echo $buttonClass; ?>" 
+                onclick="<?php echo $buttonDisabled ? 'return false;' : 'bookService();'; ?>"
+                <?php echo $buttonDisabled ? 'disabled' : ''; ?>
+            >
+                <?php echo $buttonText; ?>
+            </button>
         </div>
 
         <!-- Service Description -->

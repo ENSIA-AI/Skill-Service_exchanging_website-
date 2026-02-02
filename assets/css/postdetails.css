@@ -275,9 +275,55 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #ff9f5a;
+    background-color:var(--clr-btn);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(249, 177, 122, 0.3);
+}
+
+/* Button State Styles */
+.btn-primary.btn-pending {
+    background-color: var(--clr-btn);
+    color: #333;
+}
+
+.btn-primary.btn-pending:hover {
+    background-color: var(--clr-btn);
+}
+
+.btn-primary.btn-accepted {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-primary.btn-accepted:hover {
+    background-color: #218838;
+}
+
+.btn-primary.btn-refused {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-primary.btn-refused:hover {
+    background-color: #c82333;
+}
+
+.btn-disabled {
+    background-color: #cccccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.btn-disabled:hover {
+    background-color: #cccccc;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-primary:disabled,
+.btn-disabled:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .btn-secondary {

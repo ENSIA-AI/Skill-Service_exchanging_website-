@@ -42,6 +42,36 @@ require_once '../../DataBaseManagement/config.php';
 
 $error = '';
 $success = '';
+$currentUserExchange = null;
+
+/**
+ * Get user's exchange for a specific post
+ */
+function getUserExchangesForPost($postId, $userId) {
+    global $conn;
+    $sql = "SELECT ExchangeId, Status FROM Exchanges 
+            WHERE PostId = ? AND RequestedByUserId = ?
+            ORDER BY CreatedAt DESC LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ii', $postId, $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->num_rows > 0 ? $result->fetch_assoc() : null;
+    $stmt->close();
+    return $row;
+}
+
+/**
+ * Get button state based on exchange status
+ */
+function getButtonState($status) {
+    $states = [
+        'pending' => ['text' => 'Request Sent', 'class' => 'btn-pending', 'disabled' => true],
+        'accepted' => ['text' => 'Request Accepted', 'class' => 'btn-accepted', 'disabled' => true],
+        'rejected' => ['text' => 'Request Refused', 'class' => 'btn-refused', 'disabled' => true]
+    ];
+    return isset($states[$status]) ? $states[$status] : null;
+}
 
 $sql = "SELECT * FROM Posts WHERE PostId = ? ";
 $stmt=$conn->prepare($sql);
@@ -198,11 +228,11 @@ while ($ex = $resultEx->fetch_assoc()) {
 // Handle POST when user selects a date 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
     // Check if user is logged in
-    if (!isset($_SESSION['userId'])) {
+    if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
         $error = "Please log in to book this service.";
     } else {
         $selectedDate = $_POST['SelectedDate'];
-        $userId = $_SESSION['userId']; // current logged-in user
+        $userId = $_SESSION['user_id'];  // Use user_id, not userId
 
         // Validate user cannot book their own post
         if ($userId == $postUserId) {
@@ -210,67 +240,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
         } elseif (in_array($selectedDate, $bookedDates)) {
             $error = "This date has already been booked.";
         } else {
-            // Get current user's name for notification
+            // Get requester's name
             $userNameSql = "SELECT FullName FROM Users WHERE UserId = ?";
             $userNameStmt = $conn->prepare($userNameSql);
-            if (!$userNameStmt) {
-                $error = "Database error: " . $conn->error;
-            } else {
-                $userNameStmt->bind_param('i', $userId);
-                $userNameStmt->execute();
-                $userNameResult = $userNameStmt->get_result();
-                $currentUserData = $userNameResult->fetch_assoc();
-                $currentUserName = $currentUserData['FullName'] ?? 'Unknown User';
-                $userNameStmt->close();
-                
-                // Get payment method from POST
-                $paymentMethod = isset($_POST['selectedPaymentMethod']) ? $_POST['selectedPaymentMethod'] : 'credits';
-                
-                // Create notification message based on payment method
-                if ($paymentMethod === 'exchange') {
-                    $notificationMessage = "$currentUserName is requesting to exchange skills for your $postTitle course";
-                    $notificationType = 'booking';
-                    $notificationSection = 'Exchange';
-                } else {
-                    // Credits payment
-                    $notificationMessage = "$currentUserName is requesting to pay $requiredCredits for your $postTitle course";
-                    $notificationType = 'booking';
-                    $notificationSection = 'Exchange';
-                }
-                
-                // Insert new exchange
-                $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate) VALUES (?, ?, ?, ?)";
-                $stmtInsert = $conn->prepare($sqlInsert);
-                if (!$stmtInsert) {
-                    $error = "Database error: " . $conn->error;
-                } else {
-                    $stmtInsert->bind_param('iiis', $postId, $postUserId, $userId, $selectedDate);
-                    if ($stmtInsert->execute()) {
-                        // Insert notification to post owner
-                        $notificationTitle = $paymentMethod === 'exchange' ? 'Skill Exchange Request' : 'Booking Request';
-                        $sqlNotification = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?)";
-                        $stmtNotification = $conn->prepare($sqlNotification);
-                        
-                        if (!$stmtNotification) {
-                            $error = "Notification error: " . $conn->error;
-                        } else {
-                            $stmtNotification->bind_param('issss', $postUserId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
-                            if ($stmtNotification->execute()) {
-                                $success = "Your booking request has been submitted!";
-                                $bookedDates[] = $selectedDate;
-                            } else {
-                                $error = "Error sending notification: " . $stmtNotification->error;
-                            }
-                            $stmtNotification->close();
-                        }
+            $userNameStmt->bind_param('i', $userId);
+            $userNameStmt->execute();
+            $currentUserData = $userNameStmt->get_result()->fetch_assoc();
+            $requesterName = $currentUserData['FullName'] ?? 'Unknown User';
+            $userNameStmt->close();
+            
+            // Get payment method
+            $paymentMethod = isset($_POST['selectedPaymentMethod']) ? $_POST['selectedPaymentMethod'] : 'credit';
+            
+            // Insert new exchange
+            $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate) VALUES (?, ?, ?, ?)";
+            $stmtInsert = $conn->prepare($sqlInsert);
+            $stmtInsert->bind_param('iiis', $postId, $postUserId, $userId, $selectedDate);
+            
+            if ($stmtInsert->execute()) {
+                try {
+                    // Create notification message (exact approach as eventdetails)
+                    if ($paymentMethod === 'exchange') {
+                        $message = "$requesterName has requested to exchange skills for your $postTitle on " . date('M d, Y', strtotime($selectedDate));
+                        $title = "Skill Exchange Request";
                     } else {
-                        $error = "Error submitting booking: " . $stmtInsert->error;
+                        $message = "$requesterName has requested to pay $requiredCredits credits for your $postTitle on " . date('M d, Y', strtotime($selectedDate));
+                        $title = "Booking Request";
                     }
-                    $stmtInsert->close();
+                    
+                    // Insert notification (exact pattern as teammate's eventdetails)
+                    $insertQuery = "
+                        INSERT INTO UserNotifications 
+                        (SenderId, RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                        VALUES (?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')
+                    ";
+                    
+                    $insertStmt = $conn->prepare($insertQuery);
+                    if (!$insertStmt) {
+                        throw new Exception("Prepare failed: " . $conn->error);
+                    }
+                    
+                    $insertStmt->bind_param('iiss', $userId, $postUserId, $title, $message);
+                    
+                    if ($insertStmt->execute()) {
+                        $notificationId = $conn->insert_id;
+                        $insertStmt->close();
+                        
+                        $success = "Your booking request has been submitted!";
+                        $bookedDates[] = $selectedDate;
+                        $currentUserExchange = getUserExchangesForPost($postId, $userId);
+                    } else {
+                        throw new Exception("Failed to create notification: " . $insertStmt->error);
+                    }
+                } catch (Exception $e) {
+                    $error = "Server error: " . $e->getMessage();
+                    $insertStmt->close();
                 }
+            } else {
+                $error = "Error submitting booking: " . $stmtInsert->error;
             }
+            $stmtInsert->close();
         }
     }
+}
+
+// Check if current user has an existing exchange for this post
+if (isset($_SESSION['user_id'])) {
+    $currentUserExchange = getUserExchangesForPost($postId, $_SESSION['user_id']);
 }
 
 
