@@ -1,54 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Select elements
-  const categoryCards = document.querySelectorAll(".category-card");
-  const posts = document.querySelectorAll(".post-card");
-  const title = document.querySelector("#posts-title");
-
-  // Filter posts when clicking a category
-  categoryCards.forEach(card => {
-    card.addEventListener("click", () => {
-      const selectedCategory = card.dataset.category;
-
-      // Update title
-      if (title) {
-        title.textContent = `${selectedCategory}`;
-      }
-
-      // Remove border from all cards
-      categoryCards.forEach(c => {
-        c.style.border = "2px solid transparent"; 
-      });
-
-      // Add border to selected card
-      card.style.border = "2px solid var(--clr-botn)"; 
-
-      // Show only the posts of that category
-      posts.forEach(post => {
-        if(post.dataset.category === selectedCategory){
-          post.style.display = "flex";
-        }
-        else{
-          post.style.display = "none";
-        }
-      });
-    });
-  });
-
-  const showAllBtn = document.querySelector(".show-all-btn");
-
-  if (showAllBtn && title) {
-    showAllBtn.addEventListener("click", () => {
-      title.textContent = "Browse All Posts";
-
-      categoryCards.forEach(c => {
-        c.style.border = "2px solid transparent";
-      });
-
-      posts.forEach(post => {
-        post.style.display = "flex";
-      });
-    });
-  }
+  // Category filtering is done only in posts.php (links to posts.php?category=...)
 
   const searchInput = document.querySelector(".search-input");
   const allPosts = document.querySelectorAll(".post-card");
