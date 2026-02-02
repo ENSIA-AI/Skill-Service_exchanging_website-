@@ -271,8 +271,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                     // Insert notification (exact pattern as teammate's eventdetails)
                     $insertQuery = "
                         INSERT INTO UserNotifications 
-                        (SenderId, RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
-                        VALUES (?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')
+                        (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                        VALUES (?, 'booking', ?, ?, 'no', NOW(), 'Exchange')
                     ";
                     
                     $insertStmt = $conn->prepare($insertQuery);
@@ -280,7 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                         throw new Exception("Prepare failed: " . $conn->error);
                     }
                     
-                    $insertStmt->bind_param('iiss', $userId, $postUserId, $title, $message);
+                    $insertStmt->bind_param('iss', $postUserId, $title, $message);
                     
                     if ($insertStmt->execute()) {
                         $notificationId = $conn->insert_id;
@@ -294,7 +294,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                     }
                 } catch (Exception $e) {
                     $error = "Server error: " . $e->getMessage();
-                    $insertStmt->close();
+                    if (isset($insertStmt) && $insertStmt) {
+                        $insertStmt->close();
+                    }
                 }
             } else {
                 $error = "Error submitting booking: " . $stmtInsert->error;

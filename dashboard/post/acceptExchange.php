@@ -9,7 +9,6 @@
 
 session_start();
 require_once '../../DataBaseManagement/config.php';
-require_once './postnotification.php';
 
 // Set response header
 header('Content-Type: application/json');
@@ -23,7 +22,7 @@ try {
     }
     
     // Check if user is logged in
-    if (!isset($_SESSION['userId'])) {
+    if (!isset($_SESSION['user_id'])) {
         http_response_code(401);
         echo json_encode(['success' => false, 'error' => 'Not logged in']);
         exit;
@@ -95,26 +94,34 @@ try {
     
     $updateStmt->close();
     
-    // Send acceptance notification to the requester
-    $notifResult = sendAcceptanceNotification(
-        $exchange['OfferedByUserId'],
-        $exchange['RequestedByUserId'],
-        $exchangeId,
-        $exchange['Title'],
-        $exchange['FullName']
-    );
+    // Create and insert acceptance notification (inline - like eventdetails)
+    $message = $exchange['FullName'] . " has accepted your booking request for " . $exchange['Title'];
+    $title = "Booking Accepted";
     
-    if (!$notifResult['success']) {
-        // Still return success for exchange update, but log the notification error
-        error_log('Notification error: ' . ($notifResult['error'] ?? 'Unknown'));
+    $notificationSQL = "INSERT INTO UserNotifications 
+                       (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                       VALUES (?, 'accepted', ?, ?, 'no', NOW(), 'Exchange')";
+    
+    $notifStmt = $conn->prepare($notificationSQL);
+    if (!$notifStmt) {
+        throw new Exception('Notification prepare failed: ' . $conn->error);
     }
+    
+    $notifStmt->bind_param('iss', $exchange['RequestedByUserId'], $title, $message);
+    
+    if (!$notifStmt->execute()) {
+        throw new Exception('Failed to create notification: ' . $notifStmt->error);
+    }
+    
+    $notificationId = $conn->insert_id;
+    $notifStmt->close();
     
     // Return success response
     http_response_code(200);
     echo json_encode([
         'success' => true, 
         'message' => 'Exchange accepted successfully',
-        'notificationSent' => $notifResult['success']
+        'notificationId' => $notificationId
     ]);
     
 } catch (Exception $e) {
