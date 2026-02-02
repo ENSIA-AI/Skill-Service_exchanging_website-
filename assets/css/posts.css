@@ -358,7 +358,10 @@ a.show-all-btn {
   min-width: 1ch;
 }
 
-
+.like-btn.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
 
 /* Profile picture */
 .profile-pic {
