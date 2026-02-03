@@ -45,7 +45,7 @@ try {
 try {
     $query = "SELECT uss.SkillId, s.SkillName 
               FROM user_seeking_skills uss
-              JOIN skills s ON uss.SkillId = s.SkillId
+              JOIN Skills s ON uss.SkillId = s.SkillId
               WHERE uss.UserId = :id";
      $stmt = $connection->prepare($query);
      $stmt->execute(['id' => $userId]);

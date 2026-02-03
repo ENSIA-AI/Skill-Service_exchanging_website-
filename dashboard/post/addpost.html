@@ -32,20 +32,13 @@
                 </div>
             </section>
 
-            <!-- Exchange Details -->
+            <!-- Targeted Skills -->
             <section class="form-section">
-                <h3>Exchange Details</h3>
-                <div class="form-group">
-                    <label for="exchange">What do you want in exchange? *</label>
-                    <input type="text" id="exchange" name="exchange"
-                        placeholder="e.g., Spanish lessons, graphic design, etc." required minlength="3"
-                        maxlength="100">
-                    <span class="error-message" id="exchange-error"></span>
-                </div>
+                <h3>Targeted Skills (What you want in return)</h3>
                 <div class="form-inline">
                     <div class="form-group">
-                        <label for="category">Category *</label>
-                        <select id="category" name="category" required>
+                        <label for="target-category">Category *</label>
+                        <select id="target-category" name="target-category">
                             <option value="">Select a category</option>
                             <?php foreach ($categories as $cat): ?>
                             <option value="<?= $cat['CategoryId'] ?>">
@@ -53,27 +46,36 @@
                             </option>
                             <?php endforeach; ?>
                         </select>
-                        <span class="error-message" id="category-error"></span>
                     </div>
-                    <div class="form-group">
-                        <label for="service-type">Service Type *</label>
-                        <select id="service-type" name="service-type" required>
-                            <option value="">Select service type</option>
-                            <option>Online</option>
-                            <option>In-person</option>
+                    <div class="form-group" style="margin-left: 10px;">
+                        <label for="target-skill-select">Skill *</label>
+                        <select id="target-skill-select" name="target-skill-select" disabled>
+                            <option value="">Select a category first</option>
                         </select>
-                        <span class="error-message" id="service-type-error"></span>
                     </div>
+                    <button class="btn add-target-skill" type="button" style="margin-top: 25px;">+ Add skill</button>
+                </div>
+                <div id="target-skills-container" class="skills-list"></div>
+                <span class="error-message" id="target-skills-error"></span>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="service-type">Service Type *</label>
+                    <select id="service-type" name="service-type" required>
+                        <option value="">Select service type</option>
+                        <option value="online">Online</option>
+                        <option value="in-person">In-person</option>
+                    </select>
+                    <span class="error-message" id="service-type-error"></span>
                 </div>
             </section>
 
-            <!-- Skills/Tags -->
+            <!-- Offered Skills -->
             <section class="form-section">
-                <h3>Skills/Tags (Max 5)</h3>
+                <h3>Offered Skills (Max 5)</h3>
                 <div class="form-inline">
                     <div class="form-group">
                         <label for="skill-category">Category</label>
-                        <select id="skill-category" name="skill-category">
+                        <select id="skill-category" name="category" required>
                             <option value="">Select a category</option>
                             <?php foreach ($categories as $cat): ?>
                             <option value="<?= $cat['CategoryId'] ?>">
@@ -136,6 +138,18 @@
                         <span class="error-message" id="location-error"></span>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label>Available Times *</label>
+                    <div class="form-inline">
+                        <input type="datetime-local" id="availability-input" class="form-control">
+                        <button type="button" class="btn add-availability" style="margin-left: 10px;">+ Add
+                            Slot</button>
+                    </div>
+                    <div id="availability-list" class="availability-tags" style="margin-top: 10px;"></div>
+                    <span class="error-message" id="availability-error"></span>
+                </div>
+
                 <div class="form-group">
                     <strong>Service Delivery Options *</strong>
                     <div class="delivery-options">

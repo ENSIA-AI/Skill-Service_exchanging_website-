@@ -1,64 +1,73 @@
-// Form validation script
+// Form validation and dynamic functionality for Add Post
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('post-form');
     const description = document.getElementById('description');
     const charCount = document.getElementById('char-count');
-    const addSkillBtn = document.querySelector('.add-skill');
-    const skillsContainer = document.getElementById('skills-container');
-    const skillCategory = document.getElementById('skill-category');
-    const skillSelect = document.getElementById('skill-select');
 
-    let skillCount = 0;
+    // Offered Skills
+    const addOfferedSkillBtn = document.querySelector('.add-skill');
+    const offeredSkillsContainer = document.getElementById('skills-container');
+    const offeredCategory = document.getElementById('skill-category');
+    const offeredSkillSelect = document.getElementById('skill-select');
+
+    // Targeted Skills
+    const addTargetSkillBtn = document.querySelector('.add-target-skill');
+    const targetSkillsContainer = document.getElementById('target-skills-container');
+    const targetCategory = document.getElementById('target-category');
+    const targetSkillSelect = document.getElementById('target-skill-select');
+
+    // Availability
+    const availabilityInput = document.getElementById('availability-input');
+    const addAvailabilityBtn = document.querySelector('.add-availability');
+    const availabilityList = document.getElementById('availability-list');
+
+    let offeredSkillCount = 0;
+    let targetSkillCount = 0;
     const maxSkills = 5;
 
     // Add character count for description
     description.addEventListener('input', function () {
         const currentLength = this.value.length;
         charCount.textContent = `${currentLength}/500 characters`;
-
-        if (currentLength > 500) {
-            charCount.style.color = 'red';
-        } else {
-            charCount.style.color = '';
-        }
+        charCount.style.color = currentLength > 500 ? 'red' : '';
     });
 
-    // Fetch skills when category changes
-    skillCategory.addEventListener('change', function () {
-        const categoryId = this.value;
-        skillSelect.disabled = true;
-        skillSelect.innerHTML = '<option value="">Loading...</option>';
+    // Reusable function to fetch skills
+    function setupSkillFetch(categoryElement, skillElement) {
+        categoryElement.addEventListener('change', function () {
+            const categoryId = this.value;
+            skillElement.disabled = true;
+            skillElement.innerHTML = '<option value="">Loading...</option>';
 
-        if (!categoryId) {
-            skillSelect.innerHTML = '<option value="">Select a category first</option>';
-            return;
-        }
+            if (!categoryId) {
+                skillElement.innerHTML = '<option value="">Select a category first</option>';
+                return;
+            }
 
-        fetch(`../events/eventsAPI/getSkills.php?categoryid=${categoryId}`)
-            .then(response => response.json())
-            .then(skills => {
-                skillSelect.innerHTML = '<option value="">Select a skill</option>';
-                skills.forEach(skill => {
-                    const option = document.createElement('option');
-                    option.value = skill.skillid;
-                    option.textContent = skill.skillname;
-                    skillSelect.appendChild(option);
+            fetch(`../events/eventsAPI/getSkills.php?categoryid=${categoryId}`)
+                .then(response => response.json())
+                .then(skills => {
+                    skillElement.innerHTML = '<option value="">Select a skill</option>';
+                    skills.forEach(skill => {
+                        const option = document.createElement('option');
+                        option.value = skill.skillid;
+                        option.textContent = skill.skillname;
+                        skillElement.appendChild(option);
+                    });
+                    skillElement.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching skills:', error);
+                    skillElement.innerHTML = '<option value="">Error loading skills</option>';
                 });
-                skillSelect.disabled = false;
-            })
-            .catch(error => {
-                console.error('Error fetching skills:', error);
-                skillSelect.innerHTML = '<option value="">Error loading skills</option>';
-            });
-    });
+        });
+    }
 
-    // Add skill functionality
-    addSkillBtn.addEventListener('click', function () {
-        if (skillCount >= maxSkills) {
-            alert('You can only add up to 5 skills');
-            return;
-        }
+    setupSkillFetch(offeredCategory, offeredSkillSelect);
+    setupSkillFetch(targetCategory, targetSkillSelect);
 
+    // Reusable function to add skill tags
+    function addSkillTag(skillSelect, container, inputName, counterRef, isTarget = false) {
         const skillId = skillSelect.value;
         const skillName = skillSelect.options[skillSelect.selectedIndex].text;
 
@@ -67,9 +76,17 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Avoid duplicate skills
-        const existingSkills = skillsContainer.querySelectorAll('input[name="skills[]"]');
-        for (let input of existingSkills) {
+        if (isTarget && targetSkillCount >= maxSkills) {
+            alert(`You can only add up to ${maxSkills} targeted skills`);
+            return;
+        } else if (!isTarget && offeredSkillCount >= maxSkills) {
+            alert(`You can only add up to ${maxSkills} offered skills`);
+            return;
+        }
+
+        // Avoid duplicates in the same container
+        const existing = container.querySelectorAll(`input[name="${inputName}"]`);
+        for (let input of existing) {
             if (input.value === skillId) {
                 alert('This skill has already been added');
                 return;
@@ -80,34 +97,56 @@ document.addEventListener('DOMContentLoaded', function () {
         skillDiv.className = 'skill-tag';
         skillDiv.innerHTML = `
             <span>${skillName}</span>
-            <input type="hidden" name="skills[]" value="${skillId}">
+            <input type="hidden" name="${inputName}" value="${skillId}">
             <button type="button" class="remove-skill">×</button>
         `;
 
-        skillsContainer.appendChild(skillDiv);
-        skillCount++;
+        container.appendChild(skillDiv);
+        if (isTarget) targetSkillCount++; else offeredSkillCount++;
 
-        // Add event listener to remove button
         skillDiv.querySelector('.remove-skill').addEventListener('click', function () {
-            skillsContainer.removeChild(skillDiv);
-            skillCount--;
+            container.removeChild(skillDiv);
+            if (isTarget) targetSkillCount--; else offeredSkillCount--;
+        });
+    }
+
+    addOfferedSkillBtn.addEventListener('click', () => addSkillTag(offeredSkillSelect, offeredSkillsContainer, 'skills[]', offeredSkillCount, false));
+    addTargetSkillBtn.addEventListener('click', () => addSkillTag(targetSkillSelect, targetSkillsContainer, 'target_skills[]', targetSkillCount, true));
+
+    // Availability management
+    addAvailabilityBtn.addEventListener('click', function () {
+        const dateTime = availabilityInput.value;
+        if (!dateTime) {
+            alert('Please select a date and time');
+            return;
+        }
+
+        const dateObj = new Date(dateTime);
+        const formatted = dateObj.toLocaleString();
+
+        const tag = document.createElement('div');
+        tag.className = 'availability-tag';
+        tag.innerHTML = `
+            <span>${formatted}</span>
+            <input type="hidden" name="available_times[]" value="${dateTime}">
+            <button type="button" class="remove-availability">×</button>
+        `;
+
+        availabilityList.appendChild(tag);
+        availabilityInput.value = '';
+
+        tag.querySelector('.remove-availability').addEventListener('click', function () {
+            availabilityList.removeChild(tag);
         });
     });
 
-    // Form validation
+    // Form submission
     form.addEventListener('submit', function (e) {
         e.preventDefault();
-
-        // Clear previous error messages
         clearErrors();
 
-        // Validate each field
-        const isValid = validateForm();
-
-        if (isValid) {
+        if (validateForm()) {
             const formData = new FormData(form);
-
-            // Collect skills separately if needed, but the hidden inputs in skillsContainer should be included in FormData
 
             fetch('process_addpost.php', {
                 method: 'POST',
@@ -117,130 +156,69 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (data.status === 'success') {
                         alert('Post created successfully!');
-                        window.location.href = 'posts.php';
+                        window.location.href = `postdetails.php?Postid=${data.postId}`;
                     } else {
                         alert('Error: ' + data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error submitting form:', error);
-                    alert('An error occurred while creating the post. Please try again.');
+                    alert('An error occurred while creating the post.');
                 });
         }
     });
 
-    // Real-time validation for required fields
-    const requiredFields = form.querySelectorAll('[required]');
-    requiredFields.forEach(field => {
-        field.addEventListener('blur', function () {
-            validateField(this);
-        });
-    });
-
-    // Validate individual field
-    function validateField(field) {
-        const fieldId = field.id;
-        const errorElement = document.getElementById(`${fieldId}-error`);
-
-        // Clear previous error
-        errorElement.textContent = '';
-        field.classList.remove('error');
-
-        // Check if field is empty
-        if (field.value.trim() === '') {
-            showError(field, errorElement, 'This field is required');
-            return false;
-        }
-
-        // Field-specific validation
-        switch (fieldId) {
-            case 'title':
-                if (field.value.length < 5) {
-                    showError(field, errorElement, 'Title must be at least 5 characters long');
-                    return false;
-                }
-                break;
-
-            case 'description':
-                if (field.value.length < 20) {
-                    showError(field, errorElement, 'Description must be at least 20 characters long');
-                    return false;
-                }
-                break;
-
-            case 'credits':
-                const credits = parseInt(field.value);
-                if (isNaN(credits) || credits < 1 || credits > 1000) {
-                    showError(field, errorElement, 'Credits must be between 1 and 1000');
-                    return false;
-                }
-                break;
-
-            case 'exchange':
-                if (field.value.length < 3) {
-                    showError(field, errorElement, 'Exchange description must be at least 3 characters long');
-                    return false;
-                }
-                break;
-        }
-
-        return true;
-    }
-
-    // Validate entire form
     function validateForm() {
         let isValid = true;
 
-        // Validate required fields
-        const requiredFields = form.querySelectorAll('[required]');
-        requiredFields.forEach(field => {
-            if (!validateField(field)) {
-                isValid = false;
-            }
-        });
-
-        // Validate delivery options
-        const onlineCheckbox = document.getElementById('online');
-        const inpersonCheckbox = document.getElementById('inperson');
-        const deliveryError = document.getElementById('delivery-error');
-
-        if (!onlineCheckbox.checked && !inpersonCheckbox.checked) {
-            deliveryError.textContent = 'Please select at least one delivery option';
+        if (offeredSkillCount === 0) {
+            document.getElementById('skills-error').textContent = 'Please add at least one offered skill';
             isValid = false;
         }
 
-        // Validate skills (optional but with limit)
-        if (skillCount > maxSkills) {
-            document.getElementById('skills-error').textContent = `You can only add up to ${maxSkills} skills`;
+        if (targetSkillCount === 0) {
+            document.getElementById('target-skills-error').textContent = 'Please add at least one targeted skill';
+            isValid = false;
+        }
+
+        const availabilityTags = availabilityList.querySelectorAll('input[name="available_times[]"]');
+        if (availabilityTags.length === 0) {
+            document.getElementById('availability-error').textContent = 'Please add at least one available time slot';
+            isValid = false;
+        }
+
+        // Basic validation for title/description
+        if (document.getElementById('title').value.length < 5) {
+            showError(document.getElementById('title'), document.getElementById('title-error'), 'Title too short');
+            isValid = false;
+        }
+
+        if (document.getElementById('description').value.length < 20) {
+            showError(document.getElementById('description'), document.getElementById('description-error'), 'Description too short');
+            isValid = false;
+        }
+
+        const onlineCheckbox = document.getElementById('online');
+        const inpersonCheckbox = document.getElementById('inperson');
+        if (!onlineCheckbox.checked && !inpersonCheckbox.checked) {
+            document.getElementById('delivery-error').textContent = 'Select at least one delivery option';
             isValid = false;
         }
 
         return isValid;
     }
 
-    // Show error message
     function showError(field, errorElement, message) {
         errorElement.textContent = message;
         field.classList.add('error');
     }
 
-    // Clear all error messages
     function clearErrors() {
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(error => {
-            error.textContent = '';
-        });
-
-        const errorFields = document.querySelectorAll('.error');
-        errorFields.forEach(field => {
-            field.classList.remove('error');
-        });
+        document.querySelectorAll('.error-message').forEach(err => err.textContent = '');
+        document.querySelectorAll('.error').forEach(f => f.classList.remove('error'));
     }
 
-    // Cancel button functionality
     document.querySelector('.cancel').addEventListener('click', function () {
-        if (confirm('Are you sure you want to cancel? All unsaved changes will be lost.')) {
-            window.history.back();
-        }
+        if (confirm('Cancel changes?')) window.history.back();
     });
 });

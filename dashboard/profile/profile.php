@@ -13,7 +13,7 @@ $targetUserId = isset($_GET['id']) ? (int)$_GET['id'] : $loggedInId;
 $isOwner = ($targetUserId === $loggedInId);
 
 try {
-    $stmt = $connection->prepare("SELECT * FROM users WHERE UserId = :id");
+    $stmt = $connection->prepare("SELECT * FROM Users WHERE UserId = :id");
     $stmt->execute([':id' => $targetUserId]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -48,7 +48,7 @@ try {
 try {
     $query = "SELECT uss.SkillId, s.SkillName 
               FROM user_seeking_skills uss
-              JOIN skills s ON uss.SkillId = s.SkillId
+              JOIN Skills s ON uss.SkillId = s.SkillId
               WHERE uss.UserId = :id";
     $stmt = $connection->prepare($query);
     $stmt->execute(['id' => $targetUserId]);
@@ -305,8 +305,9 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                                     </div>
                                     <div class="skills">
                                         <?php
-                                        $stmt2 = $connection->prepare("SELECT userskills.ProficiencyLevel, skills.SkillName FROM userskills JOIN skills ON userskills.SkillId = skills.SkillId WHERE userskills.UserId = :id");
+                                        $stmt2 = $connection->prepare("SELECT UserSkills.ProficiencyLevel, Skills.SkillName FROM UserSkills JOIN Skills ON UserSkills.SkillId = Skills.SkillId WHERE UserSkills.UserId = :id");
                                         $stmt2->execute([':id' => $targetUserId]);
+
                                         $skills = $stmt2->fetchAll(PDO::FETCH_ASSOC);
                                         foreach ($skills as $skill) {
                                         ?>
@@ -406,17 +407,17 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                 <div class="short-posts-section" id="posts-container">
                     <?php
                     // 1. Get the TOTAL number of posts for this specific user
-                    $countSql = "SELECT COUNT(*) FROM posts WHERE UserId = :targetUserId";
+                    $countSql = "SELECT COUNT(*) FROM Posts WHERE UserId = :targetUserId";
                     $countStmt = $connection->prepare($countSql);
                     $countStmt->execute([':targetUserId' => $targetUserId]);
                     $totalPosts = $countStmt->fetchColumn();
 
                     // 2. Fetch the first 3 posts
-                    $sql = "SELECT posts.*, users.FullName, users.ProfilePicture, users.username
-                FROM posts 
-                JOIN users ON posts.UserId = users.UserId
-                WHERE posts.UserId = :targetUserId
-                ORDER BY posts.PostId DESC 
+                    $sql = "SELECT Posts.*, Users.FullName, Users.ProfilePicture, Users.username
+                FROM Posts 
+                JOIN Users ON Posts.UserId = Users.UserId
+                WHERE Posts.UserId = :targetUserId
+                ORDER BY Posts.PostId DESC 
                 LIMIT :limit";
 
                     $stmt = $connection->prepare($sql);
@@ -518,7 +519,7 @@ function renderReviewForm($targetUserId, $data, $isEdit)
 
                     $query = "SELECT r.*, u.FullName, u.UserName, u.ProfilePicture 
                   FROM profile_reviews r
-                  JOIN users u ON r.ReviewerID = u.UserId
+                  JOIN Users u ON r.ReviewerID = u.UserId
                   WHERE r.userID = :id
                   ORDER BY r.ReviewDate ASC
                   LIMIT 2;";

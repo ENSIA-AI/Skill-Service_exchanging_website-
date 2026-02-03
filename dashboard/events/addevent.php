@@ -352,7 +352,7 @@ function validateCategory(&$errors , mysqli $conn , $field_value){
     
     $category_id_int = (int)$field_value;
     
-    $stmt = $conn->prepare("SELECT categoryid FROM category WHERE categoryid = ?");
+    $stmt = $conn->prepare("SELECT categoryid FROM Category WHERE categoryid = ?");
     $stmt->bind_param("i" , $category_id_int);
     $stmt->execute();
     $stmt->store_result(); 
@@ -392,7 +392,7 @@ function validateSkill(&$errors, mysqli $conn, array $skills, $category_id) {
     $category_id = (int)$category_id;
     
     // Prepare statement - check by skill ID (not name)
-    $stmt = $conn->prepare("SELECT skillid FROM skills WHERE skillid = ? AND categoryid = ?");
+    $stmt = $conn->prepare("SELECT skillid FROM Skills WHERE skillid = ? AND categoryid = ?");
     
     foreach ($skills as $skill_id) {
         // Skip if not numeric
@@ -438,7 +438,7 @@ function saveToDataBase($data, mysqli $conn, $organizerId) {
     try {
         // Insert event
         $stmt = $conn->prepare("
-            INSERT INTO events
+            INSERT INTO Events
             (OrganizerId, EventTitle, EventDescription, EventLocation, EventType, EventStartDate, EventEndDate, MaxAttendees, EventCost)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
@@ -466,7 +466,7 @@ function saveToDataBase($data, mysqli $conn, $organizerId) {
         $stmt->close();
 
         $stmt = $conn->prepare("
-            INSERT INTO eventskills (EventId, SkillId)
+            INSERT INTO EventSkills (EventId, SkillId)
             VALUES (?, ?)
         ");
 

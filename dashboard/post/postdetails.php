@@ -121,7 +121,7 @@ $postDescription  = $post['Description'];
 $postType         = $post['PostType'];
 $postDuration     = $post['Duration'];
 $postLocation     = $post['MeetLocation'];
-$postDate         = $post['AvailableDate'];
+// $postDate         = $post['AvailableDate']; // Column missing in some DB versions, handled by PostAvailableDates
 $paymentMethod    = $post['PaymentMethod'];
 $requiredCredits  = $post['RequiredCredits'];
 $prerequisites    = $post['Prerequisites'];
@@ -131,29 +131,29 @@ $postUserId       = $post['UserId'];
 // Fetch skills offered by this post
 $skillsSql = "SELECT s.SkillName, s.SkillId FROM PostSkills ps 
               JOIN Skills s ON ps.SkillId = s.SkillId 
-              WHERE ps.PostId = ?";
+              WHERE ps.PostId = ? AND ps.SkillType = 'offered'";
 $skillsStmt = $conn->prepare($skillsSql);
 if (!$skillsStmt) { die('Database error: ' . $conn->error); }
 $skillsStmt->bind_param('i', $postId);
 $skillsStmt->execute();
 $skillsResult = $skillsStmt->get_result();
-$postSkills = [];
+$offeredSkills = [];
 while ($skill = $skillsResult->fetch_assoc()) {
-    $postSkills[] = $skill['SkillName'];
+    $offeredSkills[] = $skill['SkillName'];
 }
 
-// Fetch skills being sought (from user preferences or post data)
-$seekingSkillsSql = "SELECT s.SkillName, s.SkillId FROM UserSkills us 
-                     JOIN Skills s ON us.SkillId = s.SkillId 
-                     WHERE us.UserId = ? LIMIT 5";
+// Fetch skills being sought (Targeted Skills)
+$seekingSkillsSql = "SELECT s.SkillName, s.SkillId FROM PostSkills ps 
+                     JOIN Skills s ON ps.SkillId = s.SkillId 
+                     WHERE ps.PostId = ? AND ps.SkillType = 'requested'";
 $seekingStmt = $conn->prepare($seekingSkillsSql);
 if (!$seekingStmt) { die('Database error: ' . $conn->error); }
-$seekingStmt->bind_param('i', $postUserId);
+$seekingStmt->bind_param('i', $postId);
 $seekingStmt->execute();
 $seekingResult = $seekingStmt->get_result();
-$seekingSkills = [];
+$requestedSkills = [];
 while ($skill = $seekingResult->fetch_assoc()) {
-    $seekingSkills[] = $skill['SkillName'];
+    $requestedSkills[] = $skill['SkillName'];
 }
 
 
@@ -171,6 +171,7 @@ $resultDates = $stmtDates->get_result();
 while ($row = $resultDates->fetch_assoc()) {
     $dates[] = $row['AvailableDate'];
 }
+$postDate = !empty($dates) ? $dates[0] : '';
 
 // NEW: Process dates into time ranges per day (like first image)
 $timeSlotsByDay = [];
