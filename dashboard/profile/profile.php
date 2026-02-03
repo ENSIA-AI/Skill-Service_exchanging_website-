@@ -1,6 +1,6 @@
 <?php
-session_start(); 
-require_once 'includes/dbh.inc.php'; 
+session_start();
+require_once 'includes/dbh.inc.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../../auth/login.php");
@@ -20,7 +20,7 @@ try {
     if ($user) {
         $currentName     = !empty($user['FullName']) ? $user['FullName'] : 'Your Full hhhhh Name';
         $currentUsername = !empty($user['UserName']) ? $user['UserName'] : 'usehhrname';
-        $currentPhoto    = !empty($user['ProfilePicture']) ? $user['ProfilePicture'] : '../../assets/images/Default_pfp.svg';
+        $currentPhoto    = !empty($user['ProfilePicture']) && $user['ProfilePicture'] !== null && $user['ProfilePicture'] !== '' ? htmlspecialchars($user['ProfilePicture']) : '../../assets/images/Default_pfp.svg';
         $currentProfessionalTitle = !empty($user['ProfessionalTitle']) ? $user['ProfessionalTitle'] : 'Your Professional Title';
         $currentLocation = !empty($user['Location']) ? $user['Location'] : 'Your Location';
         $Datestring     = !empty($user['UserSince']) ? $user['UserSince'] : 'Year';
@@ -57,7 +57,39 @@ try {
     die("Database Error: " . $e->getMessage());
 }
 
+function renderReviewForm($targetUserId, $data, $isEdit)
+{
+    $rating = $data ? $data['ReviewRate'] : '';
+    $text = $data ? htmlspecialchars($data['ReviewText']) : '';
+?>
+    <form action="process_review.php" method="POST">
+        <input type="hidden" name="target_user_id" value="<?= $targetUserId; ?>">
+        <input type="hidden" name="is_edit" id="is_edit_flag" value="<?= $isEdit ? '1' : '0'; ?>">
 
+        <div id="rating-label" style="font-weight: bold;text-align: center;font-size: 1.2em; color: white; margin-top: 20px; margin-bottom: 10px; height: 1.5em;">
+            <?= $isEdit ? "" : "Select a rating" ?>
+        </div>
+
+        <div class="star-rating" style="font-size: 2.5rem; cursor: pointer; color: #ccc; text-align: center;">
+            <?php for ($i = 1; $i <= 5; $i++): ?>
+                <span class="star" data-value="<?= $i ?>">&#9733;</span>
+            <?php endfor; ?>
+        </div>
+        <input type="hidden" name="rating" id="ratingInput" value="<?= $rating ?>" required>
+
+        <div class="add-review-section" style="margin-top: 15px; text-align: center;">
+            <input type="text" name="review_text" id="add-review" value="<?= $text ?>" placeholder="Write your review" required>
+        </div>
+
+        <div style="display: flex; justify-content:right;width: 96%;padding:0;">
+            <button type="submit" class="submit-review">
+                <?= $isEdit ? "Update Review" : "Save and Post Review" ?>
+            </button>
+        </div>
+    </form>
+
+<?php
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,18 +109,26 @@ try {
 
     <script>
         $(document).ready(function() {
+            var reviewLimit = 2;
             $("#show-more-reviews").click(function() {
-                let currentCount = $(".review").length;
-
+                reviewLimit += 2;
                 $.ajax({
                     url: "load-reviews.php",
                     method: "POST",
                     data: {
-                        NewReviews: currentCount + 2,
+                        NewReviews: reviewLimit,
                         targetUserId: <?php echo $targetUserId; ?>
                     },
                     success: function(data) {
                         $(".reviews-container").html(data);
+
+                        // Check if there are more reviews to load
+                        if ($("#no-more-reviews-signal").length > 0) {
+                            $("#show-more-reviews").hide();
+                        }
+                    },
+                    error: function() {
+                        console.log("Error loading more reviews");
                     }
                 });
             });
@@ -97,8 +137,23 @@ try {
             var postLimit = 3;
             $("#show-more-posts").click(function() {
                 postLimit += 3;
-                $("#posts-container").load("load-posts.php", {
-                    newPostLimit: postLimit
+                $.ajax({
+                    url: "load-posts.php",
+                    method: "POST",
+                    data: {
+                        newPostLimit: postLimit,
+                        targetUserId: <?php echo $targetUserId; ?>
+                    },
+                    success: function(data) {
+                        $("#posts-container").html(data);
+
+                        if ($("#no-more-posts-signal").length > 0) {
+                            $("#show-more-posts").hide();
+                        }
+                    },
+                    error: function() {
+                        console.log("Error loading more posts");
+                    }
                 });
             });
         });
@@ -109,6 +164,30 @@ try {
             .php-content {
                 padding: 0;
             }
+        }
+
+        /* Empty posts state styling */
+        .no-posts-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            width: 100%;
+        }
+
+        .no-posts-msg {
+            text-align: center;
+            padding: 40px 30px;
+            color: #bbb;
+            border: 2px dashed #444;
+            border-radius: 10px;
+            max-width: 400px;
+            font-size: 16px;
+        }
+
+        .no-posts-msg p {
+            margin: 0;
+            font-weight: 500;
         }
     </style>
 
@@ -123,7 +202,7 @@ try {
             <div class="profile-head">
                 <div class="user-info">
                     <div class="avatar">
-                        <img id="profile-preview" src="<?= $currentPhoto; ?>" alt="Profile">
+                        <img id="profile-preview" src="<?= $currentPhoto; ?>" alt="Profile" data-user-id="<?= htmlspecialchars($targetUserId); ?>">
                     </div>
                     <section>
                         <div class="user-info-profile-name">
@@ -227,7 +306,7 @@ try {
                                     <div class="skills">
                                         <?php
                                         $stmt2 = $connection->prepare("SELECT userskills.ProficiencyLevel, skills.SkillName FROM userskills JOIN skills ON userskills.SkillId = skills.SkillId WHERE userskills.UserId = :id");
-                                        $stmt2->execute([':id' => $userId]);
+                                        $stmt2->execute([':id' => $targetUserId]);
                                         $skills = $stmt2->fetchAll(PDO::FETCH_ASSOC);
                                         foreach ($skills as $skill) {
                                         ?>
@@ -377,21 +456,27 @@ try {
                             </section>
                     <?php
                         }
-                    } else {
-                        echo '<div style="text-align:center; padding: 20px; color: #bbb;">No services posted yet.</div>';
                     }
                     ?>
                 </div>
 
+                <?php if ($totalPosts === 0): ?>
+                    <div class="no-posts-container" id="no-posts-message">
+                        <div class="no-posts-msg">
+                            <p>This user hasn't created any posts yet.</p>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <?php if ($totalPosts > 3): ?>
                     <div class="more-reviews">
-                        <span id="show-more-posts" class="view-sessions" style="cursor:pointer;">Show More Posts</span>
+                        <span id="show-more-posts">show more posts</span>
                     </div>
                 <?php endif; ?>
             </div>
 
 
-            <div id="" class="reviews-section section">
+
+            <div id="reviews-section" class="reviews-section section">
                 <div class="reviews-head">
                     <div class="reviews-head-lable">
                         <h3><span class="reviews-section-header-lable">Reviews & Feedback</span></h3>
@@ -435,7 +520,7 @@ try {
                   FROM profile_reviews r
                   JOIN users u ON r.ReviewerID = u.UserId
                   WHERE r.userID = :id
-                  ORDER BY r.ReviewDate DESC
+                  ORDER BY r.ReviewDate ASC
                   LIMIT 2;";
 
                     $stmt = $connection->prepare($query);
@@ -478,43 +563,63 @@ try {
 
                 <div class="review-container">
                     <?php
-                    $checkReview = $connection->prepare("SELECT ReviewerID FROM profile_reviews WHERE ReviewerID = :rev AND userID = :target");
+                    $checkReview = $connection->prepare("SELECT ReviewRate, ReviewText FROM profile_reviews WHERE ReviewerID = :rev AND userID = :target");
                     $checkReview->execute([':rev' => $loggedInId, ':target' => $targetUserId]);
-                    $hasAlreadyReviewed = $checkReview->fetch();
+                    $existingReview = $checkReview->fetch(PDO::FETCH_ASSOC);
 
                     if ($isOwner) {
-                    } elseif ($hasAlreadyReviewed) {
-                        echo "<p style='text-align:center; color:white;'>You have already submitted a review for this user.</p>";
-                    } else {
-                    ?>
-                        <form action="process_review.php" method="POST">
-                            <input type="hidden" name="target_user_id" value="<?php echo $targetUserId; ?>">
-                            <div>
-                                <div id="rating-label" style="font-weight: bold;text-align: center;font-size: 1.2em; color: white; margin-top: 20px; margin-bottom: 10px; height: 1.5em;">
-                                    Select a rating
-                                </div>
+                    } elseif ($existingReview) { ?>
+                        <div id="review-status-msg" style="text-align:center; color:white; margin-bottom: 20px;">
+                            <p>You have already submitted a review for this user.
+                                <a href="javascript:void(0);" id="edit-review-trigger" style="color: #ffa36c; text-decoration: underline; cursor: pointer;">edit review</a>
+                            </p>
+                        </div>
+
+                        <div id="review-form-container" style="display: none;">
+                            <form action="process_review.php" method="POST">
+                                <input type="hidden" name="target_user_id" value="<?= $targetUserId; ?>">
+                                <input type="hidden" name="is_edit" value="1">
+                                <div id="rating-label" style="font-weight: bold;text-align: center;font-size: 1.2em; color: white; margin-top: 20px; margin-bottom: 10px; height: 1.5em;"></div>
+
                                 <div class="star-rating" style="font-size: 2.5rem; cursor: pointer; color: #ccc; text-align: center;">
-                                    <span class="star" data-value="1">&#9733;</span>
-                                    <span class="star" data-value="2">&#9733;</span>
-                                    <span class="star" data-value="3">&#9733;</span>
-                                    <span class="star" data-value="4">&#9733;</span>
-                                    <span class="star" data-value="5">&#9733;</span>
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <span class="star" data-value="<?= $i ?>">&#9733;</span>
+                                    <?php endfor; ?>
+                                </div>
+                                <input type="hidden" name="rating" id="ratingInput" value="<?= $existingReview['ReviewRate'] ?>" required>
+
+                                <div class="add-review-section" style="margin-top: 15px; text-align: center;">
+                                    <input type="text" name="review_text" id="add-review" value="<?= htmlspecialchars($existingReview['ReviewText']) ?>" placeholder="Write your review" required>
+                                </div>
+                                <div style="display: flex; justify-content:right;width: 96%;padding:0;">
+                                    <button type="submit" class="submit-review">Update Review</button>
+                                </div>
+                            </form>
+                        </div>
+
+                    <?php } else { ?>
+                        <div id="review-form-container">
+                            <form action="process_review.php" method="POST">
+                                <input type="hidden" name="target_user_id" value="<?= $targetUserId; ?>">
+                                <div id="rating-label" style="font-weight: bold;text-align: center;font-size: 1.2em; color: white; margin-top: 20px; margin-bottom: 10px; height: 1.5em;">Select a rating</div>
+                                <div class="star-rating" style="font-size: 2.5rem; cursor: pointer; color: #ccc; text-align: center;">
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <span class="star" data-value="<?= $i ?>">&#9733;</span>
+                                    <?php endfor; ?>
                                 </div>
                                 <input type="hidden" name="rating" id="ratingInput" required>
-                            </div>
-                            <div class="add-review-section" style="margin-top: 15px; text-align: center;">
-                                <input type="text" name="review_text" id="add-review" placeholder="Write your review" required>
-                            </div>
-                            <div style="display: flex; justify-content:right;width: 96%;padding:0;">
-                                <button type="submit" class="submit-review">Save and Post Review</button>
-                            </div>
-                        </form>
-                        <script>
-                        </script>
+                                <div class="add-review-section" style="margin-top: 15px; text-align: center;">
+                                    <input type="text" name="review_text" id="add-review" placeholder="Write your review" required>
+                                </div>
+                                <div style="display: flex; justify-content:right;width: 96%;padding:0;">
+                                    <button type="submit" class="submit-review">Save and Post Review</button>
+                                </div>
+                            </form>
+                        </div>
                     <?php } ?>
                 </div>
 
-                <?php if ($stmt->rowCount() > 2): ?>
+                <?php if ($stmt->rowCount() > 0): ?>
                     <div class="more-reviews">
                         <span id="show-more-reviews">show more reviews</span>
                     </div>
@@ -524,7 +629,69 @@ try {
 
     </main>
     <script src="../../assets/js/profile.js"></script>
+    <script>
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('ratingInput');
+    const ratingLabel = document.getElementById('rating-label');
+    const editTrigger = document.getElementById('edit-review-trigger');
+    const statusMsg = document.getElementById('review-status-msg');
+    const formContainer = document.getElementById('review-form-container');
 
+    const labels = {
+        1: "Awful, not what I expected at all",
+        2: "Poor, pretty disappointed",
+        3: "Average, could be better",
+        4: "Good, what I expected",
+        5: "Amazing, above expectations!"
+    };
+
+    function highlightStars(count, color) {
+        stars.forEach((s) => {
+            const val = parseInt(s.getAttribute('data-value'));
+            s.style.color = (val <= count) ? color : '#ccc';
+        });
+    }
+
+    const initialValue = parseInt(ratingInput.value) || 0;
+    if (initialValue > 0) {
+        highlightStars(initialValue, '#ffa36c');
+        ratingLabel.textContent = labels[initialValue];
+    }
+
+    if (editTrigger) {
+        editTrigger.addEventListener('click', function() {
+            statusMsg.style.display = 'none';
+            formContainer.style.display = 'block';
+            document.getElementById('add-review').focus();
+        });
+    }
+
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            ratingLabel.textContent = labels[value];
+            highlightStars(value, '#ffa36c');
+        });
+
+        star.addEventListener('mouseout', function() {
+            const lockedValue = parseInt(ratingInput.value) || 0;
+            if (lockedValue > 0) {
+                ratingLabel.textContent = labels[lockedValue];
+                highlightStars(lockedValue, '#ffa36c');
+            } else {
+                ratingLabel.textContent = "Select a rating";
+                highlightStars(0, '#ccc');
+            }
+        });
+
+        star.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            ratingInput.value = value;
+            ratingLabel.textContent = labels[value];
+            highlightStars(value, '#ffa36c');
+        });
+    });
+</script>
 </body>
 
 </html>

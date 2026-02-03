@@ -39,7 +39,7 @@ try {
             FROM profile_reviews r 
             JOIN Users u ON r.ReviewerID = u.UserId 
             WHERE r.userID = :targetId 
-            ORDER BY r.ReviewDate DESC 
+            ORDER BY r.ReviewDate ASC 
             LIMIT :limit";
 
     $stmt = $connection->prepare($sql);
@@ -86,3 +86,16 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+try {
+    $countSql = "SELECT COUNT(*) FROM profile_reviews WHERE userID = :targetId";
+    $countStmt = $connection->prepare($countSql);
+    $countStmt->execute([':targetId' => $targetUserId]);
+    $totalReviews = $countStmt->fetchColumn();
+
+    if ($limit >= $totalReviews) {
+        echo '<input type="hidden" id="no-more-reviews-signal" value="1">';
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+?>

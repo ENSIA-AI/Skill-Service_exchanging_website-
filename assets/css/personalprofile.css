@@ -861,3 +861,15 @@
     padding-left: 20px;
     background: var(--clr-lighter);
 }
+#edit-review-trigger {
+    color: #ffa36c; 
+    text-decoration: underline;
+    transition: all 0.3s ease; 
+    cursor: pointer;
+}
+
+#edit-review-trigger:hover {
+    color: #ffffff; 
+    text-shadow: 0 0 8px rgba(255, 163, 108, 0.7); 
+    transform: scale(1.05); 
+}

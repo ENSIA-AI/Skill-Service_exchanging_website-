@@ -47,13 +47,8 @@ if ($stmt->rowCount() > 0) {
                 </div>
             </div>
         </section>
-        <hr>
         <?php
     }
-} else {
-    echo '<div class="no-posts-msg" style="text-align:center; padding: 30px; color: #bbb; border: 1px dashed #444; border-radius: 10px; margin: 20px;">
-            <p>This user hasn’t created any posts yet.</p>
-          </div>';
 }
 
 $countSql = "SELECT COUNT(*) FROM Posts WHERE UserId = :targetId";

@@ -1,19 +1,19 @@
 <?php
 require_once dirname(__DIR__) . '/dashboard/profile/includes/dbh.inc.php';
 
-$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] :
+$Id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] :
             (isset($_GET['id']) ? (int)$_GET['id'] : 0);
 
 try {
     $stmt = $connection->prepare("SELECT * FROM Users WHERE UserId = :id");
-    $stmt->execute([':id' => $userId]);
+    $stmt->execute([':id' => $Id]);
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        $currentPhoto    = !empty($user['ProfilePicture']) ? $user['ProfilePicture'] : '../../assets/images/Default_pfp.svg';
+        $currentHeaderPhoto    = !empty($user['ProfilePicture']) ? htmlspecialchars($user['ProfilePicture']) : '../../assets/images/Default_pfp.svg';
     } else {
-        $currentPhoto = '../../assets/images/Default_pfp.svg';
+        $currentHeaderPhoto = '../../assets/images/Default_pfp.svg';
     }
 } catch (PDOException $e) {
     echo "Query failed: " . $e->getMessage();
@@ -22,15 +22,14 @@ try {
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
-
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="../../assets/css/header.css">
     <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <style>
         .header-avatar {
             grid-area: avatar;
-            border: 2px solid var(--color2);
+            border: 2px solid #ffa546;
             border-radius: 50%;
             width: 55px;
             height: 55px;
@@ -91,7 +90,7 @@ try {
             </a>
             <a href="../profile/profile.php"
                 class="header-profile header-avatar">
-                <img src="<?= $currentPhoto; ?>" alt="Profile Picture">
+                <img src="<?= $currentHeaderPhoto; ?>" alt="Profile Picture">
             </a>
         </div>
     </div>

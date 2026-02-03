@@ -23,7 +23,8 @@ $category_filter = isset($_GET['category']) ? trim($_GET['category']) : '';
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['search'] !== '') {
     $isSearch = true;
     $search_query = htmlspecialchars(trim($_GET['search']), ENT_QUOTES, 'UTF-8');
-    $sql = 'SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating,
+    $sql = 'SELECT p.PostId, p.UserId, p.Title, p.Description, p.LikeCount, 
+               c.CategoryName, u.UserName, u.Rating, u.ProfilePicture,
         (SELECT COUNT(*) FROM PostLikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
         FROM Posts p
         JOIN Users u ON p.UserId = u.UserId 
@@ -42,18 +43,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
         $stmt->bind_param('isss', $currentUserId, $search_param, $search_param, $search_param);
     }
     $stmt->execute();
-    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $userLiked);
+    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $profilePicture, $userId, $userLiked);
     while ($stmt->fetch()) {
         $posts[] = [
-            'PostId' => $postId, 'Title' => $title, 'Description' => $description, 
-            'LikeCount' => $likeCount, 'CategoryName' => $categoryName, 
-            'UserName' => $userName, 'Rating' => $rating, 'UserLiked' => $userLiked
+            'PostId' => $postId,
+            'Title' => $title,
+            'Description' => $description,
+            'LikeCount' => $likeCount,
+            'CategoryName' => $categoryName,
+            'UserName' => $userName,
+            'Rating' => $rating,
+            'UserLiked' => $userLiked,
+            'ProfilePicture' => $profilePicture,
+            'UserId' => $userId
         ];
     }
     $stmt->close();
 } elseif ($category_filter !== '') {
     // Filter by category only (server-side)
-    $stmt = $conn->prepare('SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating,
+    $stmt = $conn->prepare('SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating, u.ProfilePicture, u.UserId,
         (SELECT COUNT(*) FROM PostLikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
         FROM Posts p 
         JOIN Users u ON p.UserId = u.UserId 
@@ -62,17 +70,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
         ORDER BY p.CreatedAt DESC');
     $stmt->bind_param('is', $currentUserId, $category_filter);
     $stmt->execute();
-    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $userLiked);
+    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $profilePicture, $userId, $userLiked);
     while ($stmt->fetch()) {
         $posts[] = [
-            'PostId' => $postId, 'Title' => $title, 'Description' => $description, 
-            'LikeCount' => $likeCount, 'CategoryName' => $categoryName, 
-            'UserName' => $userName, 'Rating' => $rating, 'UserLiked' => $userLiked
+            'PostId' => $postId,
+            'Title' => $title,
+            'Description' => $description,
+            'LikeCount' => $likeCount,
+            'CategoryName' => $categoryName,
+            'UserName' => $userName,
+            'Rating' => $rating,
+            'UserLiked' => $userLiked,
+            'ProfilePicture' => $profilePicture,
+            'UserId' => $userId
         ];
     }
     $stmt->close();
 } else {
-    $stmt = $conn->prepare('SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating,
+    $stmt = $conn->prepare('SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating, u.ProfilePicture, u.UserId,
         (SELECT COUNT(*) FROM PostLikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
         FROM Posts p 
         JOIN Users u ON p.UserId = u.UserId 
@@ -81,12 +96,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
         ORDER BY p.CreatedAt DESC LIMIT ? OFFSET ?');
     $stmt->bind_param('iii', $currentUserId, $limit, $offset);
     $stmt->execute();
-    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $userLiked);
+    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $profilePicture, $userId, $userLiked);
     while ($stmt->fetch()) {
         $posts[] = [
-            'PostId' => $postId, 'Title' => $title, 'Description' => $description, 
-            'LikeCount' => $likeCount, 'CategoryName' => $categoryName, 
-            'UserName' => $userName, 'Rating' => $rating, 'UserLiked' => $userLiked
+            'PostId' => $postId,
+            'Title' => $title,
+            'Description' => $description,
+            'LikeCount' => $likeCount,
+            'CategoryName' => $categoryName,
+            'UserName' => $userName,
+            'Rating' => $rating,
+            'UserLiked' => $userLiked,
+            'ProfilePicture' => $profilePicture,
+            'UserId' => $userId
         ];
     }
     $stmt->close();
@@ -103,24 +125,32 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
             $isLiked = $post['UserLiked'] > 0 ? 'liked' : '';
             $likeCount = (int) $post['LikeCount'];
+            $userId = htmlspecialchars((string)($post['UserId'] ?? ''));
+            $profilePic = !empty($post['ProfilePicture']) ? htmlspecialchars($post['ProfilePicture']) : '../../assets/images/Default_pfp.svg';
+            $CategoryName = htmlspecialchars((string)($post['CategoryName'] ?? ''));
+            $UserName = htmlspecialchars((string)($post['UserName'] ?? ''));
+            $Desc = htmlspecialchars((string)($post['Description'] ?? ''));
+            $Title = htmlspecialchars((string)($post['Title'] ?? ''));
 
-            echo '<div class="post-card" data-post-id="' . htmlspecialchars($post['PostId']) . '" data-category="' . htmlspecialchars($post['CategoryName']) . '">';
+            echo '<div class="post-card" data-post-id="' . htmlspecialchars($post['PostId']) . '" data-category="' . $CategoryName . '">';
             echo '<div class="post-header">';
-            echo '<img src="../../assets/images/Default_pfp.svg" alt="Profile Picture" class="profile-pic">';
+            echo '<a href="../../dashboard/profile/profile.php?id=' . $userId . '" class="profile-pic-link">';
+            echo '<img src="' . $profilePic . '" alt="Profile Picture" class="profile-pic">';
+            echo '</a>';
             echo '<div class="profile-info">';
-            echo '<h3>' . htmlspecialchars($post['UserName']) . '</h3>';
+            echo '<h3><a href="../../dashboard/profile/profile.php?id=' . $userId . '" class="profile-username-link">' . $UserName . '</a></h3>';
             echo '<div class="stars">';
             echo $starsHtml;
             echo '</div>';
             echo '</div>';
             echo '</div>';
-            echo '<p class="post-field">' . htmlspecialchars($post['Title']) . '</p>';
-            echo '<p class="post-description">' . htmlspecialchars(substr($post['Description'], 0, 100)) . '...</p>';
+            echo '<p class="post-field">' . $Title . '</p>';
+            echo '<p class="post-description">' . $Desc . '</p>';
             echo '<div class="skills">';
-            echo '<span>' . htmlspecialchars($post['CategoryName']) . '</span>';
+            echo '<span>' . htmlspecialchars((string)($post['CategoryName'] ?? '')) . '</span>';
             echo '</div>';
             echo '<div class="post-actions">';
-            echo '<a href="postdetails.php?Postid=' . htmlspecialchars($post['PostId']) . '" class="see-details-btn">See Details</a>';
+            echo '<button class="see-details-btn" onclick="window.location.href=\'postdetails.php?Postid=' . htmlspecialchars($post['PostId']) . '\'">See Details</button>';
             echo '<button class="like-btn ' . $isLiked . '" data-likes="' . $likeCount . '">';
             echo '<svg viewBox="0 0 24 24">';
             echo '<path d="M12 21s-7.5-4.9-9.3-7.1C1.2 11.9 2.3 7.5 6.3 6.1 8.1 5.5 10 6.1 11 7.6c1-1.5 2.9-2.1 4.7-1.5 4 1.4 5.1 5.8 3.6 7.8C19.5 16.1 12 21 12 21z"></path>';
@@ -149,6 +179,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Posts</title>
     <link rel="stylesheet" href="../../assets/css/posts.css">
+    <link rel="icon" href="../../assets/icons/favicon_io/favicon.ico" type="image/x-icon">
     <style>
         .category-card.hidden {
             display: none;
@@ -236,11 +267,43 @@ $conn->close();
         .stars .empty-star {
             color: #ddd;
         }
+
+        .profile-pic-link {
+            display: inline-block;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+
+        .profile-username-link {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.2s ease;
+        }
+
+        .profile-username-link:hover {
+            color: #ffae00;
+        }
     </style>
 </head>
 
 <body>
-    <?php include '../../components/header.html'; ?>
+    <?php include '../../components/header_t.php'; ?>
     <?php include '../../components/sidebar.html'; ?>
 
     <main class="main-content">
@@ -413,17 +476,26 @@ $conn->close();
             <div class="posts-grid" id="posts-grid">
                 <?php if (count($posts) > 0): ?>
                     <?php foreach ($posts as $post):
-                        $rating = round((float) $post['Rating']);
+                    
+                        $rating = round((float) ($post['Rating'] ?? 0));
                         $isLiked = $post['UserLiked'] > 0 ? 'liked' : '';
                         $likeCount = (int) $post['LikeCount'];
-                        ?>
+                        $userId = htmlspecialchars((string)($post['UserId'] ?? ''));
+                        $profilePic = !empty($post['ProfilePicture']) ? htmlspecialchars($post['ProfilePicture']) : '../../assets/images/Default_pfp.svg';
+                        $CategoryName = htmlspecialchars((string)($post['CategoryName'] ?? ''));
+                        $UserName = htmlspecialchars((string)($post['UserName'] ?? ''));
+                        $Desc = htmlspecialchars((string)($post['Description'] ?? ''));
+                        $Title = htmlspecialchars((string)($post['Title'] ?? ''));
+                    ?>
                         <div class="post-card" data-post-id="<?php echo htmlspecialchars($post['PostId']); ?>"
-                            data-category="<?php echo htmlspecialchars($post['CategoryName']); ?>">
+                            data-category="<?php echo $CategoryName; ?>">
                             <div class="post-header">
-                                <img src="../../assets/images/Default_pfp.svg"
-                                    alt="Profile Picture" class="profile-pic">
+                                <a href="../../dashboard/profile/profile.php?id=<?php echo $userId; ?>" class="profile-pic-link">
+                                    <img src="<?php echo $profilePic; ?>"
+                                        alt="Profile Picture" class="profile-pic">
+                                </a>
                                 <div class="profile-info">
-                                    <h3><?php echo htmlspecialchars($post['UserName']); ?></h3>
+                                    <h3><a href="../../dashboard/profile/profile.php?id=<?php echo $userId; ?>" class="profile-username-link"><?php echo $UserName; ?></a></h3>
                                     <div class="stars">
                                         <?php
                                         echo str_repeat('★', $rating) . str_repeat('☆', 5 - $rating);
@@ -432,13 +504,13 @@ $conn->close();
                                 </div>
                             </div>
 
-                            <p class="post-field"><?php echo htmlspecialchars($post['Title']); ?></p>
+                            <p class="post-field"><?php echo $Title; ?></p>
                             <p class="post-description">
-                                <?php echo htmlspecialchars(substr($post['Description'], 0, 100)); ?>...
+                                <?php echo htmlspecialchars(substr($Desc, 0, 100)); ?>...
                             </p>
 
                             <div class="skills">
-                                <span><?php echo htmlspecialchars($post['CategoryName']); ?></span>
+                                <span><?php echo $CategoryName; ?></span>
                             </div>
                             <div class="post-actions">
                                 <a href="postdetails.php?Postid=<?php echo htmlspecialchars($post['PostId']); ?>" class="see-details-btn">See Details</a>
@@ -475,17 +547,19 @@ $conn->close();
         var currentOffset = 12;
         var hasMorePosts = <?php echo count($posts) >= 12 ? 'true' : 'false'; ?>;
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Show More Posts button with AJAX pagination
-            $('#show-all-btn, #show-all-btn-bottom').on('click', function () {
+            $('#show-all-btn, #show-all-btn-bottom').on('click', function() {
                 $.ajax({
                     type: 'GET',
                     url: 'posts.php',
-                    data: { offset: currentOffset },
+                    data: {
+                        offset: currentOffset
+                    },
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response.trim() !== '' && response.includes('post-card')) {
                             $('#posts-grid').append(response);
                             currentOffset += 12;
@@ -493,28 +567,28 @@ $conn->close();
                             $('#show-all-btn, #show-all-btn-bottom').hide();
                         }
                     },
-                    error: function () {
+                    error: function() {
                         console.log('Error loading more posts');
                     }
                 });
             });
 
             // Show More Categories functionality
-            $('#showMoreCategoriesBtn').on('click', function (e) {
+            $('#showMoreCategoriesBtn').on('click', function(e) {
                 e.preventDefault();
                 $('.more-categories').css('display', 'block');
                 $(this).css('display', 'none');
                 $('#showMoreCategoriesBtn2').css('display', 'flex');
             });
 
-            $('#showMoreCategoriesBtn2').on('click', function (e) {
+            $('#showMoreCategoriesBtn2').on('click', function(e) {
                 e.preventDefault();
                 $('.more-categories-2').css('display', 'block');
                 $(this).css('display', 'none');
             });
 
             // Search functionality — show results without recommendation title
-            $('#search-bar').on('keyup', function () {
+            $('#search-bar').on('keyup', function() {
                 var searchQuery = $(this).val().trim();
                 currentOffset = 12;
 
@@ -522,16 +596,18 @@ $conn->close();
                     $.ajax({
                         type: 'GET',
                         url: 'posts.php',
-                        data: { search: searchQuery },
+                        data: {
+                            search: searchQuery
+                        },
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'
                         },
-                        success: function (response) {
+                        success: function(response) {
                             $('#posts-grid').html(response);
                             $('#posts-title').text('Browse All Posts');
                             $('#back-to-all-btn').hide();
                         },
-                        error: function () {
+                        error: function() {
                             console.log('Search error');
                         }
                     });
@@ -540,7 +616,7 @@ $conn->close();
                 }
             });
 
-            $('.search-btn').on('click', function () {
+            $('.search-btn').on('click', function() {
                 var searchQuery = $('#search-bar').val();
                 if (searchQuery.length > 0) {
                     $('#search-bar').keyup();
@@ -548,7 +624,7 @@ $conn->close();
             });
 
             // Like button functionality
-            $(document).on('click', '.like-btn', function (e) {
+            $(document).on('click', '.like-btn', function(e) {
                 e.preventDefault();
 
                 var $likeBtn = $(this);
@@ -576,7 +652,7 @@ $conn->close();
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    success: function (response) {
+                    success: function(response) {
                         console.log('Server response:', response);
                         var data = JSON.parse(response);
                         console.log('Parsed data:', data);
@@ -607,10 +683,10 @@ $conn->close();
                             console.log('Error from server:', data.message);
                         }
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.log('AJAX error:', error, xhr.status, xhr.responseText);
                     },
-                    complete: function () {
+                    complete: function() {
                         // Remove loading flag
                         $likeBtn.removeClass('loading');
                     }
