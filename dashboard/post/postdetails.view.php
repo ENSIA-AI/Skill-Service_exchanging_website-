@@ -128,8 +128,8 @@
         <div class="skills-section">
             <h2>Skills & Expertise</h2>
             <div class="skills-tags">
-                    <?php if (!empty($postSkills)): ?>
-                        <?php foreach ($postSkills as $skill): ?>
+                    <?php if (!empty($offeredSkills)): ?>
+                        <?php foreach ($offeredSkills as $skill): ?>
                             <span class="skill-tag"><?php echo htmlspecialchars($skill); ?></span>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -154,8 +154,8 @@
                 <h3>Skills I'm Seeking</h3>
                 <p>If you prefer skill exchange instead of credits, I'm interested in learning:</p>
                 <div class="seeking-tags">
-                    <?php if (!empty($seekingSkills)): ?>
-                        <?php foreach ($seekingSkills as $skill): ?>
+                    <?php if (!empty($requestedSkills)): ?>
+                        <?php foreach ($requestedSkills as $skill): ?>
                             <span class="seeking-tag"><?php echo htmlspecialchars($skill); ?></span>
                         <?php endforeach; ?>
                     <?php else: ?>

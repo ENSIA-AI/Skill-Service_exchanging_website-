@@ -4,7 +4,7 @@ require_once __DIR__ . "/../../DataBaseManagement/config.php";
 
 function getCategories(mysqli $conn){ 
     $categories = []; 
-    $result = $conn->query("SELECT categoryId, categoryName FROM category ORDER BY categoryName"); 
+    $result = $conn->query("SELECT categoryId, categoryName FROM Category ORDER BY categoryName"); 
     if($result){ 
         while($row = $result->fetch_assoc()) { 
             $categories[] = $row;

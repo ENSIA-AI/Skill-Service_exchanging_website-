@@ -91,7 +91,7 @@ CREATE TABLE Posts (
   UserId INT NOT NULL,
   Title VARCHAR(150) NOT NULL,
   Description TEXT NOT NULL,
-  PostType ENUM('in-person','online') NOT NULL,
+  PostType ENUM('in-person','online','both') NOT NULL,
   PostStatus ENUM('active','disabled') DEFAULT 'active',
   CategoryId INT NOT NULL,
   Duration INT CHECK (Duration > 0 AND Duration <= 480),
@@ -99,7 +99,7 @@ CREATE TABLE Posts (
   AvailableDate DATETIME NOT NULL,
   Prerequisites TEXT,
   Requirements TEXT,
-  PaymentMethod ENUM('exchange','credit') NOT NULL,
+  PaymentMethod ENUM('exchange','credit','both') NOT NULL,
   RequiredCredits INT DEFAULT 0 CHECK (RequiredCredits >= 0),
   LikeCount INT DEFAULT 0 CHECK (LikeCount >= 0),
   CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -215,6 +215,7 @@ CREATE TABLE UserSkills (
   UserSkillId INT AUTO_INCREMENT PRIMARY KEY,
   UserId INT NOT NULL,
   SkillId INT NOT NULL,
+  SkillType ENUM('offered', 'requested') NOT NULL DEFAULT 'offered',
   SkillType ENUM('teach','learn') NOT NULL,
   ProficiencyLevel ENUM('beginner','intermediate','advanced','expert') NOT NULL,
   
@@ -233,6 +234,7 @@ CREATE TABLE EventSkills (
   EventSkillId INT AUTO_INCREMENT PRIMARY KEY,
   EventId INT NOT NULL,
   SkillId INT NOT NULL,
+  SkillType ENUM('offered', 'requested') NOT NULL DEFAULT 'offered',
   IsRequired ENUM('yes','no') DEFAULT 'no',
   
   FOREIGN KEY (EventId) REFERENCES Events(EventId) ON DELETE CASCADE,
@@ -250,6 +252,7 @@ CREATE TABLE PostSkills (
   PostSkillId INT AUTO_INCREMENT PRIMARY KEY,
   PostId INT NOT NULL,
   SkillId INT NOT NULL,
+  SkillType ENUM('offered', 'requested') NOT NULL DEFAULT 'offered',
   
   FOREIGN KEY (PostId) REFERENCES Posts(PostId) ON DELETE CASCADE,
   FOREIGN KEY (SkillId) REFERENCES Skills(SkillId) ON DELETE CASCADE,
