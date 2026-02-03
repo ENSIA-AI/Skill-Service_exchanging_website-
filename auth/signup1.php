@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     function isValidPassword($password) {
-        return preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/', $password);
+        return strlen($password) >= 8 && preg_match('/[A-Za-z]/', $password) && preg_match('/[0-9]/', $password);
     }
 
     function isValidAlgerianPhone($phone) {
@@ -130,8 +130,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Password 
     if (!$password) {
         $errors['password'] = 'Password is required';
-    } elseif (!isValidPassword($password)) {
-        $errors['password'] = 'Password must be at least 6 characters with letters and numbers';
+    } elseif (strlen($password) < 8) {
+        $errors['password'] = 'Password must be at least 8 characters';
+    } elseif (!preg_match('/[A-Za-z]/', $password)) {
+        $errors['password'] = 'Password must contain at least one letter';
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $errors['password'] = 'Password must contain at least one number';
     } else {
         $errors['password'] = '';
     }

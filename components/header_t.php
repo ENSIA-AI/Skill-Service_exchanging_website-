@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/dbh.inc.php';
+require_once dirname(__DIR__) . '/dashboard/profile/includes/dbh.inc.php';
 
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] :
             (isset($_GET['id']) ? (int)$_GET['id'] : 0);
