@@ -210,7 +210,7 @@ function updateSkillCounter() {
 
 let currentName = "";
 
-window.onload = function() {
+window.onload = function () {
     currentName = document.getElementById("username").value;
 };
 
@@ -225,25 +225,67 @@ function checkUser(username) {
     if (!pattern.test(username)) {
         document.getElementById("username-status").innerHTML = "Invalid format";
         document.getElementById("username-status").style.color = "orange";
-        return; 
+        return;
     }
 
     if (username === currentName) {
         document.getElementById("username-status").innerHTML = "";
-        return; 
+        return;
     }
 
     let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function(){
+    xhttp.onreadystatechange = function () {
 
-        if(this.readyState == 4 && this.status ==200) {
+        if (this.readyState == 4 && this.status == 200) {
             let msg = this.responseText;
             let statusSpan = document.getElementById("username-status");
 
             statusSpan.innerHTML = msg;
-            statusSpan.style.color = (msg === 'username is available') ? '#00ff00' : 'red';
+            statusSpan.style.color = (msg === 'username is available') ? '#00ff00cd' : 'red';
         }
     };
-    xhttp.open("GET", "../../dashboard/profile/check_user.php?username="+username, true);
+    xhttp.open("GET", "../../dashboard/profile/check_user.php?username=" + username, true);
     xhttp.send();
 }
+
+$(document).ready(function () {
+
+    $("#openPasswordBtn").click(function () {
+        $("#passwordModal").fadeIn(300);
+    });
+
+    $(".close-modal").click(function () {
+        $("#passwordModal").fadeOut(300);
+        $("#password-error").text("");
+    });
+
+    $("#changePasswordForm").on('submit', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: 'update_password.php',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function (response) {
+                const $errorDiv = $("#password-error");
+
+                if (response.status === 'success') {
+                    $errorDiv.text(response.message)
+                        .css("color", "#4CAF50")
+                        .css("margin-top", "10px");
+                    setTimeout(() => {
+                        $("#passwordModal").fadeOut();
+                        $("#changePasswordForm")[0].reset();
+                        $errorDiv.text("");
+                    }, 2000);
+
+                } else {
+                    $errorDiv.text(response.message)
+                        .css("color", "#ff6b6b")
+                        .css("margin-top", "10px");
+                }
+            }
+        });
+    });
+});
