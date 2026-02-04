@@ -232,17 +232,7 @@ input:-webkit-autofill:focus {
     cursor: pointer;
 }
 
-.forgot-password {
-    color: var(--clr-btn);
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.3s ease;
-}
 
-.forgot-password:hover {
-    color: var(--clr-org);
-    text-decoration: underline;
-}
 
 .btn-login {
     width: 100%;
