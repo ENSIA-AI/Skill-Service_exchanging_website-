@@ -3,8 +3,7 @@ session_start();
 require_once 'includes/dbh.inc.php';
 
 
-$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] :
-            (isset($_GET['id']) ? (int)$_GET['id'] : 0);
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : (isset($_GET['id']) ? (int)$_GET['id'] : 0);
 
 try {
     $stmt = $connection->prepare("SELECT * FROM Users WHERE UserId = :id");
@@ -47,9 +46,9 @@ try {
               FROM user_seeking_skills uss
               JOIN Skills s ON uss.SkillId = s.SkillId
               WHERE uss.UserId = :id";
-     $stmt = $connection->prepare($query);
-     $stmt->execute(['id' => $userId]);
-     $seekingSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $connection->prepare($query);
+    $stmt->execute(['id' => $userId]);
+    $seekingSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Database Error: " . $e->getMessage());
 }
@@ -72,42 +71,6 @@ try {
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
         crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-
-            $("#openPasswordBtn").click(function() {
-                $("#passwordModal").fadeIn(300);
-            });
-
-            $(".close-modal").click(function() {
-                $("#passwordModal").fadeOut(300);
-                $("#password-error").text("");
-            });
-
-            $("#changePasswordForm").on('submit', function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    type: 'POST',
-                    url: 'update_password.php',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert("Password updated successfully!");
-                            $("#passwordModal").fadeOut();
-                            $("#changePasswordForm")[0].reset();
-                        } else {
-                            $("#password-error").text(response.message);
-                        }
-                    },
-                    error: function() {
-                        alert("An error occurred. Check your connection.");
-                    }
-                });
-            });
-        });
-    </script>
 </head>
 
 <body>
