@@ -7,7 +7,7 @@
  */
 
 // Path to .env.local file (contains credentials that vary per teammate)
-$envFilePath = __DIR__ . '../.env.local';
+$envFilePath = __DIR__ . '/.env.local';
 
 
 if (!file_exists($envFilePath)) {
