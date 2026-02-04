@@ -138,31 +138,40 @@
                 </div>
             </div>
 
-            <!-- What I'm Looking For in Exchange -->
+            <!-- Payment & Exchange Details -->
             <div class="exchange-section">
-            <h2>What I'm Looking For in Exchange</h2>
-            
-            <div class="payment-options">
-                <h3>Payment Options</h3>
-                <div class="payment-badges">
-                    <button type="button" class="payment-badge active" data-payment-method="credits" id="creditBtn" onclick="selectPaymentMethod('credits', this)"><?php echo $requiredCredits ?? 0; ?> Credits</button>
-                    <button type="button" class="payment-badge" data-payment-method="exchange" id="exchangeBtn" onclick="selectPaymentMethod('exchange', this)">Skill Exchange</button>
+                <h2>Payment Details</h2>
+                
+                <div class="payment-options">
+                    <div class="payment-badges">
+                        <?php if ($paymentMethod === 'credit'): ?>
+                            <button type="button" class="payment-badge active">
+                                <?php echo $requiredCredits ?? 0; ?> Credits
+                            </button>
+                        <?php else: ?>
+                            <button type="button" class="payment-badge active">
+                                Skill Exchange
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                    <!-- Hidden input to maintain existing JS logic if any -->
+                    <input type="hidden" id="selectedPaymentMethod" name="selectedPaymentMethod" value="<?php echo htmlspecialchars($paymentMethod); ?>">
                 </div>
-            </div>
 
-            <div class="seeking-skills">
-                <h3>Skills I'm Seeking</h3>
-                <p>If you prefer skill exchange instead of credits, I'm interested in learning:</p>
-                <div class="seeking-tags">
+                <?php if ($paymentMethod === 'exchange' || !empty($requestedSkills)): ?>
+                <div class="seeking-skills">
+                    <h3>Skills Seeking in Exchange</h3>
                     <?php if (!empty($requestedSkills)): ?>
-                        <?php foreach ($requestedSkills as $skill): ?>
-                            <span class="seeking-tag"><?php echo htmlspecialchars($skill); ?></span>
-                        <?php endforeach; ?>
+                        <div class="seeking-tags">
+                            <?php foreach ($requestedSkills as $skill): ?>
+                                <span class="seeking-tag"><?php echo htmlspecialchars($skill); ?></span>
+                            <?php endforeach; ?>
+                        </div>
                     <?php else: ?>
-                        <span class="seeking-tag">Not specified</span>
+                        <p class="no-skills">Open to various skill exchanges.</p>
                     <?php endif; ?>
                 </div>
-            </div>
+                <?php endif; ?>
             </div>
     </div>
 
@@ -193,7 +202,7 @@
 
                     <form method="POST" action="" class="availability-form">
                         <!-- Payment Method Selection -->
-                        <input type="hidden" id="selectedPaymentMethod" name="selectedPaymentMethod" value="credits">
+                        <input type="hidden" id="selectedPaymentMethod" name="selectedPaymentMethod" value="<?php echo htmlspecialchars($paymentMethod); ?>">
                         
                         <!-- Days Schedule -->
                         <div class="schedule-container">

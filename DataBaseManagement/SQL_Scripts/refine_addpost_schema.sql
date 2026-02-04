@@ -9,13 +9,13 @@
 ALTER TABLE PostSkills 
 ADD COLUMN SkillType ENUM('offered', 'requested') NOT NULL DEFAULT 'offered';
 
--- 2. Update Posts table to allow 'both' as a PostType (Online & In-person)
+-- 2. Update Posts table to remove 'both' as a PostType
 ALTER TABLE Posts 
-MODIFY COLUMN PostType ENUM('in-person', 'online', 'both') NOT NULL;
+MODIFY COLUMN PostType ENUM('in-person', 'online') NOT NULL;
 
--- 3. Update Posts table to allow 'both' as a PaymentMethod (Credits & Exchange)
+-- 3. Update Posts table to remove 'both' as a PaymentMethod
 ALTER TABLE Posts 
-MODIFY COLUMN PaymentMethod ENUM('exchange', 'credit', 'both') NOT NULL;
+MODIFY COLUMN PaymentMethod ENUM('exchange', 'credit') NOT NULL;
 
 -- 4. Ensure PostAvailableDates exists (it was in the schema but vital for this feature)
 -- CREATE TABLE IF NOT EXISTS PostAvailableDates (

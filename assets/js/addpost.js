@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const addAvailabilityBtn = document.querySelector('.add-availability');
     const availabilityList = document.getElementById('availability-list');
 
+    // Let all sections be visible by default as they are in HTML.
+
     let offeredSkillCount = 0;
     let targetSkillCount = 0;
     const maxSkills = 5;
@@ -102,11 +104,25 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
 
         container.appendChild(skillDiv);
-        if (isTarget) targetSkillCount++; else offeredSkillCount++;
+        if (isTarget) {
+            targetSkillCount++;
+        } else {
+            offeredSkillCount++;
+            // Lock category once a skill is added
+            offeredCategory.disabled = true;
+        }
 
         skillDiv.querySelector('.remove-skill').addEventListener('click', function () {
             container.removeChild(skillDiv);
-            if (isTarget) targetSkillCount--; else offeredSkillCount--;
+            if (isTarget) {
+                targetSkillCount--;
+            } else {
+                offeredSkillCount--;
+                // Unlock category if no skills are left
+                if (offeredSkillCount === 0) {
+                    offeredCategory.disabled = false;
+                }
+            }
         });
     }
 
@@ -170,14 +186,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function validateForm() {
         let isValid = true;
+        const credits = document.getElementById('credits').value;
+        const duration = document.getElementById('duration').value;
 
+        // Offered skills are always required
         if (offeredSkillCount === 0) {
             document.getElementById('skills-error').textContent = 'Please add at least one offered skill';
             isValid = false;
         }
 
-        if (targetSkillCount === 0) {
-            document.getElementById('target-skills-error').textContent = 'Please add at least one targeted skill';
+        // Context-specific validation (Both are optional but at least one preferred)
+        const hasCredits = credits && credits > 0;
+        const hasTargetSkills = targetSkillCount > 0;
+
+        if (!hasCredits && !hasTargetSkills) {
+            document.getElementById('target-skills-error').textContent = 'Please provide either Targeted Skills or Credits';
+            document.getElementById('credits-error').textContent = 'Please provide either Targeted Skills or Credits';
+            isValid = false;
+        }
+
+        if (hasCredits && !duration) {
+            document.getElementById('duration-error').textContent = 'Please select duration for credit-based service';
             isValid = false;
         }
 
@@ -198,10 +227,10 @@ document.addEventListener('DOMContentLoaded', function () {
             isValid = false;
         }
 
-        const onlineCheckbox = document.getElementById('online');
-        const inpersonCheckbox = document.getElementById('inperson');
-        if (!onlineCheckbox.checked && !inpersonCheckbox.checked) {
-            document.getElementById('delivery-error').textContent = 'Select at least one delivery option';
+        // Delivery type is required (radio always has one checked by default, but safe to check)
+        const deliveryType = form.elements['delivery_type'].value;
+        if (!deliveryType) {
+            document.getElementById('delivery-error').textContent = 'Select a delivery option';
             isValid = false;
         }
 

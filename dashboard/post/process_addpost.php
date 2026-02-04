@@ -29,23 +29,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $duration = 60;
     }
 
-    // PostType logic
-    $isOnline = isset($_POST['online']);
-    $isInPerson = isset($_POST['inperson']);
-    $postType = 'online';
-    if ($isOnline && $isInPerson) {
-        $postType = 'both';
-    } elseif ($isInPerson) {
-        $postType = 'in-person';
-    }
+    // PostType logic - using new radio button
+    $postType = $_POST['delivery_type'] ?? 'online';
 
     // Availability
     $availableTimes = isset($_POST['available_times']) ? $_POST['available_times'] : [];
     $firstAvailableDate = count($availableTimes) > 0 ? $availableTimes[0] : null;
 
-    // PaymentMethod: If target_skills are provided, it's 'exchange' or 'both'
+    // PaymentMethod Inference:
     $hasTargetSkills = isset($_POST['target_skills']) && count($_POST['target_skills']) > 0;
-    $paymentMethod = $credits > 0 ? ($hasTargetSkills ? 'both' : 'credit') : 'exchange';
+    
+    if ($hasTargetSkills) {
+        $paymentMethod = 'exchange';
+        // Note: credits might still be stored if provided, but method is 'exchange'
+    } elseif ($credits > 0) {
+        $paymentMethod = 'credit';
+    } else {
+        $paymentMethod = 'exchange'; // Default fallback
+    }
 
     try {
         $conn->begin_transaction();

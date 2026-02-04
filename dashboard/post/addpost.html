@@ -32,8 +32,8 @@
                 </div>
             </section>
 
-            <!-- Targeted Skills -->
-            <section class="form-section">
+            <!-- Targeted Skills (What you want in return) -->
+            <section class="form-section" id="exchange-section">
                 <h3>Targeted Skills (What you want in return)</h3>
                 <div class="form-inline">
                     <div class="form-group">
@@ -47,26 +47,19 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="form-group" style="margin-left: 10px;">
+                </div>
+                <div class="form-inline" style="margin-top: 10px;">
+                    <div class="form-group">
                         <label for="target-skill-select">Skill *</label>
                         <select id="target-skill-select" name="target-skill-select" disabled>
                             <option value="">Select a category first</option>
                         </select>
                     </div>
-                    <button class="btn add-target-skill" type="button" style="margin-top: 25px;">+ Add skill</button>
+                    <button class="btn add-target-skill" type="button" style="margin-top: 25px; margin-left: 10px;">+
+                        Add skill</button>
                 </div>
                 <div id="target-skills-container" class="skills-list"></div>
                 <span class="error-message" id="target-skills-error"></span>
-
-                <div class="form-group" style="margin-top: 20px;">
-                    <label for="service-type">Service Type *</label>
-                    <select id="service-type" name="service-type" required>
-                        <option value="">Select service type</option>
-                        <option value="online">Online</option>
-                        <option value="in-person">In-person</option>
-                    </select>
-                    <span class="error-message" id="service-type-error"></span>
-                </div>
             </section>
 
             <!-- Offered Skills -->
@@ -97,19 +90,18 @@
                 <span class="error-message" id="skills-error"></span>
             </section>
 
-            <!-- Pricing & Duration -->
-            <section class="form-section">
+            <!-- Pricing & Duration (For Credits) -->
+            <section class="form-section" id="credit-section">
                 <h3>Pricing & Duration</h3>
                 <div class="form-inline">
                     <div class="form-group">
                         <label for="credits">Credits per Hour *</label>
-                        <input type="number" id="credits" name="credits" placeholder="e.g., 50" required min="1"
-                            max="1000">
+                        <input type="number" id="credits" name="credits" placeholder="e.g., 50" min="0" max="1000">
                         <span class="error-message" id="credits-error"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-left: 10px;">
                         <label for="duration">Typical Session Duration</label>
-                        <select id="duration" name="duration" required>
+                        <select id="duration" name="duration">
                             <option value="">Select duration</option>
                             <option>30 minutes</option>
                             <option>60 minutes</option>
@@ -153,10 +145,14 @@
                 <div class="form-group">
                     <strong>Service Delivery Options *</strong>
                     <div class="delivery-options">
-                        <label><input type="checkbox" name="online" id="online" checked> Online Sessions</label>
-                        <span class="note">Conduct sessions via video call</span>
-                        <label><input type="checkbox" name="inperson" id="inperson"> In-Person Sessions</label>
-                        <span class="note">Meet locally for hands-on learning</span>
+                        <label class="radio-label">
+                            <input type="radio" name="delivery_type" value="online" checked>
+                            <span>Online Sessions (via video call)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="delivery_type" value="in-person">
+                            <span>In-Person Sessions (meet locally)</span>
+                        </label>
                     </div>
                     <span class="error-message" id="delivery-error"></span>
                 </div>

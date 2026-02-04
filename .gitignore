@@ -5,4 +5,27 @@
 php.Documentation.md
 
 # Keep .env.example (template for teammates)
-!.env.examplevendor/
+!.env.example
+vendor/
+
+# =============================================================
+# LOCAL CONFIGURATION TEMPLATE
+# =============================================================
+# Add these to your .env or .env.local
+#
+# ; Database Configuration
+# ; This file contains your local database credentials
+#
+# DB_HOST=localhost
+# DB_PORT=3306
+# DB_USER=root
+# DB_PASSWORD=
+# DB_NAME=skill_service_exchange_db
+#
+# ; Email Configuration - optional
+# MAIL_HOST=smtp.gmail.com
+# MAIL_PORT=587
+# MAIL_USERNAME=skill.exchange.swap@gmail.com
+# MAIL_PASSWORD=your_password_here
+# MAIL_FROM=skill.exchange.swap@gmail.com
+# MAIL_FROM_NAME="Skill Service Exchange"
