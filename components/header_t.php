@@ -98,6 +98,26 @@ try {
         </div>
     </div>
     <script>
+        // Function to refresh credits display from server
+        async function refreshCreditsDisplay() {
+            try {
+                const response = await fetch('../notification/getCredits.php');
+                const data = await response.json();
+                if (data.success) {
+                    // Update all credit displays
+                    document.querySelectorAll('.credit-span, .credit-span-small').forEach(el => {
+                        el.textContent = data.balance;
+                    });
+                    console.log('Credits updated:', data.balance);
+                }
+            } catch (error) {
+                console.error('Failed to refresh credits:', error);
+            }
+        }
+
+        // Make it globally available
+        window.refreshCreditsDisplay = refreshCreditsDisplay;
+
         // Header functionality
         document.addEventListener('DOMContentLoaded', function() {
             const hamburger = document.querySelector('.humberger');
@@ -126,6 +146,12 @@ try {
                     this.style.opacity = '1';
                 });
             });
+
+            // Refresh credits on page load to ensure sync
+            refreshCreditsDisplay();
+            
+            // Also refresh credits every 30 seconds (optional polling)
+            setInterval(refreshCreditsDisplay, 30000);
         });
     </script>
 </body>

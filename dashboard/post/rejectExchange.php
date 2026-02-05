@@ -94,27 +94,42 @@ try {
     
     $updateStmt->close();
     
+    // Update the original booking notification to mark it as declined
+    // This prevents the Accept/Decline buttons from showing again
+    $updateNotifSql = "UPDATE UserNotifications SET NotificationType = 'booking_declined' WHERE ExchangeId = ? AND NotificationType = 'booking'";
+    $updateNotifStmt = $conn->prepare($updateNotifSql);
+    if ($updateNotifStmt) {
+        $updateNotifStmt->bind_param('i', $exchangeId);
+        $updateNotifStmt->execute();
+        $updateNotifStmt->close();
+    }
+    
     // Create and insert rejection notification (inline - like eventdetails)
-    $message = $exchange['FullName'] . " has rejected your booking request for " . $exchange['Title'];
-    $title = "Booking Rejected";
-    
-    $notificationSQL = "INSERT INTO UserNotifications 
-                       (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
-                       VALUES (?, 'being_refused', ?, ?, 'no', NOW(), 'Exchange')";
-    
-    $notifStmt = $conn->prepare($notificationSQL);
-    if (!$notifStmt) {
-        throw new Exception('Notification prepare failed: ' . $conn->error);
+    try {
+        $message = $exchange['FullName'] . " has rejected your booking request for " . $exchange['Title'];
+        $title = "Booking Rejected";
+        
+        $notificationSQL = "INSERT INTO UserNotifications 
+                           (RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                           VALUES (?, 'being_refused', ?, ?, 'no', NOW(), 'Exchange')";
+        
+        $notifStmt = $conn->prepare($notificationSQL);
+        if (!$notifStmt) {
+            throw new Exception('Notification prepare failed: ' . $conn->error);
+        }
+        
+        $notifStmt->bind_param('iss', $exchange['RequestedByUserId'], $title, $message);
+        
+        if (!$notifStmt->execute()) {
+            throw new Exception('Failed to create notification: ' . $notifStmt->error);
+        }
+        
+        $notificationId = $conn->insert_id;
+        $notifStmt->close();
+    } catch (mysqli_sql_exception $e) {
+        error_log("Failed to create 'being_refused' notification: " . $e->getMessage());
+        $notificationId = 0;
     }
-    
-    $notifStmt->bind_param('iss', $exchange['RequestedByUserId'], $title, $message);
-    
-    if (!$notifStmt->execute()) {
-        throw new Exception('Failed to create notification: ' . $notifStmt->error);
-    }
-    
-    $notificationId = $conn->insert_id;
-    $notifStmt->close();
     
     // Return success response
     http_response_code(200);

@@ -102,10 +102,14 @@
                     <div class="form-group" style="margin-left: 10px;">
                         <label for="duration">Typical Session Duration</label>
                         <select id="duration" name="duration">
-                            <option value="">Select duration</option>
-                            <option>30 minutes</option>
-                            <option>60 minutes</option>
+                            <option value="60 minutes" selected>60 minutes (default)</option>
+                            <option value="30 minutes">30 minutes</option>
+                            <option value="90 minutes">90 minutes</option>
+                            <option value="120 minutes">2 hours</option>
                         </select>
+                        <span class="duration-hint" style="font-size: 12px; color: #888; margin-top: 4px; display: block;">
+                            This is the typical length of each session
+                        </span>
                         <span class="error-message" id="duration-error"></span>
                     </div>
                 </div>

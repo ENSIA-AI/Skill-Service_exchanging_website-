@@ -110,24 +110,28 @@ try {
         exit;
     }
     
-    // Check if notification already exists (prevent duplicate requests)
-    $checkQuery = "
-        SELECT NotificationId FROM UserNotifications 
-        WHERE SenderId = ? AND RecipientId = ? AND NotificationType = 'booking' 
-        AND NotificationSection = 'Exchange' AND Message LIKE ?
+    // Check if user already has an attendee record (registered/pending/confirmed)
+    $checkAttendeeQuery = "
+        SELECT Status FROM EventsAttendees 
+        WHERE EventId = ? AND UserId = ?
     ";
-    $checkStmt = $conn->prepare($checkQuery);
-    $likePattern = "%join your event " . $eventTitle . "%";
-    $checkStmt->bind_param('iis', $senderId, $recipientId, $likePattern);
-    $checkStmt->execute();
-    $checkResult = $checkStmt->get_result();
+    $checkAttendeeStmt = $conn->prepare($checkAttendeeQuery);
+    $checkAttendeeStmt->bind_param('ii', $eventId, $senderId);
+    $checkAttendeeStmt->execute();
+    $checkAttendeeResult = $checkAttendeeStmt->get_result();
     
-    if ($checkResult->num_rows > 0) {
-        $checkStmt->close();
-        echo json_encode(['success' => true, 'message' => 'Request already sent']);
+    if ($checkAttendeeResult->num_rows > 0) {
+        $existingStatus = $checkAttendeeResult->fetch_assoc()['Status'];
+        $checkAttendeeStmt->close();
+        
+        if ($existingStatus === 'confirmed') {
+            echo json_encode(['success' => false, 'error' => 'You are already confirmed for this event']);
+        } else {
+            echo json_encode(['success' => true, 'message' => 'Request already sent']);
+        }
         exit;
     }
-    $checkStmt->close();
+    $checkAttendeeStmt->close();
     
     // Format request date
     $requestDate = date('F d, Y');
@@ -138,19 +142,29 @@ try {
     $title = "Event Join Request";
     
     // Insert notification into database
-    // Note: 'booking' type must be in 'Exchange' section per database trigger rules
+    // Using 'eventJoinRequest' type which auto-corrects to 'events' section
     $insertQuery = "
         INSERT INTO UserNotifications 
-        (SenderId, RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
-        VALUES (?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')
+        (SenderId, RecipientId, EventId, AttendeeId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+        VALUES (?, ?, ?, ?, 'eventJoinRequest', ?, ?, 'no', NOW(), 'events')
     ";
     
     $insertStmt = $conn->prepare($insertQuery);
-    $insertStmt->bind_param('iiss', $senderId, $recipientId, $title, $message);
+    $insertStmt->bind_param('iiiiss', $senderId, $recipientId, $eventId, $senderId, $title, $message);
     
     if ($insertStmt->execute()) {
         $notificationId = $conn->insert_id;
         $insertStmt->close();
+        
+        // Also insert into EventsAttendees with 'registered' status (awaiting organizer approval)
+        $attendeeInsert = "INSERT INTO EventsAttendees (EventId, UserId, Status, RegisteredAt) VALUES (?, ?, 'registered', NOW())";
+        $attendeeStmt = $conn->prepare($attendeeInsert);
+        $attendeeStmt->bind_param('ii', $eventId, $senderId);
+        
+        if (!$attendeeStmt->execute()) {
+            error_log("Failed to create EventsAttendees record: " . $attendeeStmt->error);
+        }
+        $attendeeStmt->close();
         
         echo json_encode([
             'success' => true,

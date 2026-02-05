@@ -82,6 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSkillsDisplay();
         updateSkillsCount();
         
+        // Lock category once a skill is added (prevent mixing categories)
+        categorySelect.disabled = true;
+        
         // Reset selections
         skillSelect.value = '';
         
@@ -127,6 +130,11 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedSkills.splice(index, 1);
         updateSkillsDisplay();
         updateSkillsCount();
+        
+        // Unlock category if no skills are left (allow changing category)
+        if (selectedSkills.length === 0) {
+            categorySelect.disabled = false;
+        }
     }
     
     // Update skills count

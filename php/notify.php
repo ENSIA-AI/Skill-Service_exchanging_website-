@@ -14,7 +14,7 @@ require_once __DIR__ . '/../DataBaseManagement/config.php';
  * @return int|false The ID of the created notification or false on failure.
  */
 function create_notification($conn, $userId, $type, $title, $message, $section, $senderId = null) {
-    $stmt = $conn->prepare("INSERT INTO UserNotifications (UserId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO UserNotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)");
     if (!$stmt) {
         return false;
     }

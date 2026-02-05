@@ -65,19 +65,22 @@
                 let isSidebarVisible = false;
 
                 // Handle sidebar toggle from header
+                // Support wider breakpoint (899px for events page, 768px for others)
                 document.addEventListener('toggleSidebar', function() {
-                    if (window.innerWidth <= 768) {
+                    if (window.innerWidth <= 899) {
                         isSidebarVisible = !isSidebarVisible;
                         
                         if (isSidebarVisible) {
-                            // Show sidebar
-                            sidebarContainer.style.display = 'flex';
+                            // Show sidebar - use setProperty with !important to override CSS
+                            sidebarContainer.style.setProperty('display', 'flex', 'important');
+                            sidebarContainer.style.setProperty('position', 'fixed', 'important');
+                            sidebarContainer.style.setProperty('z-index', '1001', 'important');
                             sidebarContainer.style.animation = 'slideIn 0.3s ease forwards';
                         } else {
                             // Hide sidebar with animation
                             sidebarContainer.style.animation = 'slideOut 0.3s ease forwards';
                             setTimeout(() => {
-                                sidebarContainer.style.display = 'none';
+                                sidebarContainer.style.setProperty('display', 'none', 'important');
                             }, 300);
                         }
                         
@@ -123,11 +126,11 @@
 
                 
                 sidebar.addEventListener('click', function(e) {
-                    if (e.target.tagName === 'A' && window.innerWidth <= 768) {
+                    if (e.target.tagName === 'A' && window.innerWidth <= 899) {
                         setTimeout(() => {
                             sidebarContainer.style.animation = 'slideOut 0.3s ease forwards';
                             setTimeout(() => {
-                                sidebarContainer.style.display = 'none';
+                                sidebarContainer.style.setProperty('display', 'none', 'important');
                                 isSidebarVisible = false;
                             }, 300);
                         }, 100);
@@ -136,14 +139,14 @@
 
                 
                 document.addEventListener('click', function(e) {
-                    if (window.innerWidth <= 768 && 
+                    if (window.innerWidth <= 899 && 
                         isSidebarVisible &&
                         !e.target.closest('.container') && 
                         !e.target.closest('.humberger')) {
                         
                         sidebarContainer.style.animation = 'slideOut 0.3s ease forwards';
                         setTimeout(() => {
-                            sidebarContainer.style.display = 'none';
+                            sidebarContainer.style.setProperty('display', 'none', 'important');
                             isSidebarVisible = false;
                         }, 300);
                     }

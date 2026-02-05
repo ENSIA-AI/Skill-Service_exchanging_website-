@@ -1,4 +1,8 @@
 <?php
+// Suppress PHP error output to prevent breaking JSON response
+error_reporting(0);
+ini_set('display_errors', 0);
+
 require_once '../../DataBaseManagement/config.php';
 session_start();
 
@@ -14,17 +18,33 @@ $userId = $_SESSION['user_id'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = htmlspecialchars(trim($_POST['title']), ENT_QUOTES, 'UTF-8');
     $description = htmlspecialchars(trim($_POST['description']), ENT_QUOTES, 'UTF-8');
-    $categoryId = (int)$_POST['category']; // Usually from offered category, but hidden in addpost.html? No, it's just 'category'.
-    // Wait, addpost.html has 'category' in the section above.
     
-    $credits = (int)$_POST['credits'];
-    $durationStr = $_POST['duration'];
-    $location = htmlspecialchars(trim($_POST['location']), ENT_QUOTES, 'UTF-8');
+    // Get CategoryId from the first offered skill
+    $categoryId = 1; // Default fallback
+    if (isset($_POST['skills']) && is_array($_POST['skills']) && count($_POST['skills']) > 0) {
+        $firstSkillId = (int)$_POST['skills'][0];
+        $catQuery = $conn->prepare("SELECT CategoryId FROM Skills WHERE SkillId = ?");
+        $catQuery->bind_param("i", $firstSkillId);
+        $catQuery->execute();
+        $catResult = $catQuery->get_result();
+        if ($catRow = $catResult->fetch_assoc()) {
+            $categoryId = (int)$catRow['CategoryId'];
+        }
+        $catQuery->close();
+    }
     
-    // Parse duration
-    $duration = 60; // default
+    $credits = (int)($_POST['credits'] ?? 0);
+    $durationStr = $_POST['duration'] ?? '60 minutes';
+    $location = htmlspecialchars(trim($_POST['location'] ?? ''), ENT_QUOTES, 'UTF-8');
+    
+    // Parse duration - default to 60 minutes (1 hour) if not specified
+    $duration = 60; // default 1 hour
     if (strpos($durationStr, '30') !== false) {
         $duration = 30;
+    } elseif (strpos($durationStr, '90') !== false) {
+        $duration = 90;
+    } elseif (strpos($durationStr, '120') !== false || strpos($durationStr, '2 hour') !== false) {
+        $duration = 120;
     } elseif (strpos($durationStr, '60') !== false) {
         $duration = 60;
     }
@@ -55,7 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $availDate = $firstAvailableDate ? $firstAvailableDate : date('Y-m-d H:i:s', strtotime('+1 day'));
 
         $stmt = $conn->prepare("INSERT INTO Posts (UserId, Title, Description, PostType, CategoryId, Duration, MeetLocation, RequiredCredits, PaymentMethod, PostStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')");
-        $stmt->bind_param("isssiisss", $userId, $title, $description, $postType, $categoryId, $duration, $location, $credits, $paymentMethod);
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $conn->error);
+        }
+        $stmt->bind_param("isssiisis", $userId, $title, $description, $postType, $categoryId, $duration, $location, $credits, $paymentMethod);
         
         if ($stmt->execute()) {
             $postId = $conn->insert_id;
