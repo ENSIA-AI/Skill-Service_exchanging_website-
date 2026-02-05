@@ -36,7 +36,20 @@
                 </svg>
                 <div>
                     <div class="info-label">Duration</div>
-                    <div class="info-value"><?php echo $postDuration ?? 0; ?> hours</div>
+                    <div class="info-value"><?php 
+                        $duration = $postDuration ?? 0;
+                        if ($duration >= 60) {
+                            $hours = floor($duration / 60);
+                            $mins = $duration % 60;
+                            if ($mins > 0) {
+                                echo $hours . ' hour' . ($hours > 1 ? 's' : '') . ' ' . $mins . ' min';
+                            } else {
+                                echo $hours . ' hour' . ($hours > 1 ? 's' : '');
+                            }
+                        } else {
+                            echo $duration . ' minutes';
+                        }
+                    ?></div>
                 </div>
             </div>
 
@@ -142,16 +155,27 @@
         <!-- Skills & Expertise -->
         <div class="skills-section">
             <h2>Skills & Expertise</h2>
+            
+            <h3>Skills Offered</h3>
             <div class="skills-tags">
-                    <?php if (!empty($offeredSkills)): ?>
-                        <?php foreach ($offeredSkills as $skill): ?>
-                            <span class="skill-tag"><?php echo htmlspecialchars($skill); ?></span>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <span class="skill-tag">No skills specified</span>
-                    <?php endif; ?>
-                </div>
+                <?php if (!empty($offeredSkills)): ?>
+                    <?php foreach ($offeredSkills as $skill): ?>
+                        <span class="skill-tag"><?php echo htmlspecialchars($skill); ?></span>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <span class="skill-tag no-skill">No skills specified</span>
+                <?php endif; ?>
             </div>
+            
+            <?php if (!empty($requestedSkills)): ?>
+            <h3 style="margin-top: 1rem;">Skills Seeking in Return</h3>
+            <div class="seeking-tags">
+                <?php foreach ($requestedSkills as $skill): ?>
+                    <span class="seeking-tag"><?php echo htmlspecialchars($skill); ?></span>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+        </div>
 
             <!-- Payment & Exchange Details -->
             <div class="exchange-section">
@@ -174,18 +198,9 @@
                     </form>
                 </div>
 
-                <?php if ($paymentMethod === 'exchange' || !empty($requestedSkills)): ?>
+                <?php if (empty($requestedSkills) && ($paymentMethod === 'exchange' || $requiredCredits == 0)): ?>
                 <div class="seeking-skills">
-                    <h3>Skills Seeking in Exchange</h3>
-                    <?php if (!empty($requestedSkills)): ?>
-                        <div class="seeking-tags">
-                            <?php foreach ($requestedSkills as $skill): ?>
-                                <span class="seeking-tag"><?php echo htmlspecialchars($skill); ?></span>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php else: ?>
-                        <p class="no-skills">Open to various skill exchanges.</p>
-                    <?php endif; ?>
+                    <p class="no-skills">Open to various skill exchanges.</p>
                 </div>
                 <?php endif; ?>
             </div>

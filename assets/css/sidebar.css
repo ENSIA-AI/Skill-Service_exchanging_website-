@@ -110,15 +110,15 @@ svg{
 }
 
 /* Mobile sidebar specific styles */
-@media (max-width: 600px) {
+@media (max-width: 899px) {
     .container {
         position: fixed;
         top: 76px;
         left: 0;
         height: calc(100% - 76px);
         width: 230px;
-        z-index: 1000;
+        z-index: 1001;
         background-color: var(--clr-bars);
-        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.3);
     }
 }

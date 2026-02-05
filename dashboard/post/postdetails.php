@@ -197,6 +197,13 @@ foreach ($timeSlotsByDay as $dayName => $times) {
         $earliest = $times[0];
         $latest = $times[count($times)-1];
         
+        // If only one time slot or start equals end, add the post duration to create end time
+        if ($earliest === $latest && isset($postDuration) && $postDuration > 0) {
+            // Add duration to the start time to get end time
+            $endDateTime = strtotime($earliest) + ($postDuration * 60); // duration is in minutes
+            $latest = date('H:i', $endDateTime);
+        }
+        
         // Store as range
         $dayRanges[$dayName] = [
             'start' => $earliest,
@@ -325,30 +332,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                 
                 file_put_contents(__DIR__ . '/booking_debug.log', "Payment method: $paymentMethod\nNotification title: $title\nNotification message: $message\nRecipient: $postUserId, Sender: $userId\n", FILE_APPEND);
                 
-                // Insert notification (using RecipientId per migration script)
-                $insertQuery = "INSERT INTO UserNotifications 
-                    (RecipientId, SenderId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
-                    VALUES (?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')";
-                
-                $notifStmt = $conn->prepare($insertQuery);
-                if ($notifStmt) {
-                    $notifStmt->bind_param('iiss', $postUserId, $userId, $title, $message);
+                // Insert notification with exception handling for trigger validation
+                try {
+                    $insertQuery = "INSERT INTO UserNotifications 
+                        (RecipientId, SenderId, ExchangeId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                        VALUES (?, ?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')";
                     
-                    if ($notifStmt->execute()) {
-                        $notificationId = $conn->insert_id;
-                        file_put_contents(__DIR__ . '/booking_debug.log', "Notification created: ID=$notificationId\n", FILE_APPEND);
+                    $notifStmt = $conn->prepare($insertQuery);
+                    if ($notifStmt) {
+                        $notifStmt->bind_param('iiiss', $postUserId, $userId, $exchangeId, $title, $message);
+                        
+                        if ($notifStmt->execute()) {
+                            $notificationId = $conn->insert_id;
+                            if ($notificationId > 0) {
+                                file_put_contents(__DIR__ . '/booking_debug.log', "✓ Notification created: ID=$notificationId\n", FILE_APPEND);
+                            } else {
+                                file_put_contents(__DIR__ . '/booking_debug.log', "⚠ Execute succeeded but no insert_id returned\n", FILE_APPEND);
+                            }
+                        }
                         $notifStmt->close();
                     } else {
-                        // Log error but don't fail the booking
-                        $errorMsg = "Failed to create notification: " . $notifStmt->error;
+                        $errorMsg = "✗ Failed to prepare notification: " . $conn->error . "\n";
                         error_log($errorMsg);
-                        file_put_contents(__DIR__ . '/booking_debug.log', "$errorMsg\n", FILE_APPEND);
-                        $notifStmt->close();
+                        file_put_contents(__DIR__ . '/booking_debug.log', $errorMsg, FILE_APPEND);
                     }
-                } else {
-                    $errorMsg = "Failed to prepare notification: " . $conn->error;
+                } catch (mysqli_sql_exception $e) {
+                    // Handle database trigger rejections gracefully
+                    $errorMsg = "✗ Notification insert failed (trigger rejection):\n";
+                    $errorMsg .= "   Message: " . $e->getMessage() . "\n";
+                    $errorMsg .= "   Code: " . $e->getCode() . "\n";
                     error_log($errorMsg);
-                    file_put_contents(__DIR__ . '/booking_debug.log', "$errorMsg\n", FILE_APPEND);
+                    file_put_contents(__DIR__ . '/booking_debug.log', $errorMsg, FILE_APPEND);
                 }
                 
                 $success = "Your booking request has been submitted!";

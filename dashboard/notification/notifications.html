@@ -189,6 +189,63 @@
             font-size: 14px;
         }
 
+        /* Accept/Decline buttons for booking and event requests */
+        .btn-accept {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-accept:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-decline {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-decline:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Status badges for processed notifications */
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-accepted {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+
+        .status-declined {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
         .notification-delete {
             position: absolute;
             right: 20px;
@@ -505,14 +562,30 @@
             let action = '';
             let actionUrl = '#';
             let needsUrl = true;
+            let showAcceptDecline = false;
+            let acceptDeclineHtml = '';
 
             if (category === 'exchange') {
                 if (lowerType === 'booking') {
-                    action = 'Respond';
-                    // Link to exchange details or post details
-                    actionUrl = exchangeId
-                        ? `../post/postdetails.php?exchangeId=${exchangeId}`
-                        : (postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php');
+                    // Show Accept/Decline buttons for booking requests
+                    if (exchangeId) {
+                        showAcceptDecline = true;
+                        acceptDeclineHtml = `
+                            <button class="btn-accept" data-action="accept-exchange" data-exchange-id="${exchangeId}">Accept</button>
+                            <button class="btn-decline" data-action="reject-exchange" data-exchange-id="${exchangeId}">Decline</button>
+                        `;
+                    } else {
+                        action = 'Respond';
+                        actionUrl = postId ? `../post/postdetails.php?postId=${postId}` : '../post/posts.php';
+                    }
+                } else if (lowerType === 'booking_accepted') {
+                    // Already accepted - show status badge instead of buttons
+                    showAcceptDecline = true;
+                    acceptDeclineHtml = `<span class="status-badge status-accepted">✓ Accepted</span>`;
+                } else if (lowerType === 'booking_declined') {
+                    // Already declined - show status badge
+                    showAcceptDecline = true;
+                    acceptDeclineHtml = `<span class="status-badge status-declined">✗ Declined</span>`;
                 } else if (lowerType === 'accepted') {
                     action = 'View Exchange';
                     actionUrl = exchangeId
@@ -548,15 +621,35 @@
                     actionUrl = '../post/posts.php';
                 }
             } else if (category === 'events') {
-                if (lowerType === 'acceptedinevent') {
+                if (lowerType === 'eventjoinrequest') {
+                    // Show Accept/Decline buttons for event join requests
+                    if (eventId && n.AttendeeId) {
+                        showAcceptDecline = true;
+                        acceptDeclineHtml = `
+                            <button class="btn-accept" data-action="accept-event-attendee" data-event-id="${eventId}" data-attendee-id="${n.AttendeeId}">Accept</button>
+                            <button class="btn-decline" data-action="reject-event-attendee" data-event-id="${eventId}" data-attendee-id="${n.AttendeeId}">Decline</button>
+                        `;
+                    } else {
+                        action = 'View Event';
+                        actionUrl = eventId ? `../events/eventdetails.php?id=${eventId}` : '../events/events.php';
+                    }
+                } else if (lowerType === 'eventjoinaccepted') {
+                    // Already accepted - show status badge instead of buttons
+                    showAcceptDecline = true;
+                    acceptDeclineHtml = `<span class="status-badge status-accepted">✓ Accepted</span>`;
+                } else if (lowerType === 'eventjoindeclined') {
+                    // Already declined - show status badge
+                    showAcceptDecline = true;
+                    acceptDeclineHtml = `<span class="status-badge status-declined">✗ Declined</span>`;
+                } else if (lowerType === 'acceptedinevent') {
                     action = 'View Event';
-                    actionUrl = eventId ? `../events/eventdetails.php?eventId=${eventId}` : '../events/events.php';
+                    actionUrl = eventId ? `../events/eventdetails.php?id=${eventId}` : '../events/events.php';
                 } else if (lowerType === 'rejectedfromevent') {
                     action = 'Browse Events';
                     actionUrl = '../events/events.php';
                 } else {
                     action = 'View Event';
-                    actionUrl = eventId ? `../events/eventdetails.php?eventId=${eventId}` : '../events/events.php';
+                    actionUrl = eventId ? `../events/eventdetails.php?id=${eventId}` : '../events/events.php';
                 }
             } else if (category === 'credits') {
                 if (lowerType === 'earned' || lowerType === 'spent') {
@@ -574,7 +667,9 @@
 
             // Build action button HTML
             let actionButton = '';
-            if (action && needsUrl) {
+            if (showAcceptDecline) {
+                actionButton = acceptDeclineHtml;
+            } else if (action && needsUrl) {
                 actionButton = `<a href="${actionUrl}" class="btn-primary" style="text-decoration: none; display: inline-block;">${action}</a>`;
             } else if (action) {
                 actionButton = `<button class="btn-primary">${action}</button>`;
@@ -798,6 +893,9 @@
             });
         });
     </script>
+
+    <!-- Include notification handler for Accept/Decline functionality -->
+    <script src="notificationHandler.js"></script>
 
 </body>
 

@@ -1,4 +1,6 @@
-<?php ?>
+<?php 
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +12,7 @@
     
 </head>
 <body>
-    <?php include '../../components/header.html'; ?>
+    <?php include '../../components/header_t.php'; ?>
     <?php include '../../components/sidebar.html'; ?>
     <main class="php-content">
         <?php include './notifications.html';?>

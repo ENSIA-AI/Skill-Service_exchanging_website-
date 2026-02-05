@@ -224,14 +224,42 @@ function setupEventListeners() {
 
     // Unsend request button
     if (unsendButton) {
-        unsendButton.addEventListener('click', () => {
+        unsendButton.addEventListener('click', async () => {
             const eventId = unsendButton.getAttribute('data-event-id');
-            // Handle unsend request logic here
-            unsendButton.style.display = 'none';
-            joinButton.style.display = 'block';
-            joinButton.textContent = 'Join Event';
-            joinButton.disabled = false;
-            // You can add a confirmation message here
+            
+            // Disable button while processing
+            unsendButton.disabled = true;
+            unsendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+            
+            try {
+                // Call API to delete the notification
+                const response = await fetch('./eventsAPI/cancelEventJoinRequest.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ eventId: parseInt(eventId) })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success - switch back to join button
+                    unsendButton.style.display = 'none';
+                    joinButton.style.display = 'block';
+                    joinButton.textContent = 'Join Event';
+                    joinButton.disabled = false;
+                } else {
+                    alert(data.error || 'Failed to cancel request');
+                    unsendButton.disabled = false;
+                    unsendButton.innerHTML = '<i class="fas fa-times"></i> Unsend Request';
+                }
+            } catch (error) {
+                console.error('Error cancelling join request:', error);
+                alert('Failed to cancel request. Please try again.');
+                unsendButton.disabled = false;
+                unsendButton.innerHTML = '<i class="fas fa-times"></i> Unsend Request';
+            }
         });
     }
 }

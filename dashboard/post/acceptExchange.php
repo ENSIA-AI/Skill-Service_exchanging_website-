@@ -7,6 +7,16 @@
  * Updates exchange status to 'accepted' and sends notification to requester
  */
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
+// Custom error handler to return JSON errors
+set_error_handler(function($severity, $message, $file, $line) {
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
+
 session_start();
 require_once '../../DataBaseManagement/config.php';
 
@@ -81,7 +91,8 @@ try {
     }
     
     // Update exchange status to 'accepted'
-    $updateSql = "UPDATE Exchanges SET Status = 'accepted', ConfirmedDate = NOW() WHERE ExchangeId = ?";
+    // Use ProposedDate as ConfirmedDate since the trigger requires ConfirmedDate >= ProposedDate
+    $updateSql = "UPDATE Exchanges SET Status = 'accepted', ConfirmedDate = ProposedDate WHERE ExchangeId = ?";
     $updateStmt = $conn->prepare($updateSql);
     
     if (!$updateStmt) {
@@ -163,23 +174,31 @@ try {
             $ctEarnedStmt->close();
 
             // UserNotifications: 'spent' and 'earned' require NotificationSection = 'credits' (per trg_validate_notification_section)
-            $notifSpent = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection) 
-                          VALUES (?, 'spent', ?, ?, 'no', NOW(), 'credits')";
-            $nsStmt = $conn->prepare($notifSpent);
-            $nsTitle = "Credits Spent";
-            $nsMsg = "You spent $creditsCost credits for $postTitle with $ownerName.";
-            $nsStmt->bind_param('iss', $requesterId, $nsTitle, $nsMsg);
-            $nsStmt->execute();
-            $nsStmt->close();
+            try {
+                $notifSpent = "INSERT INTO UserNotifications (RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection) 
+                              VALUES (?, 'spent', ?, ?, 'no', NOW(), 'credits')";
+                $nsStmt = $conn->prepare($notifSpent);
+                $nsTitle = "Credits Spent";
+                $nsMsg = "You spent $creditsCost credits for $postTitle with $ownerName.";
+                $nsStmt->bind_param('iss', $requesterId, $nsTitle, $nsMsg);
+                $nsStmt->execute();
+                $nsStmt->close();
+            } catch (mysqli_sql_exception $e) {
+                error_log("Failed to create 'spent' notification: " . $e->getMessage());
+            }
 
-            $notifEarned = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection) 
-                           VALUES (?, 'earned', ?, ?, 'no', NOW(), 'credits')";
-            $neStmt = $conn->prepare($notifEarned);
-            $neTitle = "Credits Earned";
-            $neMsg = "You earned $creditsCost credits for $postTitle from $requesterName.";
-            $neStmt->bind_param('iss', $ownerId, $neTitle, $neMsg);
-            $neStmt->execute();
-            $neStmt->close();
+            try {
+                $notifEarned = "INSERT INTO UserNotifications (RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection) 
+                               VALUES (?, 'earned', ?, ?, 'no', NOW(), 'credits')";
+                $neStmt = $conn->prepare($notifEarned);
+                $neTitle = "Credits Earned";
+                $neMsg = "You earned $creditsCost credits for $postTitle from $requesterName.";
+                $neStmt->bind_param('iss', $ownerId, $neTitle, $neMsg);
+                $neStmt->execute();
+                $neStmt->close();
+            } catch (mysqli_sql_exception $e) {
+                error_log("Failed to create 'earned' notification: " . $e->getMessage());
+            }
 
             $conn->commit();
         } catch (Exception $ex) {
@@ -188,27 +207,42 @@ try {
         }
     }
     
+    // Update the original booking notification to mark it as processed (change type from 'booking' to 'booking_accepted')
+    // This prevents the Accept/Decline buttons from showing again
+    $updateNotifSql = "UPDATE UserNotifications SET NotificationType = 'booking_accepted' WHERE ExchangeId = ? AND NotificationType = 'booking'";
+    $updateNotifStmt = $conn->prepare($updateNotifSql);
+    if ($updateNotifStmt) {
+        $updateNotifStmt->bind_param('i', $exchangeId);
+        $updateNotifStmt->execute();
+        $updateNotifStmt->close();
+    }
+    
     // Create and insert acceptance notification (inline - like eventdetails)
-    $message = $exchange['OwnerName'] . " has accepted your booking request for " . $exchange['Title'];
-    $title = "Booking Accepted";
-    
-    $notificationSQL = "INSERT INTO UserNotifications 
-                       (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
-                       VALUES (?, 'accepted', ?, ?, 'no', NOW(), 'Exchange')";
-    
-    $notifStmt = $conn->prepare($notificationSQL);
-    if (!$notifStmt) {
-        throw new Exception('Notification prepare failed: ' . $conn->error);
+    try {
+        $message = $exchange['OwnerName'] . " has accepted your booking request for " . $exchange['Title'];
+        $title = "Booking Accepted";
+        
+        $notificationSQL = "INSERT INTO UserNotifications 
+                           (RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                           VALUES (?, 'accepted', ?, ?, 'no', NOW(), 'Exchange')";
+        
+        $notifStmt = $conn->prepare($notificationSQL);
+        if (!$notifStmt) {
+            throw new Exception('Notification prepare failed: ' . $conn->error);
+        }
+        
+        $notifStmt->bind_param('iss', $exchange['RequestedByUserId'], $title, $message);
+        
+        if (!$notifStmt->execute()) {
+            throw new Exception('Failed to create notification: ' . $notifStmt->error);
+        }
+        
+        $notificationId = $conn->insert_id;
+        $notifStmt->close();
+    } catch (mysqli_sql_exception $e) {
+        error_log("Failed to create 'accepted' notification: " . $e->getMessage());
+        $notificationId = 0;
     }
-    
-    $notifStmt->bind_param('iss', $exchange['RequestedByUserId'], $title, $message);
-    
-    if (!$notifStmt->execute()) {
-        throw new Exception('Failed to create notification: ' . $notifStmt->error);
-    }
-    
-    $notificationId = $conn->insert_id;
-    $notifStmt->close();
     
     // Return success response with updated balances (if credits were transferred)
     http_response_code(200);
@@ -223,7 +257,20 @@ try {
     
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false, 
+        'error' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine()
+    ]);
+} catch (Error $e) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false, 
+        'error' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine()
+    ]);
 } finally {
     if (isset($conn)) {
         $conn->close();

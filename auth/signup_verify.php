@@ -109,8 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($attemptCount >= 10) {
                 $verification_error = "Unable to generate unique username. Please try again later.";
             } else {
-                // Insert user into database
-                $query = "INSERT INTO Users(UserName, FullName, Email, Password, Gender, PhoneNumber, BirthDate, Location, CreditBalance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)";
+                // Insert user into database with 100 starting credits
+                $query = "INSERT INTO Users(UserName, FullName, Email, Password, Gender, PhoneNumber, BirthDate, Location, CreditBalance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 100)";
                 $stmt = $conn->prepare($query);
                 
                 if (!$stmt) {
