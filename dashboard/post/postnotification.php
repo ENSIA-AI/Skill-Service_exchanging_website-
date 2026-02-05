@@ -16,32 +16,41 @@ require_once '../../DataBaseManagement/config.php';
  * @param string $requesterName - Name of the user requesting
  * @param string $paymentMethod - 'exchange' or 'credit'
  * @param int $requiredCredits - Credits amount if applicable
+ * @param string $timeSlotDisplay - Formatted time slot (e.g., "10:00 to 11:00 on Feb 10, 2026")
  */
-function sendBookingNotification($postId, $postOwnerId, $requesterId, $postTitle, $requesterName, $paymentMethod, $requiredCredits) {
+function sendBookingNotification($postId, $postOwnerId, $requesterId, $postTitle, $requesterName, $paymentMethod, $requiredCredits, $timeSlotDisplay = '') {
     global $conn;
     
     // Create notification message based on payment method
     if ($paymentMethod === 'exchange') {
-        $notificationMessage = "$requesterName is requesting to exchange skills for your $postTitle course";
+        if (!empty($timeSlotDisplay)) {
+            $notificationMessage = "$requesterName has requested to exchange skills for your \"$postTitle\" session ($timeSlotDisplay)";
+        } else {
+            $notificationMessage = "$requesterName has requested to exchange skills for your \"$postTitle\" session";
+        }
         $notificationTitle = 'Skill Exchange Request';
     } else {
         // Credits payment
-        $notificationMessage = "$requesterName is requesting to pay $requiredCredits credits for your $postTitle course";
+        if (!empty($timeSlotDisplay)) {
+            $notificationMessage = "$requesterName has requested to book your \"$postTitle\" session for $requiredCredits credits ($timeSlotDisplay)";
+        } else {
+            $notificationMessage = "$requesterName has requested to book your \"$postTitle\" session for $requiredCredits credits";
+        }
         $notificationTitle = 'Booking Request';
     }
     
     $notificationType = 'booking';
     $notificationSection = 'Exchange';
     
-    // Insert notification to post owner
-    $sqlNotification = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?)";
+    // Insert notification to post owner (using RecipientId per migration script)
+    $sqlNotification = "INSERT INTO UserNotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
     $stmtNotification = $conn->prepare($sqlNotification);
     
     if (!$stmtNotification) {
         return ['success' => false, 'error' => 'Database error: ' . $conn->error];
     }
     
-    $stmtNotification->bind_param('issss', $postOwnerId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
+    $stmtNotification->bind_param('iissss', $postOwnerId, $requesterId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
     
     if ($stmtNotification->execute()) {
         $stmtNotification->close();
@@ -70,15 +79,15 @@ function sendAcceptanceNotification($postOwnerId, $requesterId, $exchangeId, $po
     $notificationMessage = "$postOwnerName has accepted your booking request for $postTitle";
     $notificationSection = 'Exchange';
     
-    // Insert notification to requester
-    $sqlNotification = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?)";
+    // Insert notification to requester (using RecipientId per migration script)
+    $sqlNotification = "INSERT INTO UserNotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
     $stmtNotification = $conn->prepare($sqlNotification);
     
     if (!$stmtNotification) {
         return ['success' => false, 'error' => 'Database error: ' . $conn->error];
     }
     
-    $stmtNotification->bind_param('issss', $requesterId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
+    $stmtNotification->bind_param('iissss', $requesterId, $postOwnerId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
     
     if ($stmtNotification->execute()) {
         $stmtNotification->close();
@@ -106,15 +115,15 @@ function sendRejectionNotification($postOwnerId, $requesterId, $postTitle, $post
     $notificationMessage = "$postOwnerName has rejected your booking request for $postTitle";
     $notificationSection = 'Exchange';
     
-    // Insert notification to requester
-    $sqlNotification = "INSERT INTO UserNotifications (UserId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?)";
+    // Insert notification to requester (using RecipientId per migration script)
+    $sqlNotification = "INSERT INTO UserNotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
     $stmtNotification = $conn->prepare($sqlNotification);
     
     if (!$stmtNotification) {
         return ['success' => false, 'error' => 'Database error: ' . $conn->error];
     }
     
-    $stmtNotification->bind_param('issss', $requesterId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
+    $stmtNotification->bind_param('iissss', $requesterId, $postOwnerId, $notificationType, $notificationTitle, $notificationMessage, $notificationSection);
     
     if ($stmtNotification->execute()) {
         $stmtNotification->close();

@@ -172,7 +172,8 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.status === "success") {
-                    window.location.reload();
+                    // Redirect to profile page with success flag
+                    window.location.href = "profile.php?updated=1";
                 } else {
                     alert("Error: " + response.message);
                 }

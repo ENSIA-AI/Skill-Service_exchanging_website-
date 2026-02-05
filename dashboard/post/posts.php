@@ -43,10 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
         $stmt->bind_param('isss', $currentUserId, $search_param, $search_param, $search_param);
     }
     $stmt->execute();
-    $stmt->bind_result($postId, $title, $description, $likeCount, $categoryName, $userName, $rating, $profilePicture, $userId, $userLiked);
+    $stmt->bind_result($postId, $userId, $title, $description, $likeCount, $categoryName, $userName, $rating, $profilePicture, $userLiked);
     while ($stmt->fetch()) {
         $posts[] = [
             'PostId' => $postId,
+            'UserId' => $userId,
             'Title' => $title,
             'Description' => $description,
             'LikeCount' => $likeCount,
@@ -54,8 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
             'UserName' => $userName,
             'Rating' => $rating,
             'UserLiked' => $userLiked,
-            'ProfilePicture' => $profilePicture,
-            'UserId' => $userId
+            'ProfilePicture' => $profilePicture
         ];
     }
     $stmt->close();
@@ -145,7 +145,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             echo '</div>';
             echo '</div>';
             echo '<p class="post-field">' . $Title . '</p>';
-            echo '<p class="post-description">' . $Desc . '</p>';
+            echo '<p class="post-description">' . htmlspecialchars(substr($Desc, 0, 100)) . '...</p>';
             echo '<div class="skills">';
             echo '<span>' . htmlspecialchars((string)($post['CategoryName'] ?? '')) . '</span>';
             echo '</div>';
@@ -546,10 +546,30 @@ $conn->close();
     <script>
         var currentOffset = 12;
         var hasMorePosts = <?php echo count($posts) >= 12 ? 'true' : 'false'; ?>;
+        var originalPostsHtml = null; // Store original posts for reset
+        var isSearchActive = false;
 
         $(document).ready(function() {
-            // Show More Posts button with AJAX pagination
+            // Store the original posts HTML on page load
+            originalPostsHtml = $('#posts-grid').html();
+
+            // Show More Posts button with AJAX pagination (only when not in search mode)
             $('#show-all-btn, #show-all-btn-bottom').on('click', function() {
+                // If search is active, reset to show all original posts
+                if (isSearchActive) {
+                    $('#posts-grid').html(originalPostsHtml);
+                    $('#posts-title').text('Browse All Posts');
+                    $('#search-bar').val('');
+                    isSearchActive = false;
+                    currentOffset = 12;
+                    // Show the button again for pagination if there are more posts
+                    if (hasMorePosts) {
+                        $('#show-all-btn, #show-all-btn-bottom').show();
+                    }
+                    return;
+                }
+
+                // Normal pagination - load more posts
                 $.ajax({
                     type: 'GET',
                     url: 'posts.php',
@@ -562,6 +582,8 @@ $conn->close();
                     success: function(response) {
                         if (response.trim() !== '' && response.includes('post-card')) {
                             $('#posts-grid').append(response);
+                            // Update original posts to include the newly loaded ones
+                            originalPostsHtml = $('#posts-grid').html();
                             currentOffset += 12;
                         } else {
                             $('#show-all-btn, #show-all-btn-bottom').hide();
@@ -590,7 +612,6 @@ $conn->close();
             // Search functionality — show results without recommendation title
             $('#search-bar').on('keyup', function() {
                 var searchQuery = $(this).val().trim();
-                currentOffset = 12;
 
                 if (searchQuery.length > 0) {
                     $.ajax({
@@ -604,15 +625,26 @@ $conn->close();
                         },
                         success: function(response) {
                             $('#posts-grid').html(response);
-                            $('#posts-title').text('Browse All Posts');
+                            $('#posts-title').text('Search Results for "' + searchQuery + '"');
                             $('#back-to-all-btn').hide();
+                            isSearchActive = true;
+                            // Change button text to indicate reset functionality
+                            $('#show-all-btn').text('Show All Posts').show();
                         },
                         error: function() {
                             console.log('Search error');
                         }
                     });
                 } else {
-                    location.reload();
+                    // Empty search - reset to original posts
+                    if (isSearchActive) {
+                        $('#posts-grid').html(originalPostsHtml);
+                        $('#posts-title').text('Browse All Posts');
+                        isSearchActive = false;
+                        if (hasMorePosts) {
+                            $('#show-all-btn').show();
+                        }
+                    }
                 }
             });
 

@@ -228,23 +228,39 @@ while ($ex = $resultEx->fetch_assoc()) {
 
 // Handle POST when user selects a date 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
+    // Debug logging - write to a file we can check
+    $debugLog = "\n=== BOOKING POST DEBUG " . date('Y-m-d H:i:s') . " ===\n";
+    $debugLog .= "POST Data: " . print_r($_POST, true) . "\n";
+    $debugLog .= "Session user_id: " . ($_SESSION['user_id'] ?? 'NOT SET') . "\n";
+    file_put_contents(__DIR__ . '/booking_debug.log', $debugLog, FILE_APPEND);
+    
+    error_log("POST received - SelectedDate: " . $_POST['SelectedDate']);
+    error_log("POST selectedPaymentMethod: " . ($_POST['selectedPaymentMethod'] ?? 'NOT SET'));
+    
     // Check if user is logged in
     if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
         $error = "Please log in to book this service.";
+        file_put_contents(__DIR__ . '/booking_debug.log', "ERROR: User not logged in\n", FILE_APPEND);
     } else {
         $selectedDate = $_POST['SelectedDate'];
         $userId = $_SESSION['user_id'];  // Use user_id, not userId
+        
+        file_put_contents(__DIR__ . '/booking_debug.log', "User logged in: UserId=$userId, PostOwner=$postUserId\n", FILE_APPEND);
 
         // Validate user cannot book their own post
         if ($userId == $postUserId) {
             $error = "You cannot book your own post.";
+            file_put_contents(__DIR__ . '/booking_debug.log', "ERROR: User trying to book own post (UserId=$userId, PostOwner=$postUserId)\n", FILE_APPEND);
         } elseif (in_array($selectedDate, $bookedDates)) {
             $error = "This date has already been booked.";
+            file_put_contents(__DIR__ . '/booking_debug.log', "ERROR: Date already booked: $selectedDate\n", FILE_APPEND);
         } else {
             // Get payment method (form uses 'credits' or 'exchange')
             $paymentMethod = isset($_POST['selectedPaymentMethod']) ? $_POST['selectedPaymentMethod'] : 'credits';
             $isCreditPayment = ($paymentMethod === 'credits' || $paymentMethod === 'credit');
             $creditsCost = $isCreditPayment ? (int)$requiredCredits : 0;
+            
+            file_put_contents(__DIR__ . '/booking_debug.log', "Payment: method=$paymentMethod, isCreditPayment=" . ($isCreditPayment?'yes':'no') . ", creditsCost=$creditsCost, requiredCredits=$requiredCredits\n", FILE_APPEND);
 
             // If credit payment: validate requester has sufficient balance
             if ($creditsCost > 0) {
@@ -254,12 +270,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                 $balStmt->execute();
                 $balResult = $balStmt->get_result()->fetch_assoc();
                 $balStmt->close();
-                if (!$balResult || (int)($balResult['CreditBalance'] ?? 0) < $creditsCost) {
+                
+                $userBalance = (int)($balResult['CreditBalance'] ?? 0);
+                file_put_contents(__DIR__ . '/booking_debug.log', "Credit check: User balance=$userBalance, Required=$creditsCost\n", FILE_APPEND);
+                
+                if (!$balResult || $userBalance < $creditsCost) {
                     $error = "Insufficient credits. You need $creditsCost credits to book this service.";
+                    file_put_contents(__DIR__ . '/booking_debug.log', "ERROR: Insufficient credits (has $userBalance, needs $creditsCost)\n", FILE_APPEND);
                 }
             }
 
             if (empty($error)) {
+            // Log: entering success path
+            file_put_contents(__DIR__ . '/booking_debug.log', "No errors, proceeding with booking...\n", FILE_APPEND);
+            
             // Get requester's name
             $userNameSql = "SELECT FullName FROM Users WHERE UserId = ?";
             $userNameStmt = $conn->prepare($userNameSql);
@@ -269,56 +293,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
             $requesterName = $currentUserData['FullName'] ?? 'Unknown User';
             $userNameStmt->close();
             
+            file_put_contents(__DIR__ . '/booking_debug.log', "Requester: $requesterName\n", FILE_APPEND);
+            
             // Insert new exchange (store CreditsCost for credit transfers when accepted)
             $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate, CreditsCost) VALUES (?, ?, ?, ?, ?)";
             $stmtInsert = $conn->prepare($sqlInsert);
             $stmtInsert->bind_param('iiisi', $postId, $postUserId, $userId, $selectedDate, $creditsCost);
             
+            file_put_contents(__DIR__ . '/booking_debug.log', "About to insert Exchange... PostId=$postId, Owner=$postUserId, Requester=$userId, Credits=$creditsCost\n", FILE_APPEND);
+            
             if ($stmtInsert->execute()) {
-                try {
-                    // Create notification message (exact approach as eventdetails)
-                    if ($paymentMethod === 'exchange') {
-                        $message = "$requesterName has requested to exchange skills for your $postTitle on " . date('M d, Y', strtotime($selectedDate));
-                        $title = "Skill Exchange Request";
-                    } else {
-                        $message = "$requesterName has requested to pay $requiredCredits credits for your $postTitle on " . date('M d, Y', strtotime($selectedDate));
-                        $title = "Booking Request";
-                    }
-                    
-                    // Insert notification (exact pattern as teammate's eventdetails)
-                    $insertQuery = "
-                        INSERT INTO UserNotifications 
-                        (UserId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
-                        VALUES (?, 'booking', ?, ?, 'no', NOW(), 'Exchange')
-                    ";
-                    
-                    $insertStmt = $conn->prepare($insertQuery);
-                    if (!$insertStmt) {
-                        throw new Exception("Prepare failed: " . $conn->error);
-                    }
-                    
-                    $insertStmt->bind_param('iss', $postUserId, $title, $message);
-                    
-                    if ($insertStmt->execute()) {
-                        $notificationId = $conn->insert_id;
-                        $insertStmt->close();
-                        
-                        $success = "Your booking request has been submitted!";
-                        $bookedDates[] = $selectedDate;
-                        $currentUserExchange = getUserExchangesForPost($postId, $userId);
-                    } else {
-                        throw new Exception("Failed to create notification: " . $insertStmt->error);
-                    }
-                } catch (Exception $e) {
-                    $error = "Server error: " . $e->getMessage();
-                    if (isset($insertStmt) && $insertStmt) {
-                        $insertStmt->close();
-                    }
+                $exchangeId = $conn->insert_id;
+                $stmtInsert->close();
+                
+                file_put_contents(__DIR__ . '/booking_debug.log', "Exchange created: ID=$exchangeId\n", FILE_APPEND);
+                
+                // Format time slot display (from time to time based on duration)
+                $startTime = date('H:i', strtotime($selectedDate));
+                $endTime = date('H:i', strtotime($selectedDate . ' + ' . $postDuration . ' minutes'));
+                $dateFormatted = date('M d, Y', strtotime($selectedDate));
+                $timeSlotDisplay = "$startTime to $endTime on $dateFormatted";
+                
+                // Create notification message based on payment method
+                if ($paymentMethod === 'exchange') {
+                    $message = "$requesterName has requested to exchange skills for your \"$postTitle\" session ($timeSlotDisplay)";
+                    $title = "Skill Exchange Request";
+                } else {
+                    $message = "$requesterName has requested to book your \"$postTitle\" session for $requiredCredits credits ($timeSlotDisplay)";
+                    $title = "Booking Request";
                 }
+                
+                file_put_contents(__DIR__ . '/booking_debug.log', "Payment method: $paymentMethod\nNotification title: $title\nNotification message: $message\nRecipient: $postUserId, Sender: $userId\n", FILE_APPEND);
+                
+                // Insert notification (using RecipientId per migration script)
+                $insertQuery = "INSERT INTO UserNotifications 
+                    (RecipientId, SenderId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                    VALUES (?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')";
+                
+                $notifStmt = $conn->prepare($insertQuery);
+                if ($notifStmt) {
+                    $notifStmt->bind_param('iiss', $postUserId, $userId, $title, $message);
+                    
+                    if ($notifStmt->execute()) {
+                        $notificationId = $conn->insert_id;
+                        file_put_contents(__DIR__ . '/booking_debug.log', "Notification created: ID=$notificationId\n", FILE_APPEND);
+                        $notifStmt->close();
+                    } else {
+                        // Log error but don't fail the booking
+                        $errorMsg = "Failed to create notification: " . $notifStmt->error;
+                        error_log($errorMsg);
+                        file_put_contents(__DIR__ . '/booking_debug.log', "$errorMsg\n", FILE_APPEND);
+                        $notifStmt->close();
+                    }
+                } else {
+                    $errorMsg = "Failed to prepare notification: " . $conn->error;
+                    error_log($errorMsg);
+                    file_put_contents(__DIR__ . '/booking_debug.log', "$errorMsg\n", FILE_APPEND);
+                }
+                
+                $success = "Your booking request has been submitted!";
+                
+                // Store success message in session and redirect to prevent form resubmission
+                $_SESSION['booking_success'] = true;
+                header("Location: postdetails.php?Postid=$postId");
+                exit();
             } else {
                 $error = "Error submitting booking: " . $stmtInsert->error;
             }
-            $stmtInsert->close();
+            // Close the exchange insert statement
+            if (isset($stmtInsert) && $stmtInsert) {
+                $stmtInsert->close();
+                unset($stmtInsert); // Prevent double-close at end of file
+            }
             } // end if (empty($error))
         }
     }
@@ -340,7 +386,7 @@ if (isset($_SESSION['user_id'])) {
     <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="../../assets/css/postdetails.css">
+    <link rel="stylesheet" href="../../assets/css/postdetails.css?v=<?php echo time(); ?>">
 </head>
 <body>
     <?php include '../../components/header.html'; ?>
@@ -355,10 +401,12 @@ if (isset($_SESSION['user_id'])) {
 
 <?php
 // Close connection after everything is done
-if (isset($stmt)) { $stmt->close(); }
-if (isset($userStmt)) { $userStmt->close(); }
-if (isset($stmtDates)) { $stmtDates->close(); }
-if (isset($stmtEx)) { $stmtEx->close(); }
-if (isset($stmtInsert)) { $stmtInsert->close(); }
-if (isset($conn)) { $conn->close(); }
+// Note: Only close statements that haven't been closed elsewhere
+if (isset($stmt) && $stmt instanceof mysqli_stmt) { @$stmt->close(); }
+if (isset($userStmt) && $userStmt instanceof mysqli_stmt) { @$userStmt->close(); }
+if (isset($stmtDates) && $stmtDates instanceof mysqli_stmt) { @$stmtDates->close(); }
+if (isset($stmtEx) && $stmtEx instanceof mysqli_stmt) { @$stmtEx->close(); }
+if (isset($skillsStmt) && $skillsStmt instanceof mysqli_stmt) { @$skillsStmt->close(); }
+if (isset($seekingStmt) && $seekingStmt instanceof mysqli_stmt) { @$seekingStmt->close(); }
+if (isset($conn) && $conn instanceof mysqli) { @$conn->close(); }
 ?>

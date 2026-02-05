@@ -138,6 +138,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const dateObj = new Date(dateTime);
+        const now = new Date();
+        
+        // Validate that the selected time is not in the past
+        if (dateObj <= now) {
+            alert('Please select a future date and time. The time slot cannot be in the past.');
+            availabilityInput.value = '';
+            return;
+        }
+
         const formatted = dateObj.toLocaleString();
 
         const tag = document.createElement('div');
@@ -214,6 +223,20 @@ document.addEventListener('DOMContentLoaded', function () {
         if (availabilityTags.length === 0) {
             document.getElementById('availability-error').textContent = 'Please add at least one available time slot';
             isValid = false;
+        } else {
+            // Validate all time slots are still in the future at submission time
+            const now = new Date();
+            let hasPastSlot = false;
+            availabilityTags.forEach(function(input) {
+                const slotDate = new Date(input.value);
+                if (slotDate <= now) {
+                    hasPastSlot = true;
+                }
+            });
+            if (hasPastSlot) {
+                document.getElementById('availability-error').textContent = 'One or more time slots are in the past. Please remove them and add valid future times.';
+                isValid = false;
+            }
         }
 
         // Basic validation for title/description

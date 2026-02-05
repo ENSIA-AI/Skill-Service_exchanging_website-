@@ -27,9 +27,10 @@ body {
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 480px;
-    gap: 30px;
+    gap: 20px;
     padding: 0 20px;
     width: 100%;
+    align-items: start; /* Align both columns to the top */
 }
 
 /* FIXED: Override PHP content styling */
@@ -258,7 +259,8 @@ body {
 }
 
 .btn-primary,
-.btn-secondary {
+.btn-secondary,
+.btn-cancel {
     flex: 1;
     padding: 15px 30px;
     border-radius: 12px;
@@ -309,15 +311,24 @@ body {
 }
 
 .btn-disabled {
-    background-color: #cccccc;
-    color: #666;
+    background-color: var(--clr-btn);
+    color: var(--clr-font);
     cursor: not-allowed;
+    position: relative;
+    opacity: 0.75;
+    flex: 1;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .btn-disabled:hover {
-    background-color: #cccccc;
+    background-color: var(--clr-btn);
     transform: none;
     box-shadow: none;
+    opacity: 0.75;
 }
 
 .btn-primary:disabled,
@@ -451,26 +462,70 @@ body {
 
 .payment-badges {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     margin-top: 12px;
     flex-wrap: wrap;
 }
+
 .payment-badge {
-    padding: 10px 20px;
-    border-radius: 10px;
-    background-color: var(--clr-main); 
-    border: 2px solid var(--clr-main);
-    color: var(--clr-font);
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
+    padding: 8px 16px;
+    background: var(--clr-bars);
+    border: 2px solid var(--clr-lighter);
+    border-radius: 25px;
     transition: all 0.3s ease;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    font-weight: 500;
 }
 
+.payment-badge:first-child {
+    border-left: none;
+}
+
+.payment-badge:last-child {
+    border-left: none;
+}
+
+.payment-badge:hover {
+    border-color: var(--clr-btn);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 177, 122, 0.2);
+}
 
 .payment-badge.active {
-    background-color: var(--clr-btn);
+    background: linear-gradient(135deg, var(--clr-btn) 0%, #e65c00 100%);
     border-color: var(--clr-btn);
-    color: var(--clr-font);
+    color: white;
+}
+
+.payment-badge input[type="radio"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--clr-btn);
+    cursor: pointer;
+    margin: 0;
+}
+
+.payment-badge.active input[type="radio"] {
+    accent-color: white;
+}
+
+/* Cancel Button Style */
+.btn-cancel {
+    background-color: #dc3545 !important;
+    color: white !important;
+    flex: 1 !important;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
 }
 
 .seeking-skills {
@@ -485,7 +540,6 @@ body {
 .availability-section {
     position: sticky;
     top: 90px; /* Adjusted for header */
-    align-self: flex-start;
 }
 
 .availability-card {
@@ -515,6 +569,45 @@ body {
     font-size: 0.9rem;
     color: #c5c7d9;
     margin: 0;
+}
+
+/* Status Messages */
+.status-message {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.status-success {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    border: 1px solid #c3e6cb !important;
+}
+
+.status-error {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    border: 1px solid #f5c6cb !important;
+}
+
+.status-info {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    border: 1px solid #c3e6cb !important;
 }
 
 /* Schedule Container */

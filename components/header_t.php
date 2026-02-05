@@ -12,11 +12,14 @@ try {
 
     if ($user) {
         $currentHeaderPhoto    = !empty($user['ProfilePicture']) ? htmlspecialchars($user['ProfilePicture']) : '../../assets/images/Default_pfp.svg';
+        $userCredits = isset($user['CreditBalance']) ? (int)$user['CreditBalance'] : 0;
     } else {
         $currentHeaderPhoto = '../../assets/images/Default_pfp.svg';
+        $userCredits = 0;
     }
 } catch (PDOException $e) {
     echo "Query failed: " . $e->getMessage();
+    $userCredits = 0;
 }
 
 ?>
@@ -70,10 +73,10 @@ try {
 
         </div>
         <div class="header-right">
-            <span class="credit-span-small">50</span>
+            <span class="credit-span-small"><?= $userCredits ?></span>
             <div class="header-credit">
                 Credits:
-                <span class="credit-span">50</span>
+                <span class="credit-span"><?= $userCredits ?></span>
             </div>
             <a href="../notification/notifications.php"
                 class="header-notification">

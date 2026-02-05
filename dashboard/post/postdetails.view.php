@@ -15,7 +15,7 @@
             </div>
             <div class="service-price">
                 <span class="price-label">Price</span>
-                <span class="price-value"><?php echo $requiredCredits ?? 0; ?> credits/hr</span>
+                <span class="price-value"><?php echo ($requiredCredits > 0) ? $requiredCredits . ' credits/hr' : 'Free'; ?></span>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
                 </svg>
                 <div>
                     <div class="info-label">Location</div>
-                    <div class="info-value"><?php echo htmlspecialchars($postLocation ?? 'N/A'); ?></div>
+                    <div class="info-value"><?php echo !empty($postLocation) ? htmlspecialchars($postLocation) : 'N/A'; ?></div>
                 </div>
             </div>
 
@@ -85,6 +85,8 @@
                 $buttonDisabled = false;
                 $isLoggedIn = isset($_SESSION['user_id']);
                 $isPostOwner = ($isLoggedIn && $_SESSION['user_id'] == $postUserId);
+                $canCancel = false; // Flag for allowing request cancellation
+                $exchangeId = null;
                 
                 if (!$isLoggedIn) {
                     // Not logged in - show book button but might need login
@@ -98,18 +100,31 @@
                 } elseif (!empty($currentUserExchange)) {
                     // User has an existing exchange
                     $status = $currentUserExchange['Status'];
-                    $buttonState = getButtonState($status);
-                    if ($buttonState) {
-                        $buttonText = $buttonState['text'];
-                        $buttonClass = 'btn-primary ' . $buttonState['class'];
-                        $buttonDisabled = $buttonState['disabled'];
+                    $exchangeId = $currentUserExchange['ExchangeId'];
+                    
+                    if ($status === 'pending') {
+                        // Allow cancellation for pending requests
+                        $buttonText = 'Cancel Request';
+                        $buttonClass = 'btn-cancel';
+                        $buttonDisabled = false;
+                        $canCancel = true;
+                    } else {
+                        $buttonState = getButtonState($status);
+                        if ($buttonState) {
+                            $buttonText = $buttonState['text'];
+                            $buttonClass = 'btn-primary ' . $buttonState['class'];
+                            $buttonDisabled = $buttonState['disabled'];
+                        }
                     }
                 }
             ?>
             <button 
+                id="bookServiceBtn"
                 class="<?php echo $buttonClass; ?>" 
-                onclick="<?php echo $buttonDisabled ? 'return false;' : 'bookService();'; ?>"
+                onclick="<?php echo $buttonDisabled ? 'return false;' : ($canCancel ? 'cancelRequest();' : 'bookService();'); ?>"
                 <?php echo $buttonDisabled ? 'disabled' : ''; ?>
+                data-exchange-id="<?php echo $exchangeId ?? ''; ?>"
+                data-can-cancel="<?php echo $canCancel ? 'true' : 'false'; ?>"
             >
                 <?php echo $buttonText; ?>
             </button>
@@ -121,7 +136,7 @@
             <p><?php echo nl2br(htmlspecialchars($postDescription ?? '')); ?></p>
 
             <h3>Prerequisites</h3>
-            <p><?php echo nl2br(htmlspecialchars($prerequisites ?? 'No prerequisites specified.')); ?></p>
+            <p><?php echo !empty($prerequisites) ? nl2br(htmlspecialchars($prerequisites)) : 'No prerequisites specified.'; ?></p>
         </div>
 
         <!-- Skills & Expertise -->
@@ -143,19 +158,20 @@
                 <h2>Payment Details</h2>
                 
                 <div class="payment-options">
-                    <div class="payment-badges">
-                        <?php if ($paymentMethod === 'credit'): ?>
-                            <button type="button" class="payment-badge active">
-                                <?php echo $requiredCredits ?? 0; ?> Credits
-                            </button>
-                        <?php else: ?>
-                            <button type="button" class="payment-badge active">
-                                Skill Exchange
-                            </button>
-                        <?php endif; ?>
-                    </div>
-                    <!-- Hidden input to maintain existing JS logic if any -->
-                    <input type="hidden" id="selectedPaymentMethod" name="selectedPaymentMethod" value="<?php echo htmlspecialchars($paymentMethod); ?>">
+                    <form class="payment-form">
+                        <div class="payment-badges">
+                            <?php if ($requiredCredits > 0): ?>
+                            <label class="payment-badge <?php echo ($paymentMethod !== 'exchange') ? 'active' : ''; ?>">
+                                <input type="radio" name="paymentMethod" value="credits" <?php echo ($paymentMethod !== 'exchange') ? 'checked' : ''; ?> onchange="selectPaymentMethod('credits', this.closest('label'))">
+                                <span><?php echo $requiredCredits; ?> Credits</span>
+                            </label>
+                            <?php endif; ?>
+                            <label class="payment-badge <?php echo ($requiredCredits == 0 || $paymentMethod === 'exchange') ? 'active' : ''; ?>">
+                                <input type="radio" name="paymentMethod" value="exchange" <?php echo ($requiredCredits == 0 || $paymentMethod === 'exchange') ? 'checked' : ''; ?> onchange="selectPaymentMethod('exchange', this.closest('label'))">
+                                <span>Skill Exchange</span>
+                            </label>
+                        </div>
+                    </form>
                 </div>
 
                 <?php if ($paymentMethod === 'exchange' || !empty($requestedSkills)): ?>
@@ -173,7 +189,7 @@
                 </div>
                 <?php endif; ?>
             </div>
-    </div>
+        </div>
 
             <!-- Right Section: Availability Schedule -->
             <div class="availability-section">
@@ -189,20 +205,19 @@
                         </div>
                     </div>
 
+                    <!-- Status Message Container -->
+                    <div id="statusMessage" class="status-message" style="display: none;"></div>
+                    
+                    <!-- PHP Error Messages -->
                     <?php if (!empty($error)): ?>
-                        <div class="error-message" style="color: red; margin-bottom: 10px; padding: 10px; background: #ffe6e6; border-radius: 4px; border: 1px solid #ffcccc;">
+                        <div class="status-message status-error" style="display: block; background-color: #f8d7da !important; color: #721c24 !important; border: 1px solid #f5c6cb !important; padding: 12px 15px; border-radius: 8px; margin-bottom: 15px;">
                             <?php echo htmlspecialchars($error); ?>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (!empty($success)): ?>
-                        <div class="success-message" style="color: green; margin-bottom: 10px; padding: 10px; background: #e6ffe6; border-radius: 4px; border: 1px solid #ccffcc;">
-                            <?php echo htmlspecialchars($success); ?>
                         </div>
                     <?php endif; ?>
 
                     <form method="POST" action="" class="availability-form">
                         <!-- Payment Method Selection -->
-                        <input type="hidden" id="selectedPaymentMethod" name="selectedPaymentMethod" value="<?php echo htmlspecialchars($paymentMethod); ?>">
+                        <input type="hidden" id="selectedPaymentMethod" name="selectedPaymentMethod" value="<?php echo ($requiredCredits == 0) ? 'exchange' : (($paymentMethod === 'exchange') ? 'exchange' : 'credits'); ?>">
                         
                         <!-- Days Schedule -->
                         <div class="schedule-container">
@@ -272,20 +287,117 @@
 </div>
 
 <script>
+function showStatusMessage(message, type = 'success') {
+    const statusMsg = document.getElementById('statusMessage');
+    statusMsg.textContent = message;
+    statusMsg.className = 'status-message status-' + type;
+    statusMsg.style.display = 'block';
+    
+    // Force colors with inline styles to override cache
+    if (type === 'success' || type === 'info') {
+        statusMsg.style.backgroundColor = '#d4edda';
+        statusMsg.style.color = '#155724';
+        statusMsg.style.border = '1px solid #c3e6cb';
+    } else if (type === 'error') {
+        statusMsg.style.backgroundColor = '#f8d7da';
+        statusMsg.style.color = '#721c24';
+        statusMsg.style.border = '1px solid #f5c6cb';
+    }
+    statusMsg.style.padding = '12px 15px';
+    statusMsg.style.borderRadius = '8px';
+    statusMsg.style.marginBottom = '15px';
+    statusMsg.style.fontSize = '0.95rem';
+    statusMsg.style.fontWeight = '500';
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        statusMsg.style.display = 'none';
+    }, 3000);
+}
+
+// Check for booking success message
+<?php 
+if (isset($_SESSION['booking_success']) && $_SESSION['booking_success'] === true): 
+    unset($_SESSION['booking_success']); // Clear the flag
+?>
+window.addEventListener('DOMContentLoaded', () => {
+    showStatusMessage('Your booking request has been submitted!', 'info');
+});
+<?php endif; ?>
+
 function bookService() {
     const selectedSlot = document.querySelector('.time-slot-range.selected input[type="radio"]');
     if (!selectedSlot) {
-        alert('Please select a time slot from the availability schedule first.');
+        showStatusMessage('Please select a time slot from the availability schedule first.', 'error');
         return;
     }
     
     if (selectedSlot.disabled) {
-        alert('This time slot is not available for booking.');
+        showStatusMessage('This time slot is not available for booking.', 'error');
         return;
     }
     
-    // Submit the form
-    document.getElementById('submitBooking').click();
+    // Debug: Log payment method being submitted
+    const paymentMethodInput = document.getElementById('selectedPaymentMethod');
+    const paymentValue = paymentMethodInput ? paymentMethodInput.value : 'NOT FOUND';
+    console.log('=== BOOKING SUBMISSION DEBUG ===');
+    console.log('Payment method input found:', paymentMethodInput !== null);
+    console.log('Payment method value:', paymentValue);
+    console.log('Selected date:', selectedSlot.value);
+    console.log('Selected date input name:', selectedSlot.name);
+    console.log('Form will submit now...');
+    
+    // Make sure the radio is checked before submission
+    selectedSlot.checked = true;
+    
+    // Submit the form directly instead of clicking hidden button
+    const form = document.querySelector('.availability-form');
+    if (form) {
+        console.log('Submitting form...');
+        form.submit();
+    } else {
+        console.error('Form not found!');
+        showStatusMessage('Error: Form not found', 'error');
+    }
+}
+
+function cancelRequest() {
+    const btn = document.getElementById('bookServiceBtn');
+    const exchangeId = btn.dataset.exchangeId;
+    
+    if (!exchangeId) {
+        showStatusMessage('No request to cancel.', 'error');
+        return;
+    }
+    
+    // Send AJAX request to cancel the exchange
+    const formData = new FormData();
+    formData.append('exchangeId', exchangeId);
+    formData.append('action', 'cancel');
+    
+    fetch('cancelExchange.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showStatusMessage('Request has been cancelled successfully!', 'info');
+            // Update button state to 'Book This Service'
+            btn.textContent = 'Book This Service';
+            btn.className = 'btn-primary';
+            btn.dataset.canCancel = 'false';
+            btn.dataset.exchangeId = '';
+            btn.disabled = false;
+            btn.onclick = function() { bookService(); };
+        } else {
+            showStatusMessage('Error cancelling request: ' + (data.error || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showStatusMessage('An error occurred while cancelling the request.', 'error');
+    });
 }
 
 // Add click handlers for time slots
@@ -306,16 +418,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-    let selectedPaymentMethod = 'credits';
+    // Initialize payment method based on post requirements
+    let selectedPaymentMethod = <?php echo ($requiredCredits == 0) ? "'exchange'" : (($paymentMethod === 'exchange') ? "'exchange'" : "'credits'"); ?>;
     
-    function selectPaymentMethod(method, button) {
+    // Set the hidden input on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const hiddenInput = document.getElementById('selectedPaymentMethod');
+        if (hiddenInput) {
+            hiddenInput.value = selectedPaymentMethod;
+            console.log('Initial payment method set to:', selectedPaymentMethod);
+        }
+    });
+    
+    function selectPaymentMethod(method, labelElement) {
         selectedPaymentMethod = method;
-        document.getElementById('selectedPaymentMethod').value = method;
+        console.log('Payment method changed to:', method);
         
-        // Update button styling
-        document.querySelectorAll('.payment-badge').forEach(btn => {
-            btn.classList.remove('active');
+        // Update all hidden inputs with this name
+        document.querySelectorAll('[name="selectedPaymentMethod"], #selectedPaymentMethod').forEach(input => {
+            input.value = method;
+            console.log('Updated input:', input.id || input.name, '=', input.value);
         });
-        button.classList.add('active');
+        
+        // Update label styling
+        document.querySelectorAll('.payment-badge').forEach(label => {
+            label.classList.remove('active');
+        });
+        if (labelElement) {
+            labelElement.classList.add('active');
+        }
     }
 </script>

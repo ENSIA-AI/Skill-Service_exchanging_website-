@@ -1,0 +1,238 @@
+
+=== BOOKING POST DEBUG 2026-02-05 02:11:23 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+
+=== BOOKING POST DEBUG 2026-02-05 02:11:47 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+
+=== BOOKING POST DEBUG 2026-02-05 02:15:54 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+
+=== BOOKING POST DEBUG 2026-02-05 02:16:13 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+
+=== BOOKING POST DEBUG 2026-02-05 02:16:25 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+
+=== BOOKING POST DEBUG 2026-02-05 02:31:09 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=0, Required=40
+ERROR: Insufficient credits (has 0, needs 40)
+
+=== BOOKING POST DEBUG 2026-02-05 02:31:21 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=0, Required=40
+ERROR: Insufficient credits (has 0, needs 40)
+
+=== BOOKING POST DEBUG 2026-02-05 02:34:46 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=100, Required=40
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=18, Owner=8, Requester=26, Credits=40
+Exchange created: ID=52
+Payment method: credits
+Notification title: Booking Request
+Notification message: mouloud yacine has requested to book your "Intensive English Tutoring" session for 40 credits (10:00 to 11:30 on Feb 17, 2026)
+Recipient: 8, Sender: 26
+Notification created: ID=63
+
+=== BOOKING POST DEBUG 2026-02-05 02:34:56 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=100, Required=40
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=18, Owner=8, Requester=26, Credits=40
+Exchange created: ID=53
+Payment method: credits
+Notification title: Booking Request
+Notification message: mouloud yacine has requested to book your "Intensive English Tutoring" session for 40 credits (10:00 to 11:30 on Feb 17, 2026)
+Recipient: 8, Sender: 26
+Notification created: ID=64
+
+=== BOOKING POST DEBUG 2026-02-05 02:35:20 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=100, Required=40
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=18, Owner=8, Requester=26, Credits=40
+Exchange created: ID=54
+Payment method: credits
+Notification title: Booking Request
+Notification message: mouloud yacine has requested to book your "Intensive English Tutoring" session for 40 credits (10:00 to 11:30 on Feb 17, 2026)
+Recipient: 8, Sender: 26
+Notification created: ID=65
+
+=== BOOKING POST DEBUG 2026-02-05 02:51:00 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=100, Required=40
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=18, Owner=8, Requester=26, Credits=40
+Exchange created: ID=55
+Payment method: credits
+Notification title: Booking Request
+Notification message: mouloud yacine has requested to book your "Intensive English Tutoring" session for 40 credits (10:00 to 11:30 on Feb 17, 2026)
+Recipient: 8, Sender: 26
+Notification created: ID=66
+
+=== BOOKING POST DEBUG 2026-02-05 02:54:58 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: NOT SET
+ERROR: User not logged in
+
+=== BOOKING POST DEBUG 2026-02-05 02:55:02 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: NOT SET
+ERROR: User not logged in
+
+=== BOOKING POST DEBUG 2026-02-05 02:55:27 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=100, Required=40
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=18, Owner=8, Requester=26, Credits=40
+Exchange created: ID=56
+Payment method: credits
+Notification title: Booking Request
+Notification message: mouloud yacine has requested to book your "Intensive English Tutoring" session for 40 credits (10:00 to 11:30 on Feb 17, 2026)
+Recipient: 8, Sender: 26
+Notification created: ID=67
+
+=== BOOKING POST DEBUG 2026-02-05 03:02:15 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=200, Required=40
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=18, Owner=8, Requester=26, Credits=40
+Exchange created: ID=57
+Payment method: credits
+Notification title: Booking Request
+Notification message: mouloud yacine has requested to book your "Intensive English Tutoring" session for 40 credits (10:00 to 11:30 on Feb 17, 2026)
+Recipient: 8, Sender: 26
+Notification created: ID=68
+
+=== BOOKING POST DEBUG 2026-02-05 03:14:29 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => credits
+    [SelectedDate] => 2026-02-17 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=8
+Payment: method=credits, isCreditPayment=yes, creditsCost=40, requiredCredits=40
+Credit check: User balance=200, Required=40
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=18, Owner=8, Requester=26, Credits=40
+Exchange created: ID=58
+Payment method: credits
+Notification title: Booking Request
+Notification message: mouloud yacine has requested to book your "Intensive English Tutoring" session for 40 credits (10:00 to 11:30 on Feb 17, 2026)
+Recipient: 8, Sender: 26
+Notification created: ID=69

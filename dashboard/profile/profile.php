@@ -692,7 +692,124 @@ function renderReviewForm($targetUserId, $data, $isEdit)
             highlightStars(value, '#ffa36c');
         });
     });
+
+    // Dynamic skill refresh when returning from edit page
+    $(document).ready(function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('updated') === '1') {
+            // Remove the parameter from URL without page reload
+            const newUrl = window.location.pathname + window.location.hash;
+            window.history.replaceState({}, document.title, newUrl);
+            
+            // Fetch and update skills dynamically
+            const userId = $('#profile-preview').data('user-id');
+            if (userId) {
+                refreshSkills(userId);
+            }
+        }
+    });
+
+    function refreshSkills(userId) {
+        $.ajax({
+            url: 'get_user_skills.php',
+            type: 'GET',
+            data: { userId: userId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success && response.skills) {
+                    updateSkillsDisplay(response.skills);
+                    
+                    // Show success notification
+                    showNotification('Profile updated successfully!', 'success');
+                }
+            },
+            error: function() {
+                console.error('Failed to refresh skills');
+            }
+        });
+    }
+
+    function updateSkillsDisplay(skills) {
+        const skillsContainer = $('.skills');
+        if (skillsContainer.length === 0) return;
+        
+        // Clear existing skills
+        skillsContainer.empty();
+        
+        // Add updated skills
+        skills.forEach(function(skill) {
+            const proficiency = parseInt(skill.ProficiencyLevel);
+            const skillHtml = `
+                <div class="skill">
+                    <div class="donut" style="--val: ${proficiency}"><span>${proficiency}%</span></div>
+                    <p><strong>${escapeHtml(skill.SkillName)}</strong><br><br><span class="muted">50 credits/hours</span></p>
+                </div>
+            `;
+            skillsContainer.append(skillHtml);
+        });
+        
+        // Trigger animation for the donuts
+        setTimeout(function() {
+            $('.donut').each(function() {
+                const val = $(this).css('--val');
+                $(this).css('--val', '0');
+                setTimeout(() => {
+                    $(this).css('--val', val);
+                }, 50);
+            });
+        }, 100);
+    }
+
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    function showNotification(message, type) {
+        const notification = $(`
+            <div class="profile-notification ${type}" style="
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#dc3545'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            ">
+                <strong>${message}</strong>
+            </div>
+        `);
+        
+        $('body').append(notification);
+        
+        setTimeout(function() {
+            notification.fadeOut(300, function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
 </script>
+<style>
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+</style>
 </body>
 
 </html>
