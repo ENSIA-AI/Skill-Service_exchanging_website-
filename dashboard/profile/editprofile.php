@@ -42,10 +42,10 @@ try {
     echo "Query failed: " . $e->getMessage();
 }
 try {
-    $query = "SELECT uss.SkillId, s.SkillName 
-              FROM user_seeking_skills uss
-              JOIN Skills s ON uss.SkillId = s.SkillId
-              WHERE uss.UserId = :id";
+    $query = "SELECT us.SkillId, s.SkillName 
+              FROM UserSkills us
+              JOIN Skills s ON us.SkillId = s.SkillId
+              WHERE us.UserId = :id AND us.SkillType = 'learn'";
     $stmt = $connection->prepare($query);
     $stmt->execute(['id' => $userId]);
     $seekingSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -328,12 +328,6 @@ try {
                                         oninput="updateSlider(this)">
                                 </div>
                             </div>
-
-                            <div class="rate-section">
-                                <div class="label"><label>Rate (credits/hour)*</label></div>
-                                <input type="number" name="skill_rate[<?= $skill['SkillId'] ?>]"
-                                    class="textbox" value="50" required>
-                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -382,14 +376,6 @@ try {
                         <div class="slider-container">
                             <input type="range" class="proficiency-slider" min="0" max="100" value="80" oninput="updateSlider(this)">
                         </div>
-                    </div>
-
-                    <div class="rate-section">
-                        <div class="label">
-                            <label for="offering-rate">Rate (credits/hour)*</label>
-                        </div>
-                        <input type="number" id="offering-rate" name="offering_rate" class="textbox"
-                            placeholder="50" min="1" disabled />
                     </div>
 
                     <div>

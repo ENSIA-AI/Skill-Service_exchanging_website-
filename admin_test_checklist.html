@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel Test Checklist</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .credentials {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-left: 3px solid #2196f3;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .checklist li:hover {
+            background: #e3f2fd;
+            padding-left: 15px;
+        }
+        .checklist li input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .checklist li.checked {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        .button {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 10px 5px 10px 0;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #1976d2;
+        }
+        .button.success {
+            background: #4caf50;
+        }
+        .button.success:hover {
+            background: #45a049;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .summary {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 Admin Panel Test Checklist</h1>
+        <p>Test your admin panel with this comprehensive checklist</p>
+    </div>
+
+    <div class="credentials">
+        <strong>Login Credentials:</strong><br>
+        Email: <code>admin.test@skillswap.local</code><br>
+        Password: <code>TestAdmin123</code><br>
+        Admin Panel URL: <code>http://localhost/Skill-Service_exchanging_website-/dashboard/admin/</code>
+    </div>
+
+    <div class="section">
+        <h2>📋 Phase 1: Login & Dashboard</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Log in with admin credentials</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Dashboard loads without errors</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View statistics cards (Users, Posts, Events, etc.)</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Recent users feed displays</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Recent reports feed displays</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>👥 Phase 2: User Management (/users.php)</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Users page loads with table</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Search for a user by name</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Click "View Details" on a user</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Try to ban a regular user</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Try to unban a banned user</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Try to make a user admin</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Try to remove admin from an admin user</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Pagination works (if more than 50 users)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>📝 Phase 3: Post Moderation (/posts.php)</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Posts page loads with table</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View active posts</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View disabled posts</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Search posts by title</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Search posts by creator</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Click "View Post" link</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Disable an active post</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Enable a disabled post</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Delete a post (with confirmation)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🎉 Phase 4: Event Management (/events.php)</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Events page loads with table</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View all events</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View active events</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View cancelled events</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Click "View Event" link</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Cancel an active event</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Delete an event (with confirmation)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🏷️ Phase 5: Category Management (/categories.php)</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Categories page loads</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View all categories list</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View all skills organized by category</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Add a new test category</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> New category appears in list</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Delete the test category</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔄 Phase 6: Exchange Monitoring (/exchanges.php)</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Exchanges page loads with table</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View all exchanges</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Filter by "Pending" status</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Filter by "Accepted" status</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Filter by "Completed" status</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Search by post title</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Search by username</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>⚠️ Phase 7: Report Management (/reports.php)</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Reports page loads with table</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View pending reports</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View reviewing reports</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View resolved reports</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Mark a report as "Resolved"</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Mark a report as "Dismissed"</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Status updates immediately</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>💰 Phase 8: Credit Management (/transactions.php)</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Transactions page loads</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View credit adjustment form</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Select a user from dropdown</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Add credits to a user (+ amount)</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Deduct credits from a user (- amount)</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Add description/reason</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Transaction appears in history</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> User's balance updates correctly</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> View transaction history with filters</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🎨 Phase 9: UI & Responsiveness</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Sidebar navigation works</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Click each nav link loads correct page</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> All tables display properly</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Forms display properly</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Buttons work (click actions execute)</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Confirmation dialogs appear</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Success/error messages display</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Logout button works</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔒 Phase 10: Security Tests</h2>
+        <ul class="checklist">
+            <li><input type="checkbox" onclick="toggleItem(this)"> Non-admin cannot access /dashboard/admin/</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Non-logged-in users get redirected to login</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> Banned admin cannot access admin panel</li>
+            <li><input type="checkbox" onclick="toggleItem(this)"> All forms have CSRF/security checks</li>
+        </ul>
+    </div>
+
+    <div class="summary">
+        <h3>📊 Test Progress</h3>
+        <p>Total items checked: <strong id="checked">0</strong> / <strong id="total">0</strong></p>
+        <button class="button success" onclick="exportResults()">📥 Export Results</button>
+        <button class="button" onclick="resetChecklist()">🔄 Reset Checklist</button>
+    </div>
+
+    <script>
+        function toggleItem(checkbox) {
+            checkbox.parentElement.classList.toggle('checked');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const checked = document.querySelectorAll('.checklist input:checked').length;
+            const total = document.querySelectorAll('.checklist input').length;
+            document.getElementById('checked').textContent = checked;
+            document.getElementById('total').textContent = total;
+            localStorage.setItem('adminTestProgress', JSON.stringify({
+                checked: checked,
+                total: total,
+                timestamp: new Date().toLocaleString()
+            }));
+        }
+
+        function resetChecklist() {
+            document.querySelectorAll('.checklist input').forEach(cb => {
+                cb.checked = false;
+                cb.parentElement.classList.remove('checked');
+            });
+            localStorage.removeItem('adminTestProgress');
+            updateProgress();
+        }
+
+        function exportResults() {
+            const checked = document.querySelectorAll('.checklist input:checked').length;
+            const total = document.querySelectorAll('.checklist input').length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            const report = `
+ADMIN PANEL TEST REPORT
+=======================
+Date: ${new Date().toLocaleString()}
+Passed: ${checked} / ${total} (${percentage}%)
+
+Test Items Passed:
+${Array.from(document.querySelectorAll('.checklist li.checked')).map(li => '✓ ' + li.textContent.trim()).join('\n')}
+
+Test Items Not Passed:
+${Array.from(document.querySelectorAll('.checklist li:not(.checked)')).map(li => '✗ ' + li.textContent.trim()).join('\n')}
+            `;
+            
+            alert(report);
+            console.log(report);
+        }
+
+        // Load progress on page load
+        window.addEventListener('load', updateProgress);
+    </script>
+</body>
+</html>

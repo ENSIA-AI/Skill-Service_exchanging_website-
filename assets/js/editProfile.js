@@ -25,7 +25,6 @@ $(document).ready(function () {
     $(document).on("change", "#offering-category", function () {
         const selectedCat = $(this).val();
         const $skillSelect = $('#offering-skills');
-        const $rateInput = $('#offering-rate');
         const $addButton = $('#add-offering-skill-btn');
 
         if (selectedCat !== "") {
@@ -39,19 +38,15 @@ $(document).ready(function () {
             });
         } else {
             $skillSelect.prop("disabled", true).val("");
-            $rateInput.prop("disabled", true).val("");
             $addButton.prop("disabled", true);
         }
     });
 
     $(document).on("change", "#offering-skills", function () {
-        const $rateInput = $('#offering-rate');
         const $addButton = $('#add-offering-skill-btn');
         if ($(this).val() !== "") {
-            $rateInput.prop("disabled", false);
             $addButton.prop("disabled", false);
         } else {
-            $rateInput.prop("disabled", true);
             $addButton.prop("disabled", true);
         }
     });
@@ -87,10 +82,9 @@ $(document).ready(function () {
         const skillId = skillSelect.val();
         const skillName = skillSelect.find("option:selected").text();
         const proficiency = $(".proficiency-section .proficiency-slider").last().val();
-        const rate = $("#offering-rate").val();
 
-        if (!skillId || !rate) {
-            alert("Please select a skill and enter a rate!");
+        if (!skillId) {
+            alert("Please select a skill!");
             return;
         }
 
@@ -109,10 +103,6 @@ $(document).ready(function () {
                         <input type="range" class="proficiency-slider" name="skill_proficiency[${skillId}]" min="0" max="100" value="${proficiency}" oninput="updateSlider(this)">
                     </div>
                 </div>
-                <div class="rate-section">
-                    <div class="label"><label>Rate (credits/hour)*</label></div>
-                    <input type="number" name="skill_rate[${skillId}]" class="textbox" value="${rate}" required>
-                </div>
             </div>`;
 
         $(".cards-section").append(newCardHtml);
@@ -120,7 +110,6 @@ $(document).ready(function () {
 
         $("#offering-category").val("");
         skillSelect.val("").prop("disabled", true);
-        $("#offering-rate").val("").prop("disabled", true);
         $(this).prop("disabled", true);
     });
 

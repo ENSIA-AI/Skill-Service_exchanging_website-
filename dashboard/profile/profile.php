@@ -46,10 +46,10 @@ try {
 }
 
 try {
-    $query = "SELECT uss.SkillId, s.SkillName 
-              FROM user_seeking_skills uss
-              JOIN Skills s ON uss.SkillId = s.SkillId
-              WHERE uss.UserId = :id";
+    $query = "SELECT us.SkillId, s.SkillName 
+              FROM UserSkills us
+              JOIN Skills s ON us.SkillId = s.SkillId
+              WHERE us.UserId = :id AND us.SkillType = 'learn'";
     $stmt = $connection->prepare($query);
     $stmt->execute(['id' => $targetUserId]);
     $seekingSkills = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -219,7 +219,7 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                     <?php endif; ?>
                 </div>
                 <div class="user-meta">
-                    <section>
+    <section>
                         <div class="profile-name">
                             <h2><strong><span><?= $currentName; ?></span></strong></h2>
                         </div>
@@ -227,6 +227,7 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                     <section>
                         <div class="major"><span class="muted-text"><?= $currentProfessionalTitle ?></span></div>
                         <div class="location"><span class="muted-text">Location: <?= $currentLocation ?></span></div>
+                        <div class="email"><span class="muted-text">Email: <?= htmlspecialchars($user['Email']) ?></span></div>
                     </section>
                     <section>
                         <div class="user-meta-info">
@@ -305,7 +306,7 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                                     </div>
                                     <div class="skills">
                                         <?php
-                                        $stmt2 = $connection->prepare("SELECT UserSkills.ProficiencyLevel, Skills.SkillName FROM UserSkills JOIN Skills ON UserSkills.SkillId = Skills.SkillId WHERE UserSkills.UserId = :id");
+                                        $stmt2 = $connection->prepare("SELECT UserSkills.ProficiencyLevel, Skills.SkillName FROM UserSkills JOIN Skills ON UserSkills.SkillId = Skills.SkillId WHERE UserSkills.UserId = :id AND UserSkills.SkillType = 'teach'");
                                         $stmt2->execute([':id' => $targetUserId]);
 
                                         $skills = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -328,20 +329,25 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                     </div>
                     <div id="interests-content" class="tab-content">
                         <section>
-                            <div class="head-section" style="background-color: #5e6591;">
-                                <h2><strong><span class="title">Your Interests</span></strong></h2>
-                                <p>
-                                    Skills You're Seeking
-                                </p>
+                            <div id="interests" class="section">
+                                <article aria-labelledby="interests-title">
+                                    <div class="head-section" style="background-color: #5e6591;">
+                                        <h2><strong><span class="title">Your Interests</span></strong></h2>
+                                        <p>
+                                            SKILLS YOU'RE SEEKING TO LEARN.
+                                        </p>
+                                    </div>
+                                    <div class="interests-badges">
+                                        <?php
+                                        foreach ($seekingSkills as $skill) {
+                                        ?>
+                                            <div class="skill-badge"><?= htmlspecialchars($skill['SkillName']); ?> <span class="badge-remove">×</span></div>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </article>
                             </div>
-                            <div class="interests-section">
-                                <ul class="ls-skills">
-                                    <?php
-                                    foreach ($seekingSkills as $skill) {
-                                        echo '<li>' . htmlspecialchars($skill['SkillName']) . '</li>';
-                                    }
-                                    ?>
-                                </ul>
                         </section>
                     </div>
                 </div>

@@ -14,7 +14,7 @@
 -- ============================================
 -- Step 1: Add temporary INT column for proficiency
 -- ============================================
-ALTER TABLE UserSkills 
+ALTER TABLE userSkills 
 ADD COLUMN ProficiencyLevelInt INT DEFAULT 0 
 CHECK (ProficiencyLevelInt >= 0 AND ProficiencyLevelInt <= 100);
 

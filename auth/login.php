@@ -7,7 +7,6 @@ $is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email_uid = htmlspecialchars(trim($_POST['email-uid']), ENT_QUOTES, 'UTF-8');
   $password = $_POST['password'];
-  $remember = isset($_POST['remember']);
   if (empty($email_uid)) {
     $errors['email_uid'] = 'Username or email is required!';
   } else {
@@ -37,10 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = $db_username;
         $_SESSION['email'] = $db_email;
         session_regenerate_id(true);
-        if ($remember) {
-          setcookie('email', $db_email, time() + (86400 * 30), "/");
-          setcookie('username', $db_username, time() + (86400 * 30), "/");
-        }
         if ($is_ajax) {
           echo json_encode(['success' => true, 'redirect' => '../dashboard/post/posts.php']);
           exit();
@@ -81,15 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         event.preventDefault();
         var emailuid = $("#email-uid").val();
         var password = $("#password").val();
-        var remember = $("#remember").is(':checked');
 
         $.ajax({
           type: 'POST',
           url: 'login.php',
           data: {
             'email-uid': emailuid,
-            'password': password,
-            'remember': remember
+            'password': password
           },
           dataType: 'json',  // Ensures response is parsed as JSON
           headers: {
@@ -146,10 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <small class="error-message"></small>
         </div>
         <div class="form-options">
-          <div class="form-check">
-            <input type="checkbox" id="remember" name="remember">
-            <label for="remember">Remember me</label>
-          </div>
           
         </div>
         <button name="submit" type="submit" class="btn-login">Login</button>
