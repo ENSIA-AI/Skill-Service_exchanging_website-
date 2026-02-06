@@ -20,6 +20,7 @@ try {
     if ($user) {
         $currentName     = !empty($user['FullName']) ? $user['FullName'] : 'Your Full hhhhh Name';
         $currentUsername = !empty($user['UserName']) ? $user['UserName'] : 'usehhrname';
+        $currentEmail = !empty($user['Email']) ? $user['Email'] : 'No email provided';
         $currentPhoto    = !empty($user['ProfilePicture']) && $user['ProfilePicture'] !== null && $user['ProfilePicture'] !== '' ? htmlspecialchars($user['ProfilePicture']) : '../../assets/images/Default_pfp.svg';
         $currentProfessionalTitle = !empty($user['ProfessionalTitle']) ? $user['ProfessionalTitle'] : 'Your Professional Title';
         $currentLocation = !empty($user['Location']) ? $user['Location'] : 'Your Location';
@@ -227,7 +228,7 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                     <section>
                         <div class="major"><span class="muted-text"><?= $currentProfessionalTitle ?></span></div>
                         <div class="location"><span class="muted-text">Location: <?= $currentLocation ?></span></div>
-                        <div class="email"><span class="muted-text">Email: <?= htmlspecialchars($user['Email']) ?></span></div>
+                        <div class="email"><span class="muted-text">Email: <?= htmlspecialchars($currentEmail) ?></span></div>
                     </section>
                     <section>
                         <div class="user-meta-info">
@@ -434,7 +435,6 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                     if ($stmt->rowCount() > 0) {
                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     ?>
-                            <section>
                                 <div class="short-post">
                                     <div class="short-post-head">
                                         <div class="post-avatar">
@@ -460,7 +460,6 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                                         </div>
                                     </div>
                                 </div>
-                            </section>
                     <?php
                         }
                     }
@@ -480,8 +479,6 @@ function renderReviewForm($targetUserId, $data, $isEdit)
                     </div>
                 <?php endif; ?>
             </div>
-
-
 
             <div id="reviews-section" class="reviews-section section">
                 <div class="reviews-head">

@@ -2,6 +2,11 @@
 session_start();
 require_once 'includes/dbh.inc.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../auth/login.php");
+    exit();
+}
+
 
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : (isset($_GET['id']) ? (int)$_GET['id'] : 0);
 
