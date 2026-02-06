@@ -229,6 +229,10 @@ $posts = $stmt->get_result();
                     <span class="icon">💳</span>
                     <span class="label">Transactions</span>
                 </a>
+                <a href="notifications.php" class="nav-item">
+                    <span class="icon">🔔</span>
+                    <span class="label">Notifications</span>
+                </a>
                 <a href="logout.php" class="nav-item logout">
                     <span class="icon">🚪</span>
                     <span class="label">Logout</span>

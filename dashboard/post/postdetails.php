@@ -335,12 +335,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                 // Insert notification with exception handling for trigger validation
                 try {
                     $insertQuery = "INSERT INTO UserNotifications 
-                        (RecipientId, SenderId, ExchangeId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
-                        VALUES (?, ?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')";
+                        (RecipientId, SenderId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
+                        VALUES (?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')";
+                    
+                    file_put_contents(__DIR__ . '/booking_debug.log', "Preparing notification insert...\n", FILE_APPEND);
                     
                     $notifStmt = $conn->prepare($insertQuery);
                     if ($notifStmt) {
-                        $notifStmt->bind_param('iiiss', $postUserId, $userId, $exchangeId, $title, $message);
+                        file_put_contents(__DIR__ . '/booking_debug.log', "Binding params: RecipientId=$postUserId, SenderId=$userId, Title=".substr($title, 0, 30).", Message=".substr($message, 0, 30)."\n", FILE_APPEND);
+                        $notifStmt->bind_param('iiss', $postUserId, $userId, $title, $message);
                         
                         if ($notifStmt->execute()) {
                             $notificationId = $conn->insert_id;
@@ -349,6 +352,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                             } else {
                                 file_put_contents(__DIR__ . '/booking_debug.log', "⚠ Execute succeeded but no insert_id returned\n", FILE_APPEND);
                             }
+                        } else {
+                            $errorMsg = "✗ EXECUTE FAILED: " . $notifStmt->error . "\n";
+                            error_log($errorMsg);
+                            file_put_contents(__DIR__ . '/booking_debug.log', $errorMsg, FILE_APPEND);
                         }
                         $notifStmt->close();
                     } else {

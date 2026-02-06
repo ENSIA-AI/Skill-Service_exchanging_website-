@@ -130,6 +130,7 @@ $skills = $conn->query('SELECT s.*, c.CategoryName FROM Skills s JOIN Category c
                 <a href="categories.php" class="nav-item active">🏷️ Categories & Skills</a>
                 <a href="exchanges.php" class="nav-item">🔄 Exchanges</a>
                 <a href="transactions.php" class="nav-item">💳 Transactions</a>
+                <a href="notifications.php" class="nav-item">🔔 Notifications</a>
                 <a href="logout.php" class="nav-item logout">🚪 Logout</a>
             </nav>
         </aside>

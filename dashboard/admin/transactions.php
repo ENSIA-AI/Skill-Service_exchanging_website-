@@ -199,6 +199,7 @@ $users_result = $conn->query('SELECT UserId, UserName, CreditBalance FROM Users 
                 <a href="categories.php" class="nav-item">🏷️ Categories & Skills</a>
                 <a href="exchanges.php" class="nav-item">🔄 Exchanges</a>
                 <a href="transactions.php" class="nav-item active">💳 Transactions</a>
+                <a href="notifications.php" class="nav-item">🔔 Notifications</a>
                 <a href="logout.php" class="nav-item logout">🚪 Logout</a>
             </nav>
         </aside>
