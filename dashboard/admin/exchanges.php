@@ -118,6 +118,7 @@ $exchanges = $stmt->get_result();
                 <a href="categories.php" class="nav-item">🏷️ Categories & Skills</a>
                 <a href="exchanges.php" class="nav-item active">🔄 Exchanges</a>
                 <a href="transactions.php" class="nav-item">💳 Transactions</a>
+                <a href="notifications.php" class="nav-item">🔔 Notifications</a>
                 <a href="logout.php" class="nav-item logout">🚪 Logout</a>
             </nav>
         </aside>
