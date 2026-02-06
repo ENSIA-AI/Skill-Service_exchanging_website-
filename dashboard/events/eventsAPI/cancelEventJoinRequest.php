@@ -73,7 +73,7 @@ if ($eventId <= 0) {
 
 try {
     // Get event details to find the organizer (recipient of the notification)
-    $eventQuery = "SELECT EventId, EventTitle, OrganizerId FROM Events WHERE EventId = ?";
+    $eventQuery = "SELECT EventId, EventTitle, OrganizerId FROM events WHERE EventId = ?";
     $stmt = $conn->prepare($eventQuery);
     $stmt->bind_param('i', $eventId);
     $stmt->execute();

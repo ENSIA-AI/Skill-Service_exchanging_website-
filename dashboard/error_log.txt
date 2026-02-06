@@ -1,0 +1,15 @@
+[06-Feb-2026 17:53:10 Europe/Berlin] ENV DEBUG - Path: C:\xampp\htdocs\Skill-Service_exchanging_website-\DataBaseManagement/.env.local | File Exists: YES
+ENV DEBUG - File Size: 96 bytes | Readable: YES
+
+[06-Feb-2026 17:53:10 Europe/Berlin] ENV DEBUG - Successfully parsed .env.local. Keys found: DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+[06-Feb-2026 17:53:10 Europe/Berlin] DB CONNECTION SUCCESS - Host: localhost, DB: skill_service_exchange_db, Charset: utf8mb4
+[06-Feb-2026 17:53:13 Europe/Berlin] ENV DEBUG - Path: C:\xampp\htdocs\Skill-Service_exchanging_website-\DataBaseManagement/.env.local | File Exists: YES
+ENV DEBUG - File Size: 96 bytes | Readable: YES
+
+[06-Feb-2026 17:53:13 Europe/Berlin] ENV DEBUG - Successfully parsed .env.local. Keys found: DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+[06-Feb-2026 17:53:13 Europe/Berlin] DB CONNECTION SUCCESS - Host: localhost, DB: skill_service_exchange_db, Charset: utf8mb4
+[06-Feb-2026 17:54:58 Europe/Berlin] ENV DEBUG - Path: C:\xampp\htdocs\Skill-Service_exchanging_website-\DataBaseManagement/.env.local | File Exists: YES
+ENV DEBUG - File Size: 96 bytes | Readable: YES
+
+[06-Feb-2026 17:54:58 Europe/Berlin] ENV DEBUG - Successfully parsed .env.local. Keys found: DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+[06-Feb-2026 17:54:58 Europe/Berlin] DB CONNECTION SUCCESS - Host: localhost, DB: skill_service_exchange_db, Charset: utf8mb4

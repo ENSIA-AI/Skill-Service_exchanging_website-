@@ -47,9 +47,6 @@ if (file_exists($envFile)) {
     error_log("WARNING: .env file not found. Please copy .env.example to .env and add your SMTP credentials.");
 }
 
-// ============================================================
-// SMTP CONFIGURATION (loaded from .env)
-// ============================================================
 define('SMTP_HOST', $_ENV['SMTP_HOST'] ?? 'sandbox.smtp.mailtrap.io');
 define('SMTP_PORT', (int)($_ENV['SMTP_PORT'] ?? 2525));
 define('SMTP_USERNAME', $_ENV['SMTP_USERNAME'] ?? '');
@@ -58,6 +55,9 @@ define('SMTP_FROM_EMAIL', $_ENV['SMTP_FROM_EMAIL'] ?? 'noreply@skillserviceexcha
 define('SMTP_FROM_NAME', $_ENV['SMTP_FROM_NAME'] ?? 'Skill Service Exchange');
 define('SMTP_ENCRYPTION', PHPMailer::ENCRYPTION_STARTTLS);
 define('SMTP_DEBUG', ($_ENV['SMTP_DEBUG'] ?? 'false') === 'true');
+
+// Detect production environment
+$_isProduction = !empty($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], 'infinityfreeapp') !== false || strpos($_SERVER['HTTP_HOST'], 'infinityfree') !== false || strpos($_SERVER['HTTP_HOST'], 'localhost') === false);
 
 /**
  * Send a verification email with a code
@@ -74,23 +74,28 @@ function sendVerificationEmail($recipientEmail, $recipientName, $verificationCod
         SMTP_USERNAME === 'your_mailtrap_username_here' || 
         SMTP_PASSWORD === 'your_mailtrap_password_here') {
         
-        $errorMsg = "SMTP credentials not configured! Please edit your .env file with your Mailtrap credentials.";
+        $errorMsg = "SMTP credentials not configured! Email sending is disabled. ";
+        $errorMsg .= "Please configure .env file with SMTP credentials.";
         error_log($errorMsg);
         
-        if (SMTP_DEBUG) {
-            echo "<pre style='background:#fff3cd;padding:15px;margin:10px;border:2px solid #ffc107;border-radius:5px;'>";
-            echo "<strong>⚠️ Email Configuration Required</strong><br><br>";
-            echo "Your .env file is missing SMTP credentials.<br><br>";
-            echo "<strong>To fix this:</strong><br>";
-            echo "1. Open the file: <code>.env</code> in your project root<br>";
-            echo "2. Sign up at <a href='https://mailtrap.io' target='_blank'>https://mailtrap.io</a> (FREE)<br>";
-            echo "3. Go to: Email Testing → Inboxes → My Inbox → Show Credentials<br>";
-            echo "4. Copy your Username and Password into .env<br>";
-            echo "5. Save and try again<br>";
-            echo "</pre>";
+        // For production, log silently, for development show helpful message
+        if (!$_isProduction) {
+            if (SMTP_DEBUG) {
+                echo "<pre style='background:#fff3cd;padding:15px;margin:10px;border:2px solid #ffc107;border-radius:5px;'>";
+                echo "<strong>⚠️ Email Configuration Required</strong><br><br>";
+                echo "Your .env file is missing SMTP credentials.<br><br>";
+                echo "<strong>To fix this:</strong><br>";
+                echo "1. Open the file: <code>.env</code> in your project root<br>";
+                echo "2. Sign up at <a href='https://mailtrap.io' target='_blank'>https://mailtrap.io</a> (FREE)<br>";
+                echo "3. Go to: Email Testing → Inboxes → My Inbox → Show Credentials<br>";
+                echo "4. Copy your Username and Password into .env<br>";
+                echo "5. Save and try again<br>";
+                echo "</pre>";
+            }
         }
         
-        return false;
+        // Return true in development to allow signup to proceed, false in production
+        return !$_isProduction;  // Allow signup flow to continue locally without email
     }
     
     $mail = new PHPMailer(true);

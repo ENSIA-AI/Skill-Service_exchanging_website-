@@ -5,7 +5,7 @@ $Id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] :
             (isset($_GET['id']) ? (int)$_GET['id'] : 0);
 
 try {
-    $stmt = $connection->prepare("SELECT * FROM Users WHERE UserId = :id");
+    $stmt = $connection->prepare("SELECT * FROM users WHERE UserId = :id");
     $stmt->execute([':id' => $Id]);
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);

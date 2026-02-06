@@ -60,7 +60,7 @@ try {
   }
 
   // Get updated like count
-  $countStmt = $conn->prepare('SELECT LikeCount FROM Posts WHERE PostId = ?');
+  $countStmt = $conn->prepare('SELECT LikeCount FROM posts WHERE PostId = ?');
   if (!$countStmt) {
     echo json_encode(['success' => false, 'message' => 'Count prepare failed: ' . $conn->error]);
     exit();

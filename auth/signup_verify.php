@@ -1,8 +1,25 @@
 <?php
+// Error handling setup
+error_reporting(E_ALL);
+ini_set('log_errors', '1');
+
 session_start();
 
 require_once '../utils/sendMailer.php';
 include_once '../DataBaseManagement/config.php';
+
+// Detect production environment
+$isProduction = !empty($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], 'infinityfreeapp') !== false || strpos($_SERVER['HTTP_HOST'], 'infinityfree') !== false || strpos($_SERVER['HTTP_HOST'], 'localhost') === false);
+if (!$isProduction) {
+    ini_set('display_errors', '1');
+}
+
+// Check database connection
+if (!isset($conn) || !$conn) {
+    error_log("SIGNUP_VERIFY ERROR: Database connection not established");
+    http_response_code(500);
+    die('<h1>500 Internal Server Error</h1><p>Database connection failed. Please try again later.</p>');
+}
 
 // Prevent direct access if signup1.php data is missing
 if (!isset($_SESSION['signup_data']) || !isset($_SESSION['verification_code'])) {
@@ -92,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userName = $baseUsername . rand(100, 999);
             
             // Ensure username is unique
-            $checkUsername = $conn->prepare("SELECT UserId FROM Users WHERE UserName = ?");
+            $checkUsername = $conn->prepare("SELECT UserId FROM users WHERE UserName = ?");
             $checkUsername->bind_param('s', $userName);
             $checkUsername->execute();
             $checkUsername->store_result();
@@ -110,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $verification_error = "Unable to generate unique username. Please try again later.";
             } else {
                 // Insert user into database with 100 starting credits
-                $query = "INSERT INTO Users(UserName, FullName, Email, Password, Gender, PhoneNumber, BirthDate, Location, CreditBalance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 100)";
+                $query = "INSERT INTO users(UserName, FullName, Email, Password, Gender, PhoneNumber, BirthDate, Location, CreditBalance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 100)";
                 $stmt = $conn->prepare($query);
                 
                 if (!$stmt) {

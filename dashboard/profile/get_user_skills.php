@@ -22,7 +22,7 @@ try {
     // Fetch user skills with proficiency levels
     $stmt = $connection->prepare("
         SELECT UserSkills.ProficiencyLevel, Skills.SkillName, Skills.SkillId 
-        FROM UserSkills 
+        FROM userskills 
         JOIN Skills ON UserSkills.SkillId = Skills.SkillId 
         WHERE UserSkills.UserId = :id 
         AND UserSkills.SkillType = 'teach'

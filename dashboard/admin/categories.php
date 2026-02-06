@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $categories = $conn->query('SELECT * FROM Category ORDER BY CategoryName LIMIT 50');
 
 // Get skills
-$skills = $conn->query('SELECT s.*, c.CategoryName FROM Skills s JOIN Category c ON s.CategoryId = c.CategoryId ORDER BY s.SkillName LIMIT 50');
+$skills = $conn->query('SELECT s.*, c.CategoryName FROM skills s JOIN category c ON s.CategoryId = c.CategoryId ORDER BY s.SkillName LIMIT 50');
 
 ?>
 <!DOCTYPE html>

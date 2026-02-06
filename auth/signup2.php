@@ -1,8 +1,24 @@
 <?php
 session_start();
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
+// Detect production environment
+$isProduction = !empty($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], 'infinityfreeapp') !== false || strpos($_SERVER['HTTP_HOST'], 'infinityfree') !== false || strpos($_SERVER['HTTP_HOST'], 'localhost') === false);
+if (!$isProduction) {
+    ini_set('display_errors', 1);
+} else {
+    ini_set('display_errors', 0);
+    ini_set('log_errors', '1');
+}
+
 include_once '../DataBaseManagement/config.php';
+
+// Check database connection
+if (!isset($conn) || !$conn) {
+    error_log("SIGNUP2 ERROR: Database connection not established");
+    http_response_code(500);
+    die('<h1>500 Internal Server Error</h1><p>Database connection failed. Please try again later.</p>');
+}
 
 // Check if user is coming from signup1
 if (!isset($_SESSION['user_id'])) {
@@ -13,7 +29,13 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 // Verify the user actually exists in the database (prevents FK errors if DB was reset)
-$checkUser = $conn->prepare("SELECT UserId FROM Users WHERE UserId = ?");
+$checkUser = $conn->prepare("SELECT UserId FROM users WHERE UserId = ?");
+if (!$checkUser) {
+    error_log("SIGNUP2 ERROR: Prepare failed - " . $conn->error);
+    http_response_code(500);
+    die('<h1>500 Internal Server Error</h1><p>Database error occurred. Please try again later.</p>');
+}
+
 $checkUser->bind_param("i", $userId);
 $checkUser->execute();
 $checkUser->store_result();
@@ -29,7 +51,7 @@ $checkUser->close();
 
 // Fetch categories from database
 $categories = [];
-$categoryResult = $conn->query("SELECT CategoryId, CategoryName FROM Category ORDER BY CategoryName");
+$categoryResult = $conn->query("SELECT CategoryId, CategoryName FROM category ORDER BY CategoryName");
 if ($categoryResult) {
     while ($row = $categoryResult->fetch_assoc()) {
         $categories[] = [
@@ -58,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 
         // Save teach skills in the database
         foreach ($teachSkills as $skillId) {
-            $stmt = $conn->prepare("INSERT INTO UserSkills (UserId, SkillId, SkillType, ProficiencyLevel) VALUES (?, ?, 'teach', ?)");
+            $stmt = $conn->prepare("INSERT INTO userskills (UserId, SkillId, SkillType, ProficiencyLevel) VALUES (?, ?, 'teach', ?)");
             if (!$stmt) {
                 die("Prepare failed: " . $conn->error);
             }
@@ -72,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         
         // Save learn skills in the database
         foreach ($learnSkills as $skillId) {
-            $stmt = $conn->prepare("INSERT INTO UserSkills (UserId, SkillId, SkillType, ProficiencyLevel) VALUES (?, ?, 'learn', ?)");
+            $stmt = $conn->prepare("INSERT INTO userskills (UserId, SkillId, SkillType, ProficiencyLevel) VALUES (?, ?, 'learn', ?)");
             if (!$stmt) {
                 die("Prepare failed: " . $conn->error);
             }

@@ -3,7 +3,7 @@ include_once '../DataBaseManagement/config.php';
 
 $email = $_GET['email'];
 
-$stmt = $conn->prepare("SELECT UserId FROM Users WHERE Email=?");
+$stmt = $conn->prepare("SELECT UserId FROM users WHERE Email=?");
 $stmt->bind_param('s', $email);
 $stmt->execute();
 

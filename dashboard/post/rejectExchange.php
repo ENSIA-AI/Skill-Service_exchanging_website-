@@ -40,7 +40,7 @@ try {
     
     // Get exchange details with post and user info
     $sql = "SELECT e.*, p.Title, u.FullName 
-            FROM Exchanges e
+            FROM exchanges e
             JOIN Posts p ON e.PostId = p.PostId
             JOIN Users u ON e.OfferedByUserId = u.UserId
             WHERE e.ExchangeId = ?";
@@ -109,7 +109,7 @@ try {
         $message = $exchange['FullName'] . " has rejected your booking request for " . $exchange['Title'];
         $title = "Booking Rejected";
         
-        $notificationSQL = "INSERT INTO UserNotifications 
+        $notificationSQL = "INSERT INTO usernotifications 
                            (RecipientId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
                            VALUES (?, 'being_refused', ?, ?, 'no', NOW(), 'Exchange')";
         

@@ -61,7 +61,7 @@ $offset = ($page - 1) * $limit;
 
 try {
     // First, check what status values exist in database
-    $statusCheckQuery = "SELECT DISTINCT EventStatus FROM Events LIMIT 10";
+    $statusCheckQuery = "SELECT DISTINCT EventStatus FROM events LIMIT 10";
     $statusCheckResult = $conn->query($statusCheckQuery);
     $statusValues = [];
     if ($statusCheckResult) {
@@ -71,7 +71,7 @@ try {
     }
     
     // Get total count of all events (not filtering by status yet, to debug)
-    $countQuery = "SELECT COUNT(*) as total FROM Events";
+    $countQuery = "SELECT COUNT(*) as total FROM events";
     $countResult = $conn->query($countQuery);
     
     if (!$countResult) {
@@ -99,7 +99,7 @@ try {
             u.UserName as organizer,
             u.FullName as organizerFullName,
             u.UserId as organizerId
-        FROM Events e
+        FROM events e
         LEFT JOIN Users u ON e.OrganizerId = u.UserId
         ORDER BY e.EventStartDate ASC
         LIMIT ? OFFSET ?

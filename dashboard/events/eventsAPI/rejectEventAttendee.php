@@ -54,7 +54,7 @@ try {
                         e.EventId, 
                         e.EventTitle, 
                         e.OrganizerId
-                      FROM Events e
+                      FROM events e
                       WHERE e.EventId = ? AND e.OrganizerId = ?";
     $eventStmt = $conn->prepare($eventCheckSql);
     
@@ -88,7 +88,7 @@ try {
                         ea.UserId, 
                         ea.Status,
                         u.FullName as AttendeeName
-                    FROM EventsAttendees ea
+                    FROM eventsattendees ea
                     LEFT JOIN Users u ON ea.UserId = u.UserId
                     WHERE ea.EventId = ? AND ea.UserId = ?";
     $attendeeStmt = $conn->prepare($attendeeSql);
@@ -154,7 +154,7 @@ try {
     }
     
     // Get organizer name for notification
-    $organizerNameSql = "SELECT FullName FROM Users WHERE UserId = ?";
+    $organizerNameSql = "SELECT FullName FROM users WHERE UserId = ?";
     $orgNameStmt = $conn->prepare($organizerNameSql);
     $orgNameStmt->bind_param('i', $organizerId);
     $orgNameStmt->execute();

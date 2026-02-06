@@ -1,8 +1,24 @@
 <?php
 session_start();
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
+// Detect production environment
+$isProduction = !empty($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], 'infinityfreeapp') !== false || strpos($_SERVER['HTTP_HOST'], 'infinityfree') !== false || strpos($_SERVER['HTTP_HOST'], 'localhost') === false);
+if (!$isProduction) {
+    ini_set('display_errors', 1);
+} else {
+    ini_set('display_errors', 0);
+    ini_set('log_errors', '1');
+}
+
 require_once '../../DataBaseManagement/config.php';
+
+// Check database connection
+if (!isset($conn) || !$conn) {
+    error_log("POSTS ERROR: Database connection not established");
+    http_response_code(500);
+    die('<h1>500 Internal Server Error</h1><p>Database connection failed. Please try again later.</p>');
+}
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -25,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
     $search_query = htmlspecialchars(trim($_GET['search']), ENT_QUOTES, 'UTF-8');
     $sql = 'SELECT p.PostId, p.UserId, p.Title, p.Description, p.LikeCount, 
                c.CategoryName, u.UserName, u.Rating, u.ProfilePicture,
-        (SELECT COUNT(*) FROM PostLikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
-        FROM Posts p
-        JOIN Users u ON p.UserId = u.UserId 
-        JOIN Category c ON p.CategoryId = c.CategoryId 
+        (SELECT COUNT(*) FROM postlikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
+        FROM posts p
+        JOIN users u ON p.UserId = u.UserId 
+        JOIN category c ON p.CategoryId = c.CategoryId 
         WHERE p.PostStatus = "active" AND (p.Title LIKE ? OR p.Description LIKE ? OR u.UserName LIKE ?)';
     if ($category_filter !== '') {
         $sql .= ' AND c.CategoryName = ?';
@@ -62,10 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
 } elseif ($category_filter !== '') {
     // Filter by category only (server-side)
     $stmt = $conn->prepare('SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating, u.ProfilePicture, u.UserId,
-        (SELECT COUNT(*) FROM PostLikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
-        FROM Posts p 
-        JOIN Users u ON p.UserId = u.UserId 
-        JOIN Category c ON p.CategoryId = c.CategoryId 
+        (SELECT COUNT(*) FROM postlikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
+        FROM posts p 
+        JOIN users u ON p.UserId = u.UserId 
+        JOIN category c ON p.CategoryId = c.CategoryId 
         WHERE p.PostStatus = "active" AND c.CategoryName = ? 
         ORDER BY p.CreatedAt DESC');
     $stmt->bind_param('is', $currentUserId, $category_filter);
@@ -88,10 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search']) && $_GET['sea
     $stmt->close();
 } else {
     $stmt = $conn->prepare('SELECT p.PostId, p.Title, p.Description, p.LikeCount, c.CategoryName, u.UserName, u.Rating, u.ProfilePicture, u.UserId,
-        (SELECT COUNT(*) FROM PostLikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
-        FROM Posts p 
-        JOIN Users u ON p.UserId = u.UserId 
-        JOIN Category c ON p.CategoryId = c.CategoryId 
+        (SELECT COUNT(*) FROM postlikes WHERE PostId = p.PostId AND UserId = ?) as UserLiked
+        FROM posts p 
+        JOIN users u ON p.UserId = u.UserId 
+        JOIN category c ON p.CategoryId = c.CategoryId 
         WHERE p.PostStatus = "active" 
         ORDER BY p.CreatedAt DESC LIMIT ? OFFSET ?');
     $stmt->bind_param('iii', $currentUserId, $limit, $offset);

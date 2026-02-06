@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_credits'])) {
         $conn->begin_transaction();
         try {
             // Get current balance
-            $stmt = $conn->prepare('SELECT CreditBalance FROM Users WHERE UserId = ?');
+            $stmt = $conn->prepare('SELECT CreditBalance FROM users WHERE UserId = ?');
             $stmt->bind_param('i', $userId);
             $stmt->execute();
             $result = $stmt->get_result()->fetch_assoc();
@@ -222,7 +222,7 @@ $users_result = $conn->query('SELECT UserId, UserName, CreditBalance FROM Users 
                         <select name="user_id" class="form-select" required>
                             <option value="">Select User</option>
                             <?php 
-                            $users_result = $conn->query('SELECT UserId, UserName, CreditBalance FROM Users ORDER BY UserName LIMIT 50');
+                            $users_result = $conn->query('SELECT UserId, UserName, CreditBalance FROM users ORDER BY UserName LIMIT 50');
                             while ($u = $users_result->fetch_assoc()): 
                             ?>
                                 <option value="<?php echo $u['UserId']; ?>">

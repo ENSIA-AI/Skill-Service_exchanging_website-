@@ -36,7 +36,7 @@ if (isset($_POST['save-btn'])) {
                     $username = $_SESSION['username'];
                     $dbPath = '../../assets/uploads/profile_pics/' . $fileNameNew;
 
-                    $sql = "UPDATE Users SET ProfilePicture = :pfp WHERE UserId = :id";
+                    $sql = "UPDATE users SET ProfilePicture = :pfp WHERE UserId = :id";
                     $stmt = $connection->prepare($sql);
                     $stmt->execute([
                         ':pfp' => $dbPath,

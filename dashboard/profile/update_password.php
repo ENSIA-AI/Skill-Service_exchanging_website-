@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-        $stmt = $connection->prepare("UPDATE Users SET Password = :pass WHERE UserId = :id");
+        $stmt = $connection->prepare("UPDATE users SET Password = :pass WHERE UserId = :id");
         $stmt->execute([
             ':pass' => $hashedPassword,
             ':id'   => $userId

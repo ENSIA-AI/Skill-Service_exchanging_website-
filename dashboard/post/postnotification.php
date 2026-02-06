@@ -43,7 +43,7 @@ function sendBookingNotification($postId, $postOwnerId, $requesterId, $postTitle
     $notificationSection = 'Exchange';
     
     // Insert notification to post owner (using RecipientId per migration script)
-    $sqlNotification = "INSERT INTO UserNotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
+    $sqlNotification = "INSERT INTO usernotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
     $stmtNotification = $conn->prepare($sqlNotification);
     
     if (!$stmtNotification) {
@@ -80,7 +80,7 @@ function sendAcceptanceNotification($postOwnerId, $requesterId, $exchangeId, $po
     $notificationSection = 'Exchange';
     
     // Insert notification to requester (using RecipientId per migration script)
-    $sqlNotification = "INSERT INTO UserNotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
+    $sqlNotification = "INSERT INTO usernotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
     $stmtNotification = $conn->prepare($sqlNotification);
     
     if (!$stmtNotification) {
@@ -116,7 +116,7 @@ function sendRejectionNotification($postOwnerId, $requesterId, $postTitle, $post
     $notificationSection = 'Exchange';
     
     // Insert notification to requester (using RecipientId per migration script)
-    $sqlNotification = "INSERT INTO UserNotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
+    $sqlNotification = "INSERT INTO usernotifications (RecipientId, SenderId, NotificationType, Title, Message, NotificationSection) VALUES (?, ?, ?, ?, ?, ?)";
     $stmtNotification = $conn->prepare($sqlNotification);
     
     if (!$stmtNotification) {
@@ -143,7 +143,7 @@ function sendRejectionNotification($postOwnerId, $requesterId, $postTitle, $post
 function getBookingStatus($exchangeId) {
     global $conn;
     
-    $sql = "SELECT Status FROM Exchanges WHERE ExchangeId = ?";
+    $sql = "SELECT Status FROM exchanges WHERE ExchangeId = ?";
     $stmt = $conn->prepare($sql);
     
     if (!$stmt) {
@@ -172,7 +172,7 @@ function getBookingStatus($exchangeId) {
 function getUserExchangesForPost($postId, $userId) {
     global $conn;
     
-    $sql = "SELECT ExchangeId, Status FROM Exchanges 
+    $sql = "SELECT ExchangeId, Status FROM exchanges 
             WHERE PostId = ? AND RequestedByUserId = ?
             ORDER BY CreatedAt DESC LIMIT 1";
     $stmt = $conn->prepare($sql);

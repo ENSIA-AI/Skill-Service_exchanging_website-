@@ -10,15 +10,15 @@ require_once __DIR__ . '/auth_admin.php';
 $stats = [];
 
 // Total users
-$result = $conn->query('SELECT COUNT(*) as count FROM Users');
+$result = $conn->query('SELECT COUNT(*) as count FROM users');
 $stats['total_users'] = $result->fetch_assoc()['count'];
 
 // Active posts
-$result = $conn->query("SELECT COUNT(*) as count FROM Posts WHERE PostStatus = 'active'");
+$result = $conn->query("SELECT COUNT(*) as count FROM posts WHERE PostStatus = 'active'");
 $stats['active_posts'] = $result->fetch_assoc()['count'];
 
 // Active events
-$result = $conn->query("SELECT COUNT(*) as count FROM Events WHERE EventStatus IN ('upcoming', 'ongoing')");
+$result = $conn->query("SELECT COUNT(*) as count FROM events WHERE EventStatus IN ('upcoming', 'ongoing')");
 $stats['active_events'] = $result->fetch_assoc()['count'];
 
 // Pending exchanges
@@ -33,13 +33,13 @@ $result = $conn->query('SELECT COUNT(*) as count FROM CreditTransactions');
 $stats['total_transactions'] = $result->fetch_assoc()['count'];
 
 // Banned users
-$result = $conn->query("SELECT COUNT(*) as count FROM Users WHERE IsBanned = 'yes'");
+$result = $conn->query("SELECT COUNT(*) as count FROM users WHERE IsBanned = 'yes'");
 $stats['banned_users'] = $result->fetch_assoc()['count'];
 
 // Recent users (last 5)
 $recent_users = $conn->query("
     SELECT UserId, UserName, Email, UserSince 
-    FROM Users 
+    FROM users 
     ORDER BY UserSince DESC 
     LIMIT 5
 ");

@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $error = 'Failed to cancel event.';
         }
     } elseif ($action === 'delete') {
-        $stmt = $conn->prepare('DELETE FROM Events WHERE EventId = ?');
+        $stmt = $conn->prepare('DELETE FROM events WHERE EventId = ?');
         $stmt->bind_param('i', $eventId);
         if ($stmt->execute()) {
             $message = 'Event has been deleted.';
@@ -38,7 +38,7 @@ $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Build query
-$query = 'SELECT e.EventId, e.EventTitle, e.OrganizerId, e.EventStatus, e.EventStartDate, e.MaxAttendees, e.CurrentAttendeesNumber, u.UserName FROM Events e JOIN Users u ON e.OrganizerId = u.UserId WHERE 1=1';
+$query = 'SELECT e.EventId, e.EventTitle, e.OrganizerId, e.EventStatus, e.EventStartDate, e.MaxAttendees, e.CurrentAttendeesNumber, u.UserName FROM events e JOIN users u ON e.OrganizerId = u.UserId WHERE 1=1';
 $params = [];
 $types = '';
 

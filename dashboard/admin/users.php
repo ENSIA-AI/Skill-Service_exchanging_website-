@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
     } elseif ($action === 'remove_admin') {
         // Don't allow removing the last admin
-        $adminCount = $conn->query("SELECT COUNT(*) as count FROM Users WHERE IsAdmin = 'yes'")->fetch_assoc()['count'];
+        $adminCount = $conn->query("SELECT COUNT(*) as count FROM users WHERE IsAdmin = 'yes'")->fetch_assoc()['count'];
         if ($adminCount > 1) {
             $stmt = $conn->prepare('UPDATE Users SET IsAdmin = "no" WHERE UserId = ?');
             $stmt->bind_param('i', $userId);
@@ -61,7 +61,7 @@ $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Build query
-$query = 'SELECT UserId, UserName, Email, FullName, UserSince, Rating, RatingCount, CreditBalance, IsBanned, IsAdmin, ExchangeCount FROM Users WHERE 1=1';
+$query = 'SELECT UserId, UserName, Email, FullName, UserSince, Rating, RatingCount, CreditBalance, IsBanned, IsAdmin, ExchangeCount FROM users WHERE 1=1';
 $params = [];
 $types = '';
 

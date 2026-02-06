@@ -10,7 +10,7 @@ function getSkills(mysqli $conn ,$categoryid){
     }
 
     $skills = [];
-    $stmt = $conn->prepare("SELECT SkillId, SkillName FROM Skills WHERE CategoryId = ? ORDER BY SkillName");
+    $stmt = $conn->prepare("SELECT SkillId, SkillName FROM skills WHERE CategoryId = ? ORDER BY SkillName");
     
     if (!$stmt) {
         // Log error if needed, but return empty array to prevent JS crash

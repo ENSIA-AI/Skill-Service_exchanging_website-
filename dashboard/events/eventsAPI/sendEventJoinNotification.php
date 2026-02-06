@@ -80,7 +80,7 @@ try {
             e.EventTitle,
             e.OrganizerId,
             u.UserName as organizerUsername
-        FROM Events e
+        FROM events e
         LEFT JOIN Users u ON e.OrganizerId = u.UserId
         WHERE e.EventId = ?
     ";
@@ -112,7 +112,7 @@ try {
     
     // Check if user already has an attendee record (registered/pending/confirmed)
     $checkAttendeeQuery = "
-        SELECT Status FROM EventsAttendees 
+        SELECT Status FROM eventsattendees 
         WHERE EventId = ? AND UserId = ?
     ";
     $checkAttendeeStmt = $conn->prepare($checkAttendeeQuery);

@@ -79,7 +79,7 @@ try {
             u.UserName as organizer,
             u.FullName as organizerFullName,
             u.UserId as organizerId
-        FROM Events e
+        FROM events e
         LEFT JOIN Users u ON e.OrganizerId = u.UserId
         WHERE e.EventId = ?
     ";

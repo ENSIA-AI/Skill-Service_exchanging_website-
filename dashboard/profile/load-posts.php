@@ -6,7 +6,7 @@ $limit = isset($_POST['newPostLimit']) ? (int)$_POST['newPostLimit'] : 3;
 $targetUserId = isset($_POST['targetUserId']) ? (int)$_POST['targetUserId'] : 0; 
 
 $sql = "SELECT Posts.*, Users.FullName, Users.ProfilePicture, Users.UserName
-        FROM Posts 
+        FROM posts 
         JOIN Users ON Posts.UserId = Users.UserId
         WHERE Posts.UserId = :targetId
         ORDER BY Posts.PostId DESC 
@@ -51,7 +51,7 @@ if ($stmt->rowCount() > 0) {
     }
 }
 
-$countSql = "SELECT COUNT(*) FROM Posts WHERE UserId = :targetId";
+$countSql = "SELECT COUNT(*) FROM posts WHERE UserId = :targetId";
 $countStmt = $connection->prepare($countSql);
 $countStmt->execute([':targetId' => $targetUserId]);
 $totalPosts = $countStmt->fetchColumn();

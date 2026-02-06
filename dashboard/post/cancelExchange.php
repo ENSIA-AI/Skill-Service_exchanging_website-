@@ -27,7 +27,7 @@ $userId = $_SESSION['user_id'];
 try {
     // First, verify that this exchange belongs to the current user and is still pending
     $checkSql = "SELECT e.ExchangeId, e.PostId, e.RequestedByUserId, e.OfferedByUserId, e.Status, e.ProposedDate, p.Title
-                 FROM Exchanges e
+                 FROM exchanges e
                  JOIN Posts p ON e.PostId = p.PostId
                  WHERE e.ExchangeId = ? AND e.RequestedByUserId = ? AND e.Status = 'pending'";
     $checkStmt = $conn->prepare($checkSql);
@@ -56,7 +56,7 @@ try {
     
     // Delete the notification associated with this booking request
     // Find notification by matching the sender (requester), recipient (post owner), and type
-    $deleteNotifSql = "DELETE FROM UserNotifications 
+    $deleteNotifSql = "DELETE FROM usernotifications 
                        WHERE SenderId = ? 
                        AND RecipientId = ? 
                        AND NotificationType = 'booking'
@@ -77,7 +77,7 @@ try {
     $deleteNotifStmt->close();
     
     // Delete the exchange record
-    $deleteExchangeSql = "DELETE FROM Exchanges WHERE ExchangeId = ?";
+    $deleteExchangeSql = "DELETE FROM exchanges WHERE ExchangeId = ?";
     $deleteExchangeStmt = $conn->prepare($deleteExchangeSql);
     
     if (!$deleteExchangeStmt) {

@@ -1,6 +1,24 @@
 <?php 
 session_start();
-require_once '../../DataBaseManagement/config.php'; 
+error_reporting(E_ALL);
+
+// Detect production environment
+$isProduction = !empty($_SERVER['HTTP_HOST']) && (strpos($_SERVER['HTTP_HOST'], 'infinityfreeapp') !== false || strpos($_SERVER['HTTP_HOST'], 'infinityfree') !== false || strpos($_SERVER['HTTP_HOST'], 'localhost') === false);
+if (!$isProduction) {
+    ini_set('display_errors', 1);
+} else {
+    ini_set('display_errors', 0);
+    ini_set('log_errors', '1');
+}
+
+require_once '../../DataBaseManagement/config.php';
+
+// Check database connection
+if (!isset($conn) || !$conn) {
+    error_log("EVENTS ERROR: Database connection not established");
+    http_response_code(500);
+    die('<h1>500 Internal Server Error</h1><p>Database connection failed. Please try again later.</p>');
+}
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {

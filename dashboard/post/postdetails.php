@@ -49,7 +49,7 @@ $currentUserExchange = null;
  */
 function getUserExchangesForPost($postId, $userId) {
     global $conn;
-    $sql = "SELECT ExchangeId, Status FROM Exchanges 
+    $sql = "SELECT ExchangeId, Status FROM exchanges 
             WHERE PostId = ? AND RequestedByUserId = ?
             ORDER BY CreatedAt DESC LIMIT 1";
     $stmt = $conn->prepare($sql);
@@ -73,7 +73,7 @@ function getButtonState($status) {
     return isset($states[$status]) ? $states[$status] : null;
 }
 
-$sql = "SELECT * FROM Posts WHERE PostId = ? ";
+$sql = "SELECT * FROM posts WHERE PostId = ? ";
 $stmt=$conn->prepare($sql);
 if (!$stmt) {  die('Database error: ' . $conn->error);}
 
@@ -91,7 +91,7 @@ if($result->num_rows===0)
 $post=mysqli_fetch_assoc($result);
 
 // Fetch user data for the post owner
-$userSql = "SELECT FullName, ProfilePicture, Rating, RatingCount FROM Users WHERE UserId = ?";
+$userSql = "SELECT FullName, ProfilePicture, Rating, RatingCount FROM users WHERE UserId = ?";
 $userStmt = $conn->prepare($userSql);
 if (!$userStmt) {  
     die('Database error: ' . $conn->error); 
@@ -129,7 +129,7 @@ $requirements     = $post['Requirements'];
 $postUserId       = $post['UserId'];
 
 // Fetch skills offered by this post
-$skillsSql = "SELECT s.SkillName, s.SkillId FROM PostSkills ps 
+$skillsSql = "SELECT s.SkillName, s.SkillId FROM postskills ps 
               JOIN Skills s ON ps.SkillId = s.SkillId 
               WHERE ps.PostId = ? AND ps.SkillType = 'offered'";
 $skillsStmt = $conn->prepare($skillsSql);
@@ -143,7 +143,7 @@ while ($skill = $skillsResult->fetch_assoc()) {
 }
 
 // Fetch skills being sought (Targeted Skills)
-$seekingSkillsSql = "SELECT s.SkillName, s.SkillId FROM PostSkills ps 
+$seekingSkillsSql = "SELECT s.SkillName, s.SkillId FROM postskills ps 
                      JOIN Skills s ON ps.SkillId = s.SkillId 
                      WHERE ps.PostId = ? AND ps.SkillType = 'requested'";
 $seekingStmt = $conn->prepare($seekingSkillsSql);
@@ -161,7 +161,7 @@ while ($skill = $seekingResult->fetch_assoc()) {
 
 // Fetch available dates
 $dates = [];
-$Datesquery = "SELECT AvailableDate FROM PostAvailableDates WHERE PostId = ? ORDER BY AvailableDate ASC";
+$Datesquery = "SELECT AvailableDate FROM postavailabledates WHERE PostId = ? ORDER BY AvailableDate ASC";
 $stmtDates = $conn->prepare($Datesquery);
 if (!$stmtDates) {  die('Database error: ' . $conn->error); }
 $stmtDates->bind_param('i', $postId);
@@ -221,7 +221,7 @@ foreach ($timeSlotsByDay as $dayName => $times) {
 
 
 // Fetch existing exchanges to know which dates are already booked/completed 
-$sqlExchanges = "SELECT ProposedDate, Status FROM Exchanges WHERE PostId = ?";
+$sqlExchanges = "SELECT ProposedDate, Status FROM exchanges WHERE PostId = ?";
 $stmtEx = $conn->prepare($sqlExchanges);
 if (!$stmtEx) {  die('Database error: ' . $conn->error); }
 $stmtEx->bind_param('i', $postId);
@@ -271,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
 
             // If credit payment: validate requester has sufficient balance
             if ($creditsCost > 0) {
-                $balSql = "SELECT CreditBalance FROM Users WHERE UserId = ?";
+                $balSql = "SELECT CreditBalance FROM users WHERE UserId = ?";
                 $balStmt = $conn->prepare($balSql);
                 $balStmt->bind_param('i', $userId);
                 $balStmt->execute();
@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
             file_put_contents(__DIR__ . '/booking_debug.log', "No errors, proceeding with booking...\n", FILE_APPEND);
             
             // Get requester's name
-            $userNameSql = "SELECT FullName FROM Users WHERE UserId = ?";
+            $userNameSql = "SELECT FullName FROM users WHERE UserId = ?";
             $userNameStmt = $conn->prepare($userNameSql);
             $userNameStmt->bind_param('i', $userId);
             $userNameStmt->execute();
@@ -303,7 +303,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
             file_put_contents(__DIR__ . '/booking_debug.log', "Requester: $requesterName\n", FILE_APPEND);
             
             // Insert new exchange (store CreditsCost for credit transfers when accepted)
-            $sqlInsert = "INSERT INTO Exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate, CreditsCost) VALUES (?, ?, ?, ?, ?)";
+            $sqlInsert = "INSERT INTO exchanges (PostId, OfferedByUserId, RequestedByUserId, ProposedDate, CreditsCost) VALUES (?, ?, ?, ?, ?)";
             $stmtInsert = $conn->prepare($sqlInsert);
             $stmtInsert->bind_param('iiisi', $postId, $postUserId, $userId, $selectedDate, $creditsCost);
             
@@ -334,7 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['SelectedDate'])) {
                 
                 // Insert notification with exception handling for trigger validation
                 try {
-                    $insertQuery = "INSERT INTO UserNotifications 
+                    $insertQuery = "INSERT INTO usernotifications 
                         (RecipientId, SenderId, ExchangeId, NotificationType, Title, Message, IsRead, CreatedAt, NotificationSection)
                         VALUES (?, ?, ?, 'booking', ?, ?, 'no', NOW(), 'Exchange')";
                     

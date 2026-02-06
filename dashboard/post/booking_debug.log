@@ -607,3 +607,23 @@ Notification title: Booking Request
 Notification message: hello has requested to book your "aaaaaaaaaaa" session for 50 credits (17:28 to 17:58 on Feb 13, 2026)
 Recipient: 28, Sender: 30
 ✓ Notification created: ID=114
+
+=== BOOKING POST DEBUG 2026-02-06 17:52:58 ===
+POST Data: Array
+(
+    [selectedPaymentMethod] => exchange
+    [SelectedDate] => 2026-02-21 10:00:00
+)
+
+Session user_id: 26
+User logged in: UserId=26, PostOwner=2
+Payment: method=exchange, isCreditPayment=no, creditsCost=0, requiredCredits=0
+No errors, proceeding with booking...
+Requester: mouloud yacine
+About to insert Exchange... PostId=12, Owner=2, Requester=26, Credits=0
+Exchange created: ID=77
+Payment method: exchange
+Notification title: Skill Exchange Request
+Notification message: mouloud yacine has requested to exchange skills for your "Custom Graphic Design" session (10:00 to 13:00 on Feb 21, 2026)
+Recipient: 2, Sender: 26
+✓ Notification created: ID=168

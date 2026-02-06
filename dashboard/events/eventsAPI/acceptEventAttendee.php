@@ -70,7 +70,7 @@ try {
                         e.EventCost,
                         e.MaxAttendees,
                         e.CurrentAttendeesNumber
-                      FROM Events e
+                      FROM events e
                       WHERE e.EventId = ? AND e.OrganizerId = ?";
     $eventStmt = $conn->prepare($eventCheckSql);
     
@@ -115,7 +115,7 @@ try {
                         ea.Status,
                         u.FullName as AttendeeName,
                         u.CreditBalance
-                    FROM EventsAttendees ea
+                    FROM eventsattendees ea
                     LEFT JOIN Users u ON ea.UserId = u.UserId
                     WHERE ea.EventId = ? AND ea.UserId = ?";
     $attendeeStmt = $conn->prepare($attendeeSql);
@@ -231,7 +231,7 @@ try {
             $addCreditsStmt->close();
             
             // Get organizer's new balance
-            $balSql = "SELECT CreditBalance FROM Users WHERE UserId = ?";
+            $balSql = "SELECT CreditBalance FROM users WHERE UserId = ?";
             $balStmt = $conn->prepare($balSql);
             $balStmt->bind_param('i', $organizerId);
             $balStmt->execute();

@@ -43,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$_POST['username'], $_POST['fullname'], $_POST['email'], $_POST['professional_title'], $_POST['location'], $_POST['about_me'], $_POST['phone'], $userId]);
 
         //delete teaching skills
-        $delOff = $connection->prepare("DELETE FROM UserSkills WHERE UserId = ? AND SkillType = 'teach'");
+        $delOff = $connection->prepare("DELETE FROM userskills WHERE UserId = ? AND SkillType = 'teach'");
         $delOff->execute([$userId]);
 
         if (isset($_POST['skill_proficiency'])) {
-            $insOff = $connection->prepare("INSERT INTO UserSkills (UserId, SkillId, ProficiencyLevel, SkillType) VALUES (?, ?, ?, 'teach')");
+            $insOff = $connection->prepare("INSERT INTO userskills (UserId, SkillId, ProficiencyLevel, SkillType) VALUES (?, ?, ?, 'teach')");
             foreach ($_POST['skill_proficiency'] as $skillId => $proficiency) {
                 $insOff->execute([$userId, $skillId, $proficiency]);
             }

@@ -19,7 +19,7 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
 
 // Get user info from database to verify admin status
 $userId = $_SESSION['user_id'];
-$stmt = $conn->prepare('SELECT UserId, UserName, Email, IsAdmin, IsBanned FROM Users WHERE UserId = ?');
+$stmt = $conn->prepare('SELECT UserId, UserName, Email, IsAdmin, IsBanned FROM users WHERE UserId = ?');
 $stmt->bind_param('i', $userId);
 $stmt->execute();
 $stmt->store_result();

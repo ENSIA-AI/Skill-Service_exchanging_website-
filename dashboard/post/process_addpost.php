@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $categoryId = 1; // Default fallback
     if (isset($_POST['skills']) && is_array($_POST['skills']) && count($_POST['skills']) > 0) {
         $firstSkillId = (int)$_POST['skills'][0];
-        $catQuery = $conn->prepare("SELECT CategoryId FROM Skills WHERE SkillId = ?");
+        $catQuery = $conn->prepare("SELECT CategoryId FROM skills WHERE SkillId = ?");
         $catQuery->bind_param("i", $firstSkillId);
         $catQuery->execute();
         $catResult = $catQuery->get_result();
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Prepare first slot date for the main Posts table (required field)
         $availDate = $firstAvailableDate ? $firstAvailableDate : date('Y-m-d H:i:s', strtotime('+1 day'));
 
-        $stmt = $conn->prepare("INSERT INTO Posts (UserId, Title, Description, PostType, CategoryId, Duration, MeetLocation, RequiredCredits, PaymentMethod, PostStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')");
+        $stmt = $conn->prepare("INSERT INTO posts (UserId, Title, Description, PostType, CategoryId, Duration, MeetLocation, RequiredCredits, PaymentMethod, PostStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')");
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $conn->error);
         }
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Handle Offered Skills
             if (isset($_POST['skills']) && is_array($_POST['skills'])) {
-                $skillStmt = $conn->prepare("INSERT INTO PostSkills (PostId, SkillId, SkillType) VALUES (?, ?, 'offered')");
+                $skillStmt = $conn->prepare("INSERT INTO postskills (PostId, SkillId, SkillType) VALUES (?, ?, 'offered')");
                 foreach ($_POST['skills'] as $skillId) {
                     $skillIdInt = (int)$skillId;
                     $skillStmt->bind_param("ii", $postId, $skillIdInt);
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Handle Targeted Skills (Requested)
             if (isset($_POST['target_skills']) && is_array($_POST['target_skills'])) {
-                $targetSkillStmt = $conn->prepare("INSERT INTO PostSkills (PostId, SkillId, SkillType) VALUES (?, ?, 'requested')");
+                $targetSkillStmt = $conn->prepare("INSERT INTO postskills (PostId, SkillId, SkillType) VALUES (?, ?, 'requested')");
                 foreach ($_POST['target_skills'] as $skillId) {
                     $skillIdInt = (int)$skillId;
                     $targetSkillStmt->bind_param("ii", $postId, $skillIdInt);
@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Handle Availability Slots
             if (count($availableTimes) > 0) {
-                $availStmt = $conn->prepare("INSERT INTO PostAvailableDates (PostId, AvailableDate) VALUES (?, ?)");
+                $availStmt = $conn->prepare("INSERT INTO postavailabledates (PostId, AvailableDate) VALUES (?, ?)");
                 foreach ($availableTimes as $dateTime) {
                     $availStmt->bind_param("is", $postId, $dateTime);
                     $availStmt->execute();

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $error = 'Failed to enable post.';
         }
     } elseif ($action === 'delete') {
-        $stmt = $conn->prepare('DELETE FROM Posts WHERE PostId = ?');
+        $stmt = $conn->prepare('DELETE FROM posts WHERE PostId = ?');
         $stmt->bind_param('i', $postId);
         if ($stmt->execute()) {
             $message = 'Post has been deleted.';
@@ -46,7 +46,7 @@ $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
 // Build query
-$query = 'SELECT p.PostId, p.UserId, p.Title, p.PostStatus, p.CreatedAt, p.LikeCount, u.UserName FROM Posts p JOIN Users u ON p.UserId = u.UserId WHERE 1=1';
+$query = 'SELECT p.PostId, p.UserId, p.Title, p.PostStatus, p.CreatedAt, p.LikeCount, u.UserName FROM posts p JOIN users u ON p.UserId = u.UserId WHERE 1=1';
 $params = [];
 $types = '';
 
